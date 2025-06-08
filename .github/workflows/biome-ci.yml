@@ -14,5 +14,5 @@ jobs:
         with:
           version: latest
       - name: Run Biome
-        run: biome ci ./src
+        run: biome ci ./src --config-path=./biome.json
 
