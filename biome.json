@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+		"ignore": ["./src/components/ui/**"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -33,9 +33,6 @@
 					"fix": "safe",
 					"options": {}
 				}
-			},
-			"style": {
-				"useNamingConvention": "error"
 			},
 			"complexity": {
 				"useArrowFunction": "error"
