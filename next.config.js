@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
+const nextConfig = {
+	images: {
+		domains: ["www.google.com"],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "www.google.com",
+				port: "",
+				pathname: "/s2/favicons/**",
+			},
+		],
+	},
+};
 module.exports = nextConfig;

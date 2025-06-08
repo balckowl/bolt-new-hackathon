@@ -1,5 +1,6 @@
 "use client";
 
+import { checkUrlExists } from "@/src/lib/favicon-utils";
 import {
 	Battery,
 	Calculator,
@@ -603,37 +604,17 @@ export default function MacosDesktop() {
 			let favicon = "";
 
 			try {
-				const response = await fetch(
-					`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-				);
-				const data = await response.json();
-				const html = data.contents;
-
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(html, "text/html");
-
-				// Get site title
-				const titleElement = doc.querySelector("title");
-				siteName = titleElement ? titleElement.textContent?.trim() || "" : "";
-
-				// Get favicon
-				const iconLink = doc.querySelector('link[rel*="icon"]') as HTMLLinkElement;
-				if (iconLink) {
-					const iconUrl = iconLink.href;
-					if (iconUrl.startsWith("http")) {
-						favicon = iconUrl;
-					} else {
-						const baseUrl = new URL(url).origin;
-						favicon = new URL(iconUrl, baseUrl).href;
-					}
-				} else {
-					const baseUrl = new URL(url).origin;
-					favicon = `${baseUrl}/favicon.ico`;
+				favicon = `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+				siteName = new URL(url).hostname.replace("www.", "");
+				const isUrlExist = await checkUrlExists(url);
+				if (!isUrlExist) {
+					favicon = "";
 				}
 			} catch (error) {
 				console.error("Error fetching site metadata:", error);
 				// Fallback to domain name
-				siteName = new URL(url).hostname;
+				favicon = "";
+				siteName = new URL(url).hostname.replace("www.", "");
 			}
 
 			// If no site name found, use domain
@@ -988,17 +969,31 @@ export default function MacosDesktop() {
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
 			return (
-				<Image
-					src={app.favicon}
-					alt={app.name}
-					className="h-7 w-7 rounded-sm"
-					onError={(e) => {
-						// Fallback to Globe icon if favicon fails to load
-						const target = e.target as HTMLImageElement;
-						target.style.display = "none";
-						target.nextElementSibling?.classList.remove("hidden");
-					}}
-				/>
+				<div className="relative h-7 w-7 ">
+					<Image
+						src={app.favicon}
+						alt={app.name}
+						width={28}
+						height={28}
+						className="h-7 w-7 rounded-sm"
+						onError={(e) => {
+							// Fallback to Globe icon if favicon fails to load
+							const target = e.target as HTMLImageElement;
+							target.style.display = "none";
+							const parent = target.parentElement;
+							if (parent) {
+								const fallbackIcon = parent.querySelector(".fallback-icon");
+								if (fallbackIcon) {
+									fallbackIcon.classList.remove("hidden");
+								}
+							}
+						}}
+					/>
+					<Globe
+						size={24}
+						className="fallback-icon absolute inset-0 hidden text-white drop-shadow-sm"
+					/>
+				</div>
 			);
 		}
 		return <app.icon size={28} className="text-white drop-shadow-sm" />;
@@ -1020,8 +1015,14 @@ export default function MacosDesktop() {
 				grid.push(
 					<div
 						key={`${row}-${col}`}
-						className={`relative flex items-center justify-center border border-white/10 transition-all duration-200 ease-in-out ${isDropTarget ? "scale-105 rounded-2xl bg-white/10" : ""}
-              ${isFolderDropTarget ? "scale-105 rounded-2xl bg-blue-500/20 ring-2 ring-blue-400" : ""}
+						className={`relative flex items-center justify-center border border-white/10 transition-all duration-200 ease-in-out ${
+							isDropTarget ? "scale-105 rounded-2xl bg-white/10" : ""
+						}
+              ${
+								isFolderDropTarget
+									? "scale-105 rounded-2xl bg-blue-500/20 ring-2 ring-blue-400"
+									: ""
+							}
             `}
 						onDragOver={(e) => handleDragOver(e, row, col)}
 						onDragLeave={handleDragLeave}
@@ -1040,7 +1041,7 @@ export default function MacosDesktop() {
 										handleAppClick(app);
 									}
 								}}
-								className="group hover:-translate-y-1 transform cursor-grab transition-all duration-200 ease-out hover:scale-110 active:cursor-grabbing"
+								className="group hover:-translate-y-1 flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out hover:scale-110 active:cursor-grabbing"
 							>
 								<div
 									className={`relative h-14 w-14 rounded-2xl ${app.color}shadow-lg flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 hover:shadow-xl group-hover:border-white/30 group-hover:shadow-2xl `}
@@ -2078,16 +2079,30 @@ function FolderWindow({
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
 			return (
-				<Image
-					src={app.favicon}
-					alt={app.name}
-					className="h-6 w-6 rounded-sm"
-					onError={(e) => {
-						const target = e.target as HTMLImageElement;
-						target.style.display = "none";
-						target.nextElementSibling?.classList.remove("hidden");
-					}}
-				/>
+				<div className="relative h-6 w-6">
+					<Image
+						src={app.favicon}
+						alt={app.name}
+						width={28}
+						height={28}
+						className="h-6 w-6 rounded-sm"
+						onError={(e) => {
+							const target = e.target as HTMLImageElement;
+							target.style.display = "none";
+							const parent = target.parentElement;
+							if (parent) {
+								const fallbackIcon = parent.querySelector(".fallback-icon");
+								if (fallbackIcon) {
+									fallbackIcon.classList.remove("hidden");
+								}
+							}
+						}}
+					/>
+					<Globe
+						size={28}
+						className="fallback-icon absolute inset-0 hidden text-white drop-shadow-sm"
+					/>
+				</div>
 			);
 		}
 		return <app.icon size={24} className="text-white drop-shadow-sm" />;
