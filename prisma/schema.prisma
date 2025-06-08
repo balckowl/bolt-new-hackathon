@@ -15,6 +15,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "prisma/zod"
+}
+
 model User {
   id            String    @id
   name          String
@@ -25,6 +30,9 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  
+  /// @zod.string.min(2, { message: "OS 名は2文字以上で入力してください。" }).max(10, { message: "OS 名は10文字以下で入力してください。" })
+  osName       String? @unique
 
   @@unique([email])
   @@map("user")
