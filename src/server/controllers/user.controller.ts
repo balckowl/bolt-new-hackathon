@@ -10,8 +10,21 @@ export const checkOsNameHandler: RouteHandler<typeof checkOsNameRoute> = async (
 		headers: c.req.raw.headers,
 	});
 
-	if (!session || !session.user?.id) {
+	if (!session?.user?.id) {
 		throw new Error("Unauthorized");
+	}
+
+	const me = await prisma.user.findUnique({
+		where: { id: session.user.id },
+		select: { osName: true },
+	});
+
+	if (!me) {
+		return c.json(null, 404);
+	}
+
+	if (me.osName !== null) {
+		return c.json(null, 400);
 	}
 
 	const exists = await prisma.user.findUnique({ where: { osName } });

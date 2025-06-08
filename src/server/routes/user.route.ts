@@ -23,6 +23,22 @@ export const checkOsNameRoute = createRoute({
 				},
 			},
 		},
+		400: {
+			description: "不正なリクエスト",
+			content: {
+				"application/json": {
+					schema: z.null(),
+				},
+			},
+		},
+		404: {
+			description: "ユーザーが見つからない",
+			content: {
+				"application/json": {
+					schema: z.null(),
+				},
+			},
+		},
 		409: {
 			description: "重複",
 			content: {
