@@ -1,5 +1,7 @@
 "use client";
 
+import TiptapEditor from "@/src/components/TiptapEditor";
+import { Button } from "@/src/components/ui/button";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import {
 	Battery,
@@ -1776,9 +1778,13 @@ function MemoWindow({
 		};
 	}, [isDragging, isResizing, dragStart, resizeStart, onPositionChange, onSizeChange]);
 
+	const handleSaveMemo = () => {
+		//todo: save to db
+		onClose();
+	};
 	return (
 		<div
-			className="fixed overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
+			className="fixed flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
 			style={{
 				left: window.position.x,
 				top: window.position.y,
@@ -1790,7 +1796,7 @@ function MemoWindow({
 			onMouseDown={handleMouseDown}
 		>
 			{/* Window Header */}
-			<div className="window-header flex cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
+			<div className="window-header flex flex-shrink-0 cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
 				<div className="flex items-center space-x-2">
 					<div className="flex space-x-2">
 						<button
@@ -1810,19 +1816,12 @@ function MemoWindow({
 					</div>
 					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
 				</div>
+				<Button onClick={handleSaveMemo}>Save</Button>
 			</div>
 
 			{/* Window Content */}
-			<div className="h-full flex-1 p-4">
-				<textarea
-					value={window.content}
-					onChange={(e) => onContentChange(e.target.value)}
-					placeholder="Start typing your memo..."
-					className="h-full w-full resize-none border-none font-mono text-gray-800 text-sm leading-relaxed outline-none"
-					style={{
-						height: "calc(100% - 60px)",
-					}}
-				/>
+			<div className="min-h-0 flex-1 overflow-y-auto p-4">
+				<TiptapEditor content={window.content} onContentChange={onContentChange} />
 			</div>
 
 			{/* Resize Handle */}
