@@ -10,7 +10,7 @@ const osApp = new OpenAPIHono()
 	.openapi(checkOsNameRoute, checkOsNameHandler)
 	.openapi(setOsNameRoute, setOsNameHandler);
 
-app.route("/", osApp);
+const route = app.route("/", osApp);
 
 app
 	.doc("/specification", {
@@ -19,4 +19,5 @@ app
 	})
 	.get("/doc", swaggerUI({ url: "/api/specification" }));
 
+export type AppType = typeof route;
 export default app;
