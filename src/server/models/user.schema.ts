@@ -7,7 +7,10 @@ export const osNameBaseSchema = UserSchema.pick({
 	osName: z
 		.string()
 		.min(2, { message: "OS 名は2文字以上で入力してください。" })
-		.max(10, { message: "OS 名は10文字以下で入力してください。" }),
+		.max(10, { message: "OS 名は10文字以下で入力してください。" })
+		.regex(/^[A-Za-z]+$/, {
+			message: "OS 名は半角アルファベットのみで入力してください。",
+		}),
 });
 
 export const osNameCheckSchema = osNameBaseSchema.openapi({
