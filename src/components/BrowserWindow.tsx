@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
-import type { MemoWindowType } from "../types/desktop";
-import TiptapEditor from "./TiptapEditor";
-import { Button } from "./ui/button";
+import type { BrowserWindowType } from "../types/desktop";
 
-export function MemoWindow({
+export function BrowserWindow({
 	window,
 	onClose,
 	onMinimize,
-	onContentChange,
 	onBringToFront,
 	onPositionChange,
 	onSizeChange,
 }: {
-	window: MemoWindowType;
+	window: BrowserWindowType;
 	onClose: () => void;
 	onMinimize: () => void;
-	onContentChange: (content: string) => void;
 	onBringToFront: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
@@ -64,8 +60,8 @@ export function MemoWindow({
 					y: e.clientY - dragStart.y,
 				});
 			} else if (isResizing) {
-				const newWidth = Math.max(300, resizeStart.width + (e.clientX - resizeStart.x));
-				const newHeight = Math.max(200, resizeStart.height + (e.clientY - resizeStart.y));
+				const newWidth = Math.max(400, resizeStart.width + (e.clientX - resizeStart.x));
+				const newHeight = Math.max(300, resizeStart.height + (e.clientY - resizeStart.y));
 				onSizeChange({
 					width: newWidth,
 					height: newHeight,
@@ -89,13 +85,9 @@ export function MemoWindow({
 		};
 	}, [isDragging, isResizing, dragStart, resizeStart, onPositionChange, onSizeChange]);
 
-	const handleSaveMemo = () => {
-		//todo: save to db
-		onClose();
-	};
 	return (
 		<div
-			className="fixed flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
+			className="fixed overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
 			style={{
 				left: window.position.x,
 				top: window.position.y,
@@ -107,7 +99,7 @@ export function MemoWindow({
 			onMouseDown={handleMouseDown}
 		>
 			{/* Window Header */}
-			<div className="window-header flex flex-shrink-0 cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
+			<div className="window-header flex cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
 				<div className="flex items-center space-x-2">
 					<div className="flex space-x-2">
 						<button
@@ -127,12 +119,21 @@ export function MemoWindow({
 					</div>
 					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
 				</div>
-				<Button onClick={handleSaveMemo}>Save</Button>
+				<div className="flex items-center space-x-2">
+					<div className="rounded bg-gray-100 px-2 py-1 text-gray-500 text-xs">{window.url}</div>
+				</div>
 			</div>
 
-			{/* Window Content */}
-			<div className="min-h-0 flex-1 overflow-y-auto p-4">
-				<TiptapEditor content={window.content} onContentChange={onContentChange} />
+			{/* Browser Content */}
+			<div className="h-full flex-1">
+				<iframe
+					src={window.url}
+					className="h-full w-full border-0"
+					style={{
+						height: "calc(100% - 50px)",
+					}}
+					title={window.title}
+				/>
 			</div>
 
 			{/* Resize Handle */}
