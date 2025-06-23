@@ -33,81 +33,18 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BackgroundSelector } from "../components/BackgroundSelector";
-
-interface AppIcon {
-	id: string;
-	name: string;
-	icon: LucideIcon;
-	color: string;
-	type?: "app" | "memo" | "website" | "folder";
-	content?: string;
-	url?: string;
-	favicon?: string;
-}
-
-interface GridPosition {
-	row: number;
-	col: number;
-}
-
-interface MemoWindow {
-	id: string;
-	title: string;
-	content: string;
-	position: { x: number; y: number };
-	size: { width: number; height: number };
-	isMinimized: boolean;
-	zIndex: number;
-}
-
-interface BrowserWindow {
-	id: string;
-	title: string;
-	url: string;
-	position: { x: number; y: number };
-	size: { width: number; height: number };
-	isMinimized: boolean;
-	zIndex: number;
-}
-
-interface FolderWindow {
-	id: string;
-	title: string;
-	position: { x: number; y: number };
-	size: { width: number; height: number };
-	isMinimized: boolean;
-	zIndex: number;
-}
-
-interface ContextMenu {
-	visible: boolean;
-	x: number;
-	y: number;
-	position: GridPosition | null;
-	existingApp?: AppIcon | null;
-}
-
-interface MemoNameDialog {
-	visible: boolean;
-	position: GridPosition | null;
-}
-
-interface AppUrlDialog {
-	visible: boolean;
-	position: GridPosition | null;
-}
-
-interface FolderNameDialog {
-	visible: boolean;
-	position: GridPosition | null;
-}
-
-interface EditDialog {
-	visible: boolean;
-	app: AppIcon | null;
-	newName: string;
-	newUrl?: string;
-}
+import type {
+	AppIcon,
+	AppUrlDialog,
+	BrowserWindowType,
+	ContextMenu,
+	EditDialog,
+	FolderNameDialog,
+	FolderWindowType,
+	GridPosition,
+	MemoNameDialog,
+	MemoWindowType,
+} from "../types/desktop";
 
 const GRID_COLS = 6;
 const GRID_ROWS = 10;
@@ -132,9 +69,9 @@ export default function MacosDesktop() {
 		y: 0,
 		position: null,
 	});
-	const [memoWindows, setMemoWindows] = useState<MemoWindow[]>([]);
-	const [browserWindows, setBrowserWindows] = useState<BrowserWindow[]>([]);
-	const [folderWindows, setFolderWindows] = useState<FolderWindow[]>([]);
+	const [memoWindows, setMemoWindows] = useState<MemoWindowType[]>([]);
+	const [browserWindows, setBrowserWindows] = useState<BrowserWindowType[]>([]);
+	const [folderWindows, setFolderWindows] = useState<FolderWindowType[]>([]);
 	const [nextzIndex, setNextzIndex] = useState(1000);
 	const [memoCounter, setMemoCounter] = useState(2);
 	const [folderCounter, setFolderCounter] = useState(1);
@@ -755,7 +692,7 @@ export default function MacosDesktop() {
 			setNextzIndex((prev) => prev + 1);
 		} else {
 			// Create new window
-			const newWindow: MemoWindow = {
+			const newWindow: MemoWindowType = {
 				id: memoApp.id,
 				title: memoApp.name,
 				content: memoApp.content || "",
@@ -794,7 +731,7 @@ export default function MacosDesktop() {
 			setNextzIndex((prev) => prev + 1);
 		} else {
 			// Create new window
-			const newWindow: BrowserWindow = {
+			const newWindow: BrowserWindowType = {
 				id: app.id,
 				title: app.name,
 				url: app.url,
@@ -831,7 +768,7 @@ export default function MacosDesktop() {
 			setNextzIndex((prev) => prev + 1);
 		} else {
 			// Create new window
-			const newWindow: FolderWindow = {
+			const newWindow: FolderWindowType = {
 				id: folderApp.id,
 				title: folderApp.name,
 				position: {
@@ -1701,7 +1638,7 @@ function MemoWindow({
 	onPositionChange,
 	onSizeChange,
 }: {
-	window: MemoWindow;
+	window: MemoWindowType;
 	onClose: () => void;
 	onMinimize: () => void;
 	onContentChange: (content: string) => void;
@@ -1844,7 +1781,7 @@ function BrowserWindow({
 	onPositionChange,
 	onSizeChange,
 }: {
-	window: BrowserWindow;
+	window: BrowserWindowType;
 	onClose: () => void;
 	onMinimize: () => void;
 	onBringToFront: () => void;
@@ -1995,7 +1932,7 @@ function FolderWindow({
 	onPositionChange,
 	onSizeChange,
 }: {
-	window: FolderWindow;
+	window: FolderWindowType;
 	folderContents: string[];
 	apps: AppIcon[];
 	onClose: () => void;
