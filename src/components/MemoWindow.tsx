@@ -1,3 +1,5 @@
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 import type { MemoWindowType } from "../types/desktop";
 import TiptapEditor from "./TiptapEditor";
@@ -28,6 +30,17 @@ export function MemoWindow({
 		y: 0,
 		width: 0,
 		height: 0,
+	});
+
+	const editor = useEditor({
+		extensions: [StarterKit],
+		content: window.content,
+		editorProps: {
+			attributes: {
+				class:
+					"prose prose-sm prose-li:marker:text-black prose-p:m-0 prose-headings:m-0 prose-ul:m-0 prose-ol:m-0 prose-blockquote:m-0 prose-hr:m-0 prose-pre:m-0 m-5 focus:outline-none text-left",
+			},
+		},
 	});
 
 	const handleMouseDown = (e: React.MouseEvent) => {
@@ -131,8 +144,8 @@ export function MemoWindow({
 			</div>
 
 			{/* Window Content */}
-			<div className="min-h-0 flex-1 overflow-y-auto p-4">
-				<TiptapEditor content={window.content} onContentChange={onContentChange} />
+			<div className="min-h-0 flex-1 overflow-y-auto ">
+				<TiptapEditor editor={editor} />
 			</div>
 
 			{/* Resize Handle */}
