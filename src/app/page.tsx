@@ -1,18 +1,8 @@
 "use client";
 
+import { ContextMenu } from "@/src/components/ContextMenu";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
-import {
-	Battery,
-	Clock,
-	Edit3,
-	FolderIcon,
-	Globe,
-	Plus,
-	Search,
-	StickyNote,
-	Trash2,
-	Wifi,
-} from "lucide-react";
+import { Battery, Clock, FolderIcon, Globe, Search, StickyNote, Wifi } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BackgroundSelector } from "../components/BackgroundSelector";
@@ -23,7 +13,7 @@ import type {
 	AppIcon,
 	AppUrlDialog,
 	BrowserWindowType,
-	ContextMenu,
+	ContextMenuType,
 	EditDialog,
 	FolderNameDialog,
 	FolderWindowType,
@@ -49,7 +39,7 @@ export default function MacosDesktop() {
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
 	const [draggedOver, setDraggedOver] = useState<GridPosition | null>(null);
-	const [contextMenu, setContextMenu] = useState<ContextMenu>({
+	const [contextMenu, setContextMenu] = useState<ContextMenuType>({
 		visible: false,
 		x: 0,
 		y: 0,
@@ -1057,70 +1047,14 @@ export default function MacosDesktop() {
 
 			{/* Context Menu */}
 			{contextMenu.visible && (
-				<div
-					className="context-menu fixed z-50 min-w-[150px] rounded-lg border border-white/20 bg-white/90 py-2 shadow-xl backdrop-blur-md"
-					style={{
-						left: contextMenu.x,
-						top: contextMenu.y,
-					}}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-							e.stopPropagation();
-						}
-					}}
-					onClick={(e) => e.stopPropagation()}
-				>
-					{contextMenu.existingApp ? (
-						// Menu for existing apps
-						<>
-							<button
-								onClick={showEditDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<Edit3 size={16} />
-								<span>Edit</span>
-							</button>
-							<button
-								onClick={deleteApp}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-red-600 text-sm transition-colors hover:bg-red-500/20"
-								type="button"
-							>
-								<Trash2 size={16} />
-								<span>Delete</span>
-							</button>
-						</>
-					) : (
-						// Menu for empty cells
-						<>
-							<button
-								onClick={showAppUrlDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<Plus size={16} />
-								<span>Create App</span>
-							</button>
-							<button
-								onClick={showMemoNameDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<StickyNote size={16} />
-								<span>Create Memo</span>
-							</button>
-							<button
-								onClick={showFolderNameDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<FolderIcon size={16} />
-								<span>Create Folder</span>
-							</button>
-						</>
-					)}
-				</div>
+				<ContextMenu
+					contextMenu={contextMenu}
+					showEditDialog={showEditDialog}
+					deleteApp={deleteApp}
+					showAppUrlDialog={showAppUrlDialog}
+					showMemoNameDialog={showMemoNameDialog}
+					showFolderNameDialog={showFolderNameDialog}
+				/>
 			)}
 
 			{/* Edit Dialog */}
