@@ -41,6 +41,10 @@ export function MemoWindow({
 					"prose prose-sm prose-li:marker:text-black prose-p:m-0 prose-headings:m-0 prose-ul:m-0 prose-ol:m-0 prose-blockquote:m-0 prose-hr:m-0 prose-pre:m-0 m-5 focus:outline-none text-left",
 			},
 		},
+		onUpdate: ({ editor }) => {
+			const markdown = editor.getHTML();
+			onContentChange(markdown);
+		},
 	});
 
 	const handleMouseDown = (e: React.MouseEvent) => {
