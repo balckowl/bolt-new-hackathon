@@ -1,7 +1,7 @@
 import { FolderIcon, Globe, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import type { AppIcon, FolderWindowType } from "../types/desktop";
+import type { AppIcon, FolderWindowType } from "../../types/desktop";
 
 export function FolderWindow({
 	window,

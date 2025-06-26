@@ -16,9 +16,9 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BackgroundSelector } from "../components/BackgroundSelector";
-import { BrowserWindow } from "../components/BrowserWindow";
-import { FolderWindow } from "../components/FolderWindow";
-import { MemoWindow } from "../components/MemoWindow";
+import { BrowserWindow } from "../components/window/BrowserWindow";
+import { FolderWindow } from "../components/window/FolderWindow";
+import { MemoWindow } from "../components/window/MemoWindow";
 import type {
 	AppIcon,
 	AppUrlDialog,
