@@ -1,34 +1,17 @@
 "use client";
 
-import TiptapEditor from "@/src/components/TiptapEditor";
-import { Button } from "@/src/components/ui/button";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import {
 	Battery,
-	Calculator,
-	Chrome,
 	Clock,
-	Download,
 	Edit3,
-	FileText,
-	Folder,
 	FolderIcon,
 	Globe,
-	type LucideIcon,
-	MapPin,
-	MessageCircle,
-	Minus,
-	Monitor,
-	Phone,
 	Plus,
 	Search,
-	Square,
 	StickyNote,
-	Terminal,
 	Trash2,
-	VideoIcon as Video,
 	Wifi,
-	X,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
