@@ -1161,96 +1161,70 @@ export default function MacosDesktop() {
 
 			{/* Memo Name Dialog */}
 			{memoNameDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="memo-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New Memo</h3>
-						<div className="mb-4">
-							<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
-								Memo Name
-							</label>
-							<input
-								id="memo-name"
-								type="text"
-								value={memoNameInput}
-								onChange={(e) => setMemoNameInput(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										createMemoWithName();
-									} else if (e.key === "Escape") {
-										cancelMemoCreation();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="Enter memo name..."
-								// autoFocus
-							/>
-						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelMemoCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createMemoWithName}
-								disabled={!memoNameInput.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								Save
-							</button>
-						</div>
+				<CommonDialog
+					visible={memoNameDialog.visible}
+					title="Create New Memo"
+					onCancel={cancelMemoCreation}
+					onSave={createMemoWithName}
+					saveDisabled={!memoNameInput.trim()}
+					dialogZIndex={nextzIndex}
+				>
+					<div className="mb-4">
+						<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
+							Memo Name
+						</label>
+						<input
+							id="memo-name"
+							type="text"
+							value={memoNameInput}
+							onChange={(e) => setMemoNameInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createMemoWithName();
+								} else if (e.key === "Escape") {
+									cancelMemoCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="Enter memo name..."
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Folder Name Dialog */}
 			{folderNameDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="folder-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New Folder</h3>
-						<div className="mb-4">
-							<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
-								Folder Name
-							</label>
-							<input
-								id="folder-name"
-								type="text"
-								value={folderNameInput}
-								onChange={(e) => setFolderNameInput(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										createFolderWithName();
-									} else if (e.key === "Escape") {
-										cancelFolderCreation();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="Enter folder name..."
-								// autoFocus
-							/>
-						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelFolderCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createFolderWithName}
-								disabled={!folderNameInput.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								Save
-							</button>
-						</div>
+				<CommonDialog
+					visible={folderNameDialog.visible}
+					title="Create New Folder"
+					onCancel={cancelFolderCreation}
+					onSave={createFolderWithName}
+					saveDisabled={!folderNameInput.trim()}
+					dialogZIndex={nextzIndex}
+				>
+					<div className="mb-4">
+						<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
+							Folder Name
+						</label>
+						<input
+							id="folder-name"
+							type="text"
+							value={folderNameInput}
+							onChange={(e) => setFolderNameInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createFolderWithName();
+								} else if (e.key === "Escape") {
+									cancelFolderCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="Enter folder name..."
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Memo Windows */}
