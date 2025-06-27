@@ -45,7 +45,7 @@ export interface FolderWindowType {
 	zIndex: number;
 }
 
-export interface ContextMenu {
+export interface ContextMenuType {
 	visible: boolean;
 	x: number;
 	y: number;

@@ -1,18 +1,9 @@
 "use client";
 
+import { CommonDialog } from "@/src/components/CommonDialog";
+import { ContextMenu } from "@/src/components/ContextMenu";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
-import {
-	Battery,
-	Clock,
-	Edit3,
-	FolderIcon,
-	Globe,
-	Plus,
-	Search,
-	StickyNote,
-	Trash2,
-	Wifi,
-} from "lucide-react";
+import { Battery, Clock, FolderIcon, Globe, Search, StickyNote, Wifi } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BackgroundSelector } from "../components/BackgroundSelector";
@@ -23,7 +14,7 @@ import type {
 	AppIcon,
 	AppUrlDialog,
 	BrowserWindowType,
-	ContextMenu,
+	ContextMenuType,
 	EditDialog,
 	FolderNameDialog,
 	FolderWindowType,
@@ -49,7 +40,7 @@ export default function MacosDesktop() {
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
 	const [draggedOver, setDraggedOver] = useState<GridPosition | null>(null);
-	const [contextMenu, setContextMenu] = useState<ContextMenu>({
+	const [contextMenu, setContextMenu] = useState<ContextMenuType>({
 		visible: false,
 		x: 0,
 		y: 0,
@@ -1057,302 +1048,187 @@ export default function MacosDesktop() {
 
 			{/* Context Menu */}
 			{contextMenu.visible && (
-				<div
-					className="context-menu fixed z-50 min-w-[150px] rounded-lg border border-white/20 bg-white/90 py-2 shadow-xl backdrop-blur-md"
-					style={{
-						left: contextMenu.x,
-						top: contextMenu.y,
-					}}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-							e.stopPropagation();
-						}
-					}}
-					onClick={(e) => e.stopPropagation()}
-				>
-					{contextMenu.existingApp ? (
-						// Menu for existing apps
-						<>
-							<button
-								onClick={showEditDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<Edit3 size={16} />
-								<span>Edit</span>
-							</button>
-							<button
-								onClick={deleteApp}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-red-600 text-sm transition-colors hover:bg-red-500/20"
-								type="button"
-							>
-								<Trash2 size={16} />
-								<span>Delete</span>
-							</button>
-						</>
-					) : (
-						// Menu for empty cells
-						<>
-							<button
-								onClick={showAppUrlDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<Plus size={16} />
-								<span>Create App</span>
-							</button>
-							<button
-								onClick={showMemoNameDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<StickyNote size={16} />
-								<span>Create Memo</span>
-							</button>
-							<button
-								onClick={showFolderNameDialog}
-								className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-								type="button"
-							>
-								<FolderIcon size={16} />
-								<span>Create Folder</span>
-							</button>
-						</>
-					)}
-				</div>
+				<ContextMenu
+					contextMenu={contextMenu}
+					showEditDialog={showEditDialog}
+					deleteApp={deleteApp}
+					showAppUrlDialog={showAppUrlDialog}
+					showMemoNameDialog={showMemoNameDialog}
+					showFolderNameDialog={showFolderNameDialog}
+				/>
 			)}
 
 			{/* Edit Dialog */}
 			{editDialog.visible && editDialog.app && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="edit-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">
-							Edit{" "}
-							{editDialog.app.type === "memo"
-								? "Memo"
-								: editDialog.app.type === "folder"
-									? "Folder"
-									: "App"}
-						</h3>
-						<div className="space-y-4">
-							<div>
-								<label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
-									Name
-								</label>
-								<input
-									id="edit-name"
-									type="text"
-									value={editDialog.newName}
-									onChange={(e) =>
-										setEditDialog((prev) => ({
-											...prev,
-											newName: e.target.value,
-										}))
-									}
-									onKeyDown={(e) => {
-										if (e.key === "Enter") {
-											saveEdit();
-										} else if (e.key === "Escape") {
-											cancelEdit();
-										}
-									}}
-									className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-									placeholder="Enter name..."
-									// autoFocus
-								/>
-							</div>
-							{editDialog.app.type === "website" && (
-								<div>
-									<label
-										htmlFor="edit-url"
-										className="mb-2 block font-medium text-gray-700 text-sm"
-									>
-										URL
-									</label>
-									<input
-										id="edit-url"
-										type="url"
-										value={editDialog.newUrl}
-										onChange={(e) =>
-											setEditDialog((prev) => ({
-												...prev,
-												newUrl: e.target.value,
-											}))
-										}
-										onKeyDown={(e) => {
-											if (e.key === "Enter") {
-												saveEdit();
-											} else if (e.key === "Escape") {
-												cancelEdit();
-											}
-										}}
-										className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-										placeholder="https://example.com"
-									/>
-								</div>
-							)}
-						</div>
-						<div className="mt-6 flex justify-end space-x-3">
-							<button
-								onClick={cancelEdit}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={saveEdit}
-								disabled={!editDialog.newName.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								Save
-							</button>
-						</div>
+				<CommonDialog
+					visible={editDialog.visible}
+					title={`Edit ${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
+					onCancel={cancelEdit}
+					onSave={saveEdit}
+					saveDisabled={!editDialog.newName.trim()}
+					dialogZIndex={nextzIndex}
+					dialogClassName="edit-dialog"
+				>
+					<div>
+						<label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
+							Name
+						</label>
+						<input
+							id="edit-name"
+							type="text"
+							value={editDialog.newName}
+							onChange={(e) =>
+								setEditDialog((prev) => ({
+									...prev,
+									newName: e.target.value,
+								}))
+							}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									saveEdit();
+								} else if (e.key === "Escape") {
+									cancelEdit();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="Enter name..."
+							// autoFocus
+						/>
 					</div>
-				</div>
-			)}
-
-			{/* App URL Dialog */}
-			{appUrlDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="app-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New App</h3>
-						<div className="mb-4">
-							<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
-								Website URL
+					{editDialog.app.type === "website" && (
+						<div>
+							<label htmlFor="edit-url" className="mb-2 block font-medium text-gray-700 text-sm">
+								URL
 							</label>
 							<input
-								id="app-url"
+								id="edit-url"
 								type="url"
-								value={appUrlInput}
-								onChange={(e) => setAppUrlInput(e.target.value)}
+								value={editDialog.newUrl}
+								onChange={(e) =>
+									setEditDialog((prev) => ({
+										...prev,
+										newUrl: e.target.value,
+									}))
+								}
 								onKeyDown={(e) => {
 									if (e.key === "Enter") {
-										createAppWithUrl();
+										saveEdit();
 									} else if (e.key === "Escape") {
-										cancelAppCreation();
+										cancelEdit();
 									}
 								}}
 								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
 								placeholder="https://example.com"
-								// autoFocus
 							/>
 						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelAppCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createAppWithUrl}
-								disabled={!appUrlInput.trim() || isLoadingApp}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								{isLoadingApp ? "Creating..." : "Save"}
-							</button>
-						</div>
+					)}
+				</CommonDialog>
+			)}
+
+			{/* App URL Dialog */}
+			{appUrlDialog.visible && (
+				<CommonDialog
+					visible={appUrlDialog.visible}
+					title="Create New App"
+					onCancel={cancelAppCreation}
+					onSave={createAppWithUrl}
+					saveDisabled={!appUrlInput.trim() || isLoadingApp}
+					saveLabel={isLoadingApp ? "Creating..." : "Save"}
+					dialogZIndex={nextzIndex}
+					dialogClassName="app-dialog"
+				>
+					<div className="mb-4">
+						<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
+							Website URL
+						</label>
+						<input
+							id="app-url"
+							type="url"
+							value={appUrlInput}
+							onChange={(e) => setAppUrlInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createAppWithUrl();
+								} else if (e.key === "Escape") {
+									cancelAppCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="https://example.com"
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Memo Name Dialog */}
 			{memoNameDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="memo-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New Memo</h3>
-						<div className="mb-4">
-							<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
-								Memo Name
-							</label>
-							<input
-								id="memo-name"
-								type="text"
-								value={memoNameInput}
-								onChange={(e) => setMemoNameInput(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										createMemoWithName();
-									} else if (e.key === "Escape") {
-										cancelMemoCreation();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="Enter memo name..."
-								// autoFocus
-							/>
-						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelMemoCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createMemoWithName}
-								disabled={!memoNameInput.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								Save
-							</button>
-						</div>
+				<CommonDialog
+					visible={memoNameDialog.visible}
+					title="Create New Memo"
+					onCancel={cancelMemoCreation}
+					onSave={createMemoWithName}
+					saveDisabled={!memoNameInput.trim()}
+					dialogZIndex={nextzIndex}
+					dialogClassName="memo-dialog"
+				>
+					<div className="mb-4">
+						<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
+							Memo Name
+						</label>
+						<input
+							id="memo-name"
+							type="text"
+							value={memoNameInput}
+							onChange={(e) => setMemoNameInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createMemoWithName();
+								} else if (e.key === "Escape") {
+									cancelMemoCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="Enter memo name..."
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Folder Name Dialog */}
 			{folderNameDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="folder-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New Folder</h3>
-						<div className="mb-4">
-							<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
-								Folder Name
-							</label>
-							<input
-								id="folder-name"
-								type="text"
-								value={folderNameInput}
-								onChange={(e) => setFolderNameInput(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										createFolderWithName();
-									} else if (e.key === "Escape") {
-										cancelFolderCreation();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="Enter folder name..."
-								// autoFocus
-							/>
-						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelFolderCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createFolderWithName}
-								disabled={!folderNameInput.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								Save
-							</button>
-						</div>
+				<CommonDialog
+					visible={folderNameDialog.visible}
+					title="Create New Folder"
+					onCancel={cancelFolderCreation}
+					onSave={createFolderWithName}
+					saveDisabled={!folderNameInput.trim()}
+					dialogZIndex={nextzIndex}
+					dialogClassName="folder-dialog"
+				>
+					<div className="mb-4">
+						<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
+							Folder Name
+						</label>
+						<input
+							id="folder-name"
+							type="text"
+							value={folderNameInput}
+							onChange={(e) => setFolderNameInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createFolderWithName();
+								} else if (e.key === "Escape") {
+									cancelFolderCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="Enter folder name..."
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Memo Windows */}
