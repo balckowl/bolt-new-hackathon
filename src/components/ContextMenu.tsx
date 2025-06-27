@@ -24,6 +24,7 @@ export const ContextMenu = ({
 			style={{
 				left: contextMenu.x,
 				top: contextMenu.y,
+				zIndex: 9999,
 			}}
 			onKeyDown={(e) => {
 				if (e.key === "Enter" || e.key === " ") {
