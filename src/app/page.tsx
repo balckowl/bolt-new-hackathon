@@ -1126,49 +1126,37 @@ export default function MacosDesktop() {
 
 			{/* App URL Dialog */}
 			{appUrlDialog.visible && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-					<div className="app-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-						<h3 className="mb-4 font-semibold text-gray-800 text-lg">Create New App</h3>
-						<div className="mb-4">
-							<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
-								Website URL
-							</label>
-							<input
-								id="app-url"
-								type="url"
-								value={appUrlInput}
-								onChange={(e) => setAppUrlInput(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										createAppWithUrl();
-									} else if (e.key === "Escape") {
-										cancelAppCreation();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="https://example.com"
-								// autoFocus
-							/>
-						</div>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={cancelAppCreation}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
-								type="button"
-							>
-								Cancel
-							</button>
-							<button
-								onClick={createAppWithUrl}
-								disabled={!appUrlInput.trim() || isLoadingApp}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-								type="button"
-							>
-								{isLoadingApp ? "Creating..." : "Save"}
-							</button>
-						</div>
+				<CommonDialog
+					visible={appUrlDialog.visible}
+					title="Create New App"
+					onCancel={cancelAppCreation}
+					onSave={createAppWithUrl}
+					saveDisabled={!appUrlInput.trim() || isLoadingApp}
+					saveLabel={isLoadingApp ? "Creating..." : "Save"}
+					dialogZIndex={nextzIndex}
+				>
+					<div className="mb-4">
+						<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
+							Website URL
+						</label>
+						<input
+							id="app-url"
+							type="url"
+							value={appUrlInput}
+							onChange={(e) => setAppUrlInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									createAppWithUrl();
+								} else if (e.key === "Escape") {
+									cancelAppCreation();
+								}
+							}}
+							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+							placeholder="https://example.com"
+							// autoFocus
+						/>
 					</div>
-				</div>
+				</CommonDialog>
 			)}
 
 			{/* Memo Name Dialog */}
