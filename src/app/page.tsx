@@ -1067,6 +1067,7 @@ export default function MacosDesktop() {
 					onSave={saveEdit}
 					saveDisabled={!editDialog.newName.trim()}
 					dialogZIndex={nextzIndex}
+					dialogClassName="edit-dialog"
 				>
 					<div>
 						<label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
@@ -1134,6 +1135,7 @@ export default function MacosDesktop() {
 					saveDisabled={!appUrlInput.trim() || isLoadingApp}
 					saveLabel={isLoadingApp ? "Creating..." : "Save"}
 					dialogZIndex={nextzIndex}
+					dialogClassName="app-dialog"
 				>
 					<div className="mb-4">
 						<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
@@ -1168,6 +1170,7 @@ export default function MacosDesktop() {
 					onSave={createMemoWithName}
 					saveDisabled={!memoNameInput.trim()}
 					dialogZIndex={nextzIndex}
+					dialogClassName="memo-dialog"
 				>
 					<div className="mb-4">
 						<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
@@ -1202,6 +1205,7 @@ export default function MacosDesktop() {
 					onSave={createFolderWithName}
 					saveDisabled={!folderNameInput.trim()}
 					dialogZIndex={nextzIndex}
+					dialogClassName="folder-dialog"
 				>
 					<div className="mb-4">
 						<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">

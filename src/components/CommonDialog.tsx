@@ -10,6 +10,7 @@ type Props = {
 	cancelLabel?: string;
 	saveLabel?: string;
 	dialogZIndex: number;
+	dialogClassName: string;
 };
 
 export const CommonDialog = ({
@@ -22,14 +23,17 @@ export const CommonDialog = ({
 	cancelLabel = "Cancel",
 	saveLabel = "Save",
 	dialogZIndex,
+	dialogClassName = "",
 }: Props) => {
 	if (!visible) return null;
 	return (
 		<div
-			className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+			className="dialog fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 			style={{ zIndex: dialogZIndex }}
 		>
-			<div className="min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
+			<div
+				className={`min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl ${dialogClassName}`}
+			>
 				<h3 className="mb-4 font-semibold text-gray-800 text-lg">{title}</h3>
 				<div className="mb-4">{children}</div>
 				<div className="mt-6 flex justify-end space-x-3">
