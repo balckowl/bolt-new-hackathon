@@ -77,7 +77,7 @@ export const setOsNameHandler: RouteHandler<typeof setOsNameRoute> = async (c) =
 							{
 								id: "app-1",
 								name: "メモ帳",
-								iconKey: "Note",
+								iconKey: "StickyNote",
 								color: "#FFEB3B",
 								type: "memo",
 								content: "これはサンプルのメモです。",
