@@ -1,21 +1,17 @@
 import { auth } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 import type { RouteHandler } from "@hono/zod-openapi";
+import type { WithAuthenticatedRequest } from "../middleware/authMIddleware";
 import type { checkOsNameRoute, setOsNameRoute } from "../routes/user.route";
 
-export const checkOsNameHandler: RouteHandler<typeof checkOsNameRoute> = async (c) => {
+export const checkOsNameHandler: RouteHandler<
+	typeof checkOsNameRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { osName } = c.req.valid("json");
 
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
 	const me = await prisma.user.findUnique({
-		where: { id: session.user.id },
+		where: { id: c.var.userId },
 		select: { osName: true },
 	});
 
@@ -36,19 +32,14 @@ export const checkOsNameHandler: RouteHandler<typeof checkOsNameRoute> = async (
 	return c.json(null, 200);
 };
 
-export const setOsNameHandler: RouteHandler<typeof setOsNameRoute> = async (c) => {
+export const setOsNameHandler: RouteHandler<
+	typeof setOsNameRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { osName } = c.req.valid("json");
 
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
 	const me = await prisma.user.findUnique({
-		where: { id: session.user.id },
+		where: { id: c.var.userId },
 		select: { osName: true },
 	});
 
@@ -67,7 +58,7 @@ export const setOsNameHandler: RouteHandler<typeof setOsNameRoute> = async (c) =
 	}
 
 	await prisma.user.update({
-		where: { id: session.user.id },
+		where: { id: c.var.userId },
 		data: {
 			osName,
 			desktop: {

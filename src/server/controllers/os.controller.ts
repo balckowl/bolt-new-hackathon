@@ -1,6 +1,7 @@
 import { auth } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 import type { RouteHandler } from "@hono/zod-openapi";
+import type { WithAuthenticatedRequest } from "../middleware/authMIddleware";
 import { stateSchema } from "../models/os.schema";
 import type {
 	getDesktopStateRoute,
@@ -9,16 +10,11 @@ import type {
 	updateVisibilityRoute,
 } from "../routes/os.route";
 
-export const getDesktopStateHandler: RouteHandler<typeof getDesktopStateRoute> = async (c) => {
+export const getDesktopStateHandler: RouteHandler<
+	typeof getDesktopStateRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { osName } = c.req.param();
-
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
 
 	const userWithDesktop = await prisma.user.findUnique({
 		where: { osName },
@@ -41,7 +37,11 @@ export const getDesktopStateHandler: RouteHandler<typeof getDesktopStateRoute> =
 	const rawJson = userWithDesktop.desktop.state;
 	const parsedState = stateSchema.parse(rawJson);
 
-	const isEdit = session.user.id === userWithDesktop.id;
+	const session = await auth.api.getSession({
+		headers: c.req.raw.headers,
+	});
+
+	const isEdit = session?.user.id === userWithDesktop.id;
 
 	const result = {
 		state: parsedState,
@@ -53,21 +53,14 @@ export const getDesktopStateHandler: RouteHandler<typeof getDesktopStateRoute> =
 	return c.json(result, 200);
 };
 
-export const updateDesktopStateHandler: RouteHandler<typeof updateDesktopStateRoute> = async (
-	c,
-) => {
+export const updateDesktopStateHandler: RouteHandler<
+	typeof updateDesktopStateRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { state } = c.req.valid("json");
 
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
 	const updateResult = await prisma.desktop.updateMany({
-		where: { userId: session.user.id },
+		where: { userId: c.var.userId },
 		data: { state },
 	});
 
@@ -76,7 +69,7 @@ export const updateDesktopStateHandler: RouteHandler<typeof updateDesktopStateRo
 	}
 
 	const desktop = await prisma.desktop.findUnique({
-		where: { userId: session.user.id },
+		where: { userId: c.var.userId },
 		select: { state: true, isPublic: true, background: true },
 	});
 
@@ -98,21 +91,14 @@ export const updateDesktopStateHandler: RouteHandler<typeof updateDesktopStateRo
 	return c.json(result, 200);
 };
 
-export const updateDesktopVisibilityHandler: RouteHandler<typeof updateVisibilityRoute> = async (
-	c,
-) => {
+export const updateDesktopVisibilityHandler: RouteHandler<
+	typeof updateVisibilityRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { isPublic } = c.req.valid("json");
 
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
 	const result = await prisma.desktop.updateMany({
-		where: { userId: session.user.id },
+		where: { userId: c.var.userId },
 		data: { isPublic },
 	});
 
@@ -121,21 +107,14 @@ export const updateDesktopVisibilityHandler: RouteHandler<typeof updateVisibilit
 	return c.json(null, 200);
 };
 
-export const updateDesktopBackgroundHandler: RouteHandler<typeof updateBackgroundRoute> = async (
-	c,
-) => {
+export const updateDesktopBackgroundHandler: RouteHandler<
+	typeof updateBackgroundRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
 	const { background } = c.req.valid("json");
 
-	const session = await auth.api.getSession({
-		headers: c.req.raw.headers,
-	});
-
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
 	const result = await prisma.desktop.updateMany({
-		where: { userId: session.user.id },
+		where: { userId: c.var.userId },
 		data: { background },
 	});
 

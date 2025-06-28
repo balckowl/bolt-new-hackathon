@@ -9,6 +9,8 @@ export const env = createEnv({
 		BETTER_AUTH_URL: z.string().url(),
 		GOOGLE_CLIENT_ID: z.string(),
 		GOOGLE_CLIENT_SECRET: z.string(),
+		API_DOC_BASIC_AUTH_USER: z.string(),
+		API_DOC_BASIC_AUTH_PASS: z.string(),
 	},
 	client: {
 		NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -21,5 +23,7 @@ export const env = createEnv({
 		BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
 		GOOGLE_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+		API_DOC_BASIC_AUTH_USER: process.env.API_DOC_BASIC_AUTH_USER,
+		API_DOC_BASIC_AUTH_PASS: process.env.API_DOC_BASIC_AUTH_PASS,
 	},
 });

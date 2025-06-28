@@ -3,7 +3,7 @@ import { hono } from "@/src/lib/hono-client";
 import { headers } from "next/headers";
 
 export default async function Page({ params }: { params: { osName: string } }) {
-	const res = await hono.api.desktop[":osName"].$get(
+	const res = await hono.api.desktop[":osName"].state.$get(
 		{
 			param: {
 				osName: params.osName,
