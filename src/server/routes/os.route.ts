@@ -8,7 +8,7 @@ import {
 import { osNameBaseSchema } from "../models/user.schema";
 
 export const getDesktopStateRoute = createRoute({
-	path: "/desktop/{osName}",
+	path: "/desktop/{osName}/state",
 	method: "get",
 	description: "デスクトップの状態を取得",
 	request: {
