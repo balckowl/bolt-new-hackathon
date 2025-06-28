@@ -10,7 +10,7 @@ const appSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	//enumで与える
-	iconKey: z.string(),
+	iconKey: z.enum(["StickyNote", "Globe", "FolderIcon"]),
 	color: z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
 	type: z.enum(["app", "memo", "website", "folder"]).optional(),
 	content: z.string().optional(),
@@ -81,7 +81,7 @@ export const stateSchema = z
 				{
 					id: "app-1",
 					name: "メモ帳",
-					iconKey: "Note",
+					iconKey: "StickyNote",
 					color: "#FFEB3B",
 					type: "memo",
 					content: "これはサンプルのメモです。",
@@ -98,7 +98,7 @@ export const stateSchema = z
 				{
 					id: "app-3",
 					name: "フォルダ",
-					iconKey: "Folder",
+					iconKey: "FolderIcon",
 					color: "#FFC107",
 					type: "folder",
 				},

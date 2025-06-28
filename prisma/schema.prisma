@@ -48,7 +48,6 @@ model Desktop {
   id     String @id @default(uuid())
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
-  name String
   state Json 
   isPublic Boolean @default(false)
   background BackgroundOption @default(SUNSET)

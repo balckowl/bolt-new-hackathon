@@ -72,9 +72,24 @@ export const setOsNameHandler: RouteHandler<typeof setOsNameRoute> = async (c) =
 			osName,
 			desktop: {
 				create: {
-					name: "My Desktop",
-					state: {},
-					isPublic: false,
+					state: {
+						apps: [
+							{
+								id: "app-1",
+								name: "メモ帳",
+								iconKey: "Note",
+								color: "#FFEB3B",
+								type: "memo",
+								content: "これはサンプルのメモです。",
+							},
+						],
+						appPositions: {
+							"app-1": {
+								row: 0,
+								col: 0,
+							},
+						},
+					},
 				},
 			},
 		},

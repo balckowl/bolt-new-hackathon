@@ -80,7 +80,6 @@ export const UserScalarFieldEnumSchema = z.enum([
 export const DesktopScalarFieldEnumSchema = z.enum([
 	"id",
 	"userId",
-	"name",
 	"state",
 	"isPublic",
 	"background",
@@ -183,7 +182,6 @@ export const DesktopSchema = z.object({
 	background: BackgroundOptionSchema,
 	id: z.string().uuid(),
 	userId: z.string(),
-	name: z.string(),
 	state: JsonValueSchema,
 	isPublic: z.boolean(),
 	createdAt: z.coerce.date(),
@@ -319,7 +317,6 @@ export const DesktopSelectSchema: z.ZodType<Prisma.DesktopSelect> = z
 	.object({
 		id: z.boolean().optional(),
 		userId: z.boolean().optional(),
-		name: z.boolean().optional(),
 		state: z.boolean().optional(),
 		isPublic: z.boolean().optional(),
 		background: z.boolean().optional(),
@@ -625,7 +622,6 @@ export const DesktopWhereInputSchema: z.ZodType<Prisma.DesktopWhereInput> = z
 			.optional(),
 		id: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
 		userId: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
-		name: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
 		state: z.lazy(() => JsonFilterSchema).optional(),
 		isPublic: z.union([z.lazy(() => BoolFilterSchema), z.boolean()]).optional(),
 		background: z
@@ -644,7 +640,6 @@ export const DesktopOrderByWithRelationInputSchema: z.ZodType<Prisma.DesktopOrde
 		.object({
 			id: z.lazy(() => SortOrderSchema).optional(),
 			userId: z.lazy(() => SortOrderSchema).optional(),
-			name: z.lazy(() => SortOrderSchema).optional(),
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
@@ -688,7 +683,6 @@ export const DesktopWhereUniqueInputSchema: z.ZodType<Prisma.DesktopWhereUniqueI
 						z.lazy(() => DesktopWhereInputSchema).array(),
 					])
 					.optional(),
-				name: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
 				state: z.lazy(() => JsonFilterSchema).optional(),
 				isPublic: z.union([z.lazy(() => BoolFilterSchema), z.boolean()]).optional(),
 				background: z
@@ -711,7 +705,6 @@ export const DesktopOrderByWithAggregationInputSchema: z.ZodType<Prisma.DesktopO
 		.object({
 			id: z.lazy(() => SortOrderSchema).optional(),
 			userId: z.lazy(() => SortOrderSchema).optional(),
-			name: z.lazy(() => SortOrderSchema).optional(),
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
@@ -744,7 +737,6 @@ export const DesktopScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Deskt
 				.optional(),
 			id: z.union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()]).optional(),
 			userId: z.union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()]).optional(),
-			name: z.union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()]).optional(),
 			state: z.lazy(() => JsonWithAggregatesFilterSchema).optional(),
 			isPublic: z.union([z.lazy(() => BoolWithAggregatesFilterSchema), z.boolean()]).optional(),
 			background: z
@@ -1511,7 +1503,6 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
 export const DesktopCreateInputSchema: z.ZodType<Prisma.DesktopCreateInput> = z
 	.object({
 		id: z.string().uuid().optional(),
-		name: z.string(),
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
@@ -1525,7 +1516,6 @@ export const DesktopUncheckedCreateInputSchema: z.ZodType<Prisma.DesktopUnchecke
 	.object({
 		id: z.string().uuid().optional(),
 		userId: z.string(),
-		name: z.string(),
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
@@ -1539,7 +1529,6 @@ export const DesktopUpdateInputSchema: z.ZodType<Prisma.DesktopUpdateInput> = z
 		id: z
 			.union([z.string().uuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 			.optional(),
-		name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 		isPublic: z.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)]).optional(),
 		background: z
@@ -1564,7 +1553,6 @@ export const DesktopUncheckedUpdateInputSchema: z.ZodType<Prisma.DesktopUnchecke
 			.union([z.string().uuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 			.optional(),
 		userId: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
-		name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 		isPublic: z.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)]).optional(),
 		background: z
@@ -1586,7 +1574,6 @@ export const DesktopCreateManyInputSchema: z.ZodType<Prisma.DesktopCreateManyInp
 	.object({
 		id: z.string().uuid().optional(),
 		userId: z.string(),
-		name: z.string(),
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
@@ -1601,7 +1588,6 @@ export const DesktopUpdateManyMutationInputSchema: z.ZodType<Prisma.DesktopUpdat
 			id: z
 				.union([z.string().uuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 				.optional(),
-			name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 			isPublic: z
 				.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)])
@@ -1630,7 +1616,6 @@ export const DesktopUncheckedUpdateManyInputSchema: z.ZodType<Prisma.DesktopUnch
 			userId: z
 				.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 				.optional(),
-			name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 			isPublic: z
 				.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)])
@@ -2429,7 +2414,6 @@ export const DesktopCountOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopCo
 		.object({
 			id: z.lazy(() => SortOrderSchema).optional(),
 			userId: z.lazy(() => SortOrderSchema).optional(),
-			name: z.lazy(() => SortOrderSchema).optional(),
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
@@ -2443,7 +2427,6 @@ export const DesktopMaxOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopMaxO
 		.object({
 			id: z.lazy(() => SortOrderSchema).optional(),
 			userId: z.lazy(() => SortOrderSchema).optional(),
-			name: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
@@ -2456,7 +2439,6 @@ export const DesktopMinOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopMinO
 		.object({
 			id: z.lazy(() => SortOrderSchema).optional(),
 			userId: z.lazy(() => SortOrderSchema).optional(),
-			name: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
@@ -3658,7 +3640,6 @@ export const DesktopCreateWithoutUserInputSchema: z.ZodType<Prisma.DesktopCreate
 	z
 		.object({
 			id: z.string().uuid().optional(),
-			name: z.string(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 			isPublic: z.boolean().optional(),
 			background: z.lazy(() => BackgroundOptionSchema).optional(),
@@ -3671,7 +3652,6 @@ export const DesktopUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Desk
 	z
 		.object({
 			id: z.string().uuid().optional(),
-			name: z.string(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 			isPublic: z.boolean().optional(),
 			background: z.lazy(() => BackgroundOptionSchema).optional(),
@@ -3887,7 +3867,6 @@ export const DesktopUpdateWithoutUserInputSchema: z.ZodType<Prisma.DesktopUpdate
 			id: z
 				.union([z.string().uuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 				.optional(),
-			name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 			isPublic: z
 				.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)])
@@ -3913,7 +3892,6 @@ export const DesktopUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Desk
 			id: z
 				.union([z.string().uuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
 				.optional(),
-			name: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]).optional(),
 			isPublic: z
 				.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputSchema)])
