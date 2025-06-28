@@ -144,7 +144,6 @@ export function MemoWindow({
 					</div>
 					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
 				</div>
-				<Button onClick={handleSaveMemo}>Save</Button>
 			</div>
 
 			{/* Window Content */}
