@@ -2,6 +2,7 @@
 
 import { CommonDialog } from "@/src/components/CommonDialog";
 import { ContextMenu } from "@/src/components/ContextMenu";
+import { Button } from "@/src/components/ui/button";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import { Battery, Clock, FolderIcon, Globe, Search, StickyNote, Wifi } from "lucide-react";
 import Image from "next/image";
@@ -79,6 +80,21 @@ export default function MacosDesktop() {
 	const [background, setBackground] = useState("linear-gradient(135deg, #667eea 0%, #764ba2 100%)");
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
+
+	//差分検知用の初期値
+	const [originalApps, setOrigianlApps] = useState<AppIcon[]>([
+		{
+			id: "memo-default",
+			name: "My Notes",
+			icon: StickyNote,
+			color: "bg-yellow-300",
+			type: "memo",
+			content: "Welcome to your memo app!\n\nClick on this memo to start writing notes.",
+		},
+	]);
+	const [originalAppPositions, setOriginalAppPositions] = useState<Map<string, GridPosition>>(
+		new Map(),
+	);
 
 	const dragSourceRef = useRef<GridPosition | null>(null);
 
@@ -760,6 +776,18 @@ export default function MacosDesktop() {
 			setFolderWindows((prev) => [...prev, newWindow]);
 			setNextzIndex((prev) => prev + 1);
 		}
+	};
+
+	// difference detection
+	const appsChanged = JSON.stringify(apps) !== JSON.stringify(originalApps);
+	const positionsChanged = JSON.stringify(appPositions) !== JSON.stringify(originalAppPositions);
+	const showDesktopSaveBtn = appsChanged || positionsChanged;
+
+	const handleSaveDesktop = () => {
+		setOrigianlApps(apps);
+		setOriginalAppPositions(appPositions);
+		//更新するリクエストを送る
+		// console.log("Saving desktop state...");
 	};
 
 	const updateMemoContent = (windowId: string, content: string) => {
@@ -1486,6 +1514,14 @@ export default function MacosDesktop() {
 						))}
 				</div>
 			</div>
+			{showDesktopSaveBtn && (
+				<div className="fixed right-6 bottom-6 z-50 rounded-md bg-white p-4 text-black text-sm shadow-lg transition">
+					<p>Do you want to save changes?</p>
+					<Button size="sm" className="mt-2" onClick={handleSaveDesktop}>
+						Save
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }
