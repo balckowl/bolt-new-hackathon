@@ -30,12 +30,32 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  
+
   /// @zod.string.min(2, { message: "OS 名は2文字以上で入力してください。" }).max(10, { message: "OS 名は10文字以下で入力してください。" })
-  osName       String? @unique
+  osName  String?  @unique
+  desktop Desktop?
 
   @@unique([email])
   @@map("user")
+}
+
+enum BackgroundOption {
+  SUNSET
+  FOREST
+  OCEAN
+}
+model Desktop {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  name String
+  state Json 
+  isPublic Boolean @default(false)
+  background BackgroundOption @default(SUNSET)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("desktop")
 }
 
 model Session {

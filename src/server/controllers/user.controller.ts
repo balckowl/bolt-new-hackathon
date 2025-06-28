@@ -68,8 +68,16 @@ export const setOsNameHandler: RouteHandler<typeof setOsNameRoute> = async (c) =
 
 	await prisma.user.update({
 		where: { id: session.user.id },
-		data: { osName },
-		select: { osName: true },
+		data: {
+			osName,
+			desktop: {
+				create: {
+					name: "My Desktop",
+					state: {},
+					isPublic: false,
+				},
+			},
+		},
 	});
 
 	return c.json(null, 201);
