@@ -11,6 +11,7 @@ type Props = {
 	isPublic: boolean;
 	setIsPublic: (isPublic: boolean) => void;
 	osName: string;
+	isEditable: boolean;
 };
 
 export const MenuBar = ({
@@ -21,6 +22,7 @@ export const MenuBar = ({
 	isPublic,
 	setIsPublic,
 	osName,
+	isEditable = false,
 }: Props) => {
 	const formatTime = (date: Date) => {
 		return date.toLocaleTimeString("en-US", {
@@ -47,17 +49,21 @@ export const MenuBar = ({
 						<p className="mb-1 text-sm"> {osName ? osName : "🍎"}</p>
 					</div>
 					{/* Background Selector */}
-					<BackgroundSelector
-						onBackgroundChange={onBackgroundChange}
-						currentBackground={background}
-						setBackground={setBackground}
-					/>
+					{isEditable && (
+						<BackgroundSelector
+							onBackgroundChange={onBackgroundChange}
+							currentBackground={background}
+							setBackground={setBackground}
+						/>
+					)}
 				</div>
 				<div className="flex items-center space-x-3 text-sm text-white">
 					{/* public or private toggle */}
-					<div className="flex items-center">
-						<PublicSelector isPublic={isPublic} setIsPublic={setIsPublic} />
-					</div>
+					{isEditable && (
+						<div className="flex items-center">
+							<PublicSelector isPublic={isPublic} setIsPublic={setIsPublic} />
+						</div>
+					)}
 
 					{/* Time */}
 					<div className="flex items-center space-x-1">

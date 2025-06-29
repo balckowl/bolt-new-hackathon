@@ -92,6 +92,9 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	// public or private
 	const [isPublic, setIsPublic] = useState(false);
 
+	// isEdit
+	const isEdit = desktop.isEdit ?? false;
+
 	const dragSourceRef = useRef<GridPosition | null>(null);
 
 	// Update time every second
@@ -186,6 +189,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	};
 
 	const handleDragStart = (e: React.DragEvent, appId: string) => {
+		if (!isEdit) return;
 		setDraggedApp(appId);
 		const position = appPositions.get(appId);
 		if (position) {
@@ -222,6 +226,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	};
 
 	const handleDrop = (e: React.DragEvent, targetRow: number, targetCol: number) => {
+		if (!isEdit) return;
 		e.preventDefault();
 
 		if (!draggedApp || !dragSourceRef.current) return;
@@ -263,6 +268,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	};
 
 	const handleRightClick = (e: React.MouseEvent, row: number, col: number) => {
+		if (isEdit === false) return;
 		e.preventDefault();
 		e.stopPropagation();
 		const existingApp = getAppAtPosition(row, col);
@@ -1013,7 +1019,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 					>
 						{app && (
 							<div
-								draggable
+								draggable={isEdit}
 								onDragStart={(e) => handleDragStart(e, app.id)}
 								onDragEnd={handleDragEnd}
 								onClick={() => handleAppClick(app)}
@@ -1066,6 +1072,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				isPublic={isPublic}
 				setIsPublic={setIsPublic}
 				osName={osName}
+				isEditable={isEdit}
 			/>
 
 			{/* Desktop grid */}
@@ -1273,6 +1280,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 						<MemoWindow
 							key={window.id}
 							window={window}
+							isEditable={isEdit}
 							onClose={() => closeMemoWindow(window.id)}
 							onMinimize={() => minimizeMemoWindow(window.id)}
 							onContentChange={(content) => updateMemoContent(window.id, content)}
@@ -1521,7 +1529,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 						))}
 				</div>
 			</div>
-			{showDesktopSaveBtn && (
+			{showDesktopSaveBtn && isEdit && (
 				<div className="fixed right-6 bottom-6 z-50 rounded-md bg-white p-4 text-black text-sm shadow-lg transition">
 					<p>Do you want to save changes?</p>
 					<Button size="sm" className="mt-2" onClick={handleSaveDesktop}>
