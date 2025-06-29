@@ -837,6 +837,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 		const state = {
 			apps: apiApps,
 			appPositions: Object.fromEntries(appPositions.entries()),
+			folderContents: Object.fromEntries(folderContents.entries()),
 		};
 		const prevOriginalApps = originalApps;
 		const prevOriginalAppPositions = originalAppPositions;
