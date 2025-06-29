@@ -16,10 +16,17 @@ export default async function Page({ params }: { params: { osName: string } }) {
 			},
 		},
 	);
-	const data = await res.json();
-	if (res.status === 404 || !data) {
+
+	if (res.status === 404) {
 		return <div>No desktop information</div>;
 	}
+
+	if (res.status === 403) {
+		return <div>This OS is not available for viewing.</div>;
+	}
+
+	const data = await res.json();
+
 	return (
 		<>
 			<MacosDesktop desktop={data} osName={params.osName} />

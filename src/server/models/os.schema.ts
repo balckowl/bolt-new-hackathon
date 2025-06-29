@@ -22,11 +22,15 @@ export const stateSchema = z
 	.object({
 		apps: z.array(appSchema).default([]),
 		appPositions: z.record(positionSchema).default({}),
+		folderContents: z.record(z.array(z.string())).default({}),
 	})
 	.superRefine((data, ctx) => {
-		const appIds = data.apps.map((app) => app.id);
+		const { apps, appPositions, folderContents } = data;
+		const appIds = apps.map((a) => a.id);
+		const posIds = Object.keys(appPositions);
+		const childIds = Object.values(folderContents).flat();
 
-		// 1) apps の重複チェック
+		// 1) apps と appPositions の重複チェック（従来通り）
 		const dupAppIds = appIds.filter((id, i) => appIds.indexOf(id) !== i);
 		if (dupAppIds.length) {
 			ctx.addIssue({
@@ -36,42 +40,59 @@ export const stateSchema = z
 			});
 		}
 
-		const posEntries = Object.entries(data.appPositions); // [ [id, {row,col}], ... ]
-		const posIds = posEntries.map(([id]) => id);
-
-		// 2) apps → appPositions 存在チェック
-		const missingInPos = appIds.filter((id) => !posIds.includes(id));
-		if (missingInPos.length) {
+		// 2) apps → appPositions 存在チェック（ルートに置かれるべきもの全てがポジションを持つか？）
+		//    ただし、childIds（ネストされるもの）は除外
+		const expectedRootIds = appIds.filter((id) => !childIds.includes(id));
+		const missingRoot = expectedRootIds.filter((id) => !posIds.includes(id));
+		if (missingRoot.length) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["appPositions"],
-				message: `appPositions に missing です: ${missingInPos.join(", ")}`,
+				message: `ルートのアプリにポジションがありません: ${missingRoot.join(", ")}`,
 			});
 		}
 
-		// 3) appPositions → apps 余分キーチェック
-		const extraInPos = posIds.filter((id) => !appIds.includes(id));
-		if (extraInPos.length) {
+		// 3) appPositions → apps 余分キーチェック（ネストされたものが混ざっていないか）
+		const extraRoot = posIds.filter((id) => !expectedRootIds.includes(id));
+		if (extraRoot.length) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["appPositions"],
-				message: `appPositions に apps にないキーがあります: ${extraInPos.join(", ")}`,
+				message: `appPositions にルート以外のキーがあります: ${extraRoot.join(", ")}`,
 			});
 		}
 
-		// 4) row/col の重複チェック
-		//    位置を文字列化して重複検出
-		const coords = posEntries.map(([_, pos]) => `${pos.row},${pos.col}`);
+		// 4) folderContents のキー／値チェック
+		//   - キーは必ず type==="folder" のものだけ
+		//   - 子要素は必ず apps に含まれているものだけ
+		for (const [folderId, children] of Object.entries(folderContents)) {
+			const folderApp = apps.find((a) => a.id === folderId);
+			if (!folderApp || folderApp.type !== "folder") {
+				ctx.addIssue({
+					code: "custom",
+					path: ["folderContents", folderId],
+					message: `"${folderId}" はフォルダ型ではありません。`,
+				});
+			}
+			const invalidChildren = children.filter((cid) => !appIds.includes(cid));
+			if (invalidChildren.length) {
+				ctx.addIssue({
+					code: "custom",
+					path: ["folderContents", folderId],
+					message: `${folderId} に存在しないアプリIDが含まれています: ${invalidChildren.join(", ")}`,
+				});
+			}
+		}
+
+		// 5) row/col の重複チェック（従来通り）
+		const coords = Object.values(appPositions).map((p) => `${p.row},${p.col}`);
 		const dupCoords = coords.filter((c, i) => coords.indexOf(c) !== i);
-		const uniqCoords = [...new Set(dupCoords)];
-
-		// forEach を for…of に置き換え
-		for (const duplicate of uniqCoords) {
-			const [row, col] = duplicate.split(",").map(Number);
+		for (const dup of Array.from(new Set(dupCoords))) {
+			const [r, c] = dup.split(",").map(Number);
 			ctx.addIssue({
 				code: "custom",
 				path: ["appPositions"],
-				message: `row:${row}, col:${col} の位置が複数のアプリで使われています。`,
+				message: `row:${r}, col:${c} の位置が複数のアプリで使われています。`,
 			});
 		}
 	})
@@ -84,29 +105,39 @@ export const stateSchema = z
 					iconKey: "StickyNote",
 					color: "#FFEB3B",
 					type: "memo",
-					content: "これはサンプルのメモです。",
+					content: "Root memo",
 				},
 				{
-					id: "app-2",
-					name: "ブラウザ",
-					iconKey: "Globe",
-					color: "#2196F3",
-					type: "website",
-					url: "https://openai.com",
-					favicon: "https://openai.com/favicon.ico",
-				},
-				{
-					id: "app-3",
-					name: "フォルダ",
+					id: "folder-A",
+					name: "フォルダA",
 					iconKey: "FolderIcon",
 					color: "#FFC107",
 					type: "folder",
 				},
+				{
+					id: "folder-B",
+					name: "フォルダB",
+					iconKey: "FolderIcon",
+					color: "#FF9800",
+					type: "folder",
+				},
+				{
+					id: "memo-deep",
+					name: "深いメモ",
+					iconKey: "StickyNote",
+					color: "#FFEB3B",
+					type: "memo",
+					content: "三重ネスト",
+				},
 			],
 			appPositions: {
 				"app-1": { row: 0, col: 0 },
-				"app-2": { row: 0, col: 1 },
-				"app-3": { row: 1, col: 0 },
+				"folder-A": { row: 0, col: 1 },
+				"folder-B": { row: 1, col: 0 },
+			},
+			folderContents: {
+				"folder-A": ["folder-B"],
+				"folder-B": ["memo-deep"],
 			},
 		},
 	});

@@ -592,7 +592,8 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 					<div className="pointer-events-none absolute inset-0">
 						{heroIcons.map(({ Icon, x, y, color, rotation, id, name }, index) => (
 							<div
-								key={id}
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+								key={index}
 								className={`absolute rounded-2xl border border-gray-100 bg-white p-4 shadow-lg transition-all duration-300 hover:shadow-xl ${
 									id === "notepad" && isAnimating && cursorPosition.x > window.innerWidth * 0.8
 										? "ring-4 ring-blue-400 ring-opacity-75"
