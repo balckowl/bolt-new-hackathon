@@ -108,6 +108,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				id: app.id,
 				name: app.name,
 				icon: Icons[app.iconKey],
+				iconKey: app.iconKey,
 				color: app.color,
 				type: app.type,
 			}));
@@ -496,7 +497,7 @@ export default function MacosDesktop({ desktop }: Props) {
 			name: memoNameInput.trim(),
 			icon: StickyNote,
 			iconKey: "StickyNote",
-			color: "bg-yellow-300",
+			color: "FFEB3B",
 			type: "memo",
 			content: "",
 		};
@@ -558,7 +559,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				name: siteName,
 				icon: Globe,
 				iconKey: "Globe",
-				color: "bg-blue-500",
+				color: "FFEB3B",
 				type: "website",
 				url: url,
 				favicon: favicon,
@@ -590,7 +591,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				name: appUrlInput.trim(),
 				icon: Globe,
 				iconKey: "Globe",
-				color: "bg-blue-500",
+				color: "FFEB3B",
 				type: "website",
 				url: appUrlInput.startsWith("http") ? appUrlInput : `https://${appUrlInput}`,
 			};
@@ -623,7 +624,7 @@ export default function MacosDesktop({ desktop }: Props) {
 			name: folderNameInput.trim(),
 			icon: FolderIcon,
 			iconKey: "FolderIcon",
-			color: "bg-blue-600",
+			color: "FFEB3B",
 			type: "folder",
 		};
 
@@ -790,8 +791,14 @@ export default function MacosDesktop({ desktop }: Props) {
 		setOriginalApps(apps);
 		setOriginalAppPositions(appPositions);
 		const apiApps = apps.map((app) => ({
-			...app,
+			id: app.id,
+			name: app.name,
 			iconKey: app.iconKey,
+			color: "#FFEB3B",
+			type: app.type,
+			content: app.content,
+			url: app.url,
+			favicon: app.favicon,
 		}));
 		const state = {
 			apps: apiApps,
@@ -803,10 +810,13 @@ export default function MacosDesktop({ desktop }: Props) {
 			const res = await hono.api.desktop.state.$put({
 				json: { state },
 			});
-			if (res.status === 404) {
-				toast("Desktop update failed");
+			if (!res.ok) {
+				toast("Desktop update failed", {
+					style: { color: "#dc2626" },
+				});
 				setOriginalApps(prevOriginalApps);
 				setOriginalAppPositions(prevOriginalAppPositions);
+				return;
 			}
 			toast("Desktop state saved");
 		} catch (e) {
