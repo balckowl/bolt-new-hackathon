@@ -6,6 +6,7 @@ import { Battery, Clock, Search, Wifi } from "lucide-react";
 type Props = {
 	onBackgroundChange: (newBackground: string) => void;
 	background: string;
+	setBackground: (background: string) => void;
 	currentTime: Date;
 	isPublic: boolean;
 	setIsPublic: (isPublic: boolean) => void;
@@ -15,6 +16,7 @@ type Props = {
 export const MenuBar = ({
 	onBackgroundChange,
 	background,
+	setBackground,
 	currentTime,
 	isPublic,
 	setIsPublic,
@@ -48,6 +50,7 @@ export const MenuBar = ({
 					<BackgroundSelector
 						onBackgroundChange={onBackgroundChange}
 						currentBackground={background}
+						setBackground={setBackground}
 					/>
 				</div>
 				<div className="flex items-center space-x-3 text-sm text-white">

@@ -1,5 +1,6 @@
 "use client";
 
+import { backgroundOptions } from "@/src/components/BackgroundSelector";
 import { CommonDialog } from "@/src/components/CommonDialog";
 import { ContextMenu } from "@/src/components/ContextMenu";
 import { MenuBar } from "@/src/components/MenuBar";
@@ -122,6 +123,11 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			setOriginalApps(responseApps);
 			setPositionsInitialized(true);
 			setIsPublic(desktop.isPublic);
+			if (desktop.background) {
+				const backgroundImg = backgroundOptions.find((opt) => opt.name === desktop.background);
+				if (!backgroundImg) return;
+				setBackground(backgroundImg.value);
+			}
 		}
 	}, [desktop, apps.length, positionsInitialized]);
 
@@ -1055,6 +1061,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			<MenuBar
 				onBackgroundChange={handleBackgroundChange}
 				background={background}
+				setBackground={setBackground}
 				currentTime={currentTime}
 				isPublic={isPublic}
 				setIsPublic={setIsPublic}
