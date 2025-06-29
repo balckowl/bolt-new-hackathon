@@ -136,6 +136,11 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			setOriginalAppPositions(positionsMap);
 			setApps(responseApps);
 			setOriginalApps(responseApps);
+
+			// folderContents の初期化
+			const fcMap = new Map<string, string[]>(Object.entries(desktop.state.folderContents));
+			setFolderContents(fcMap);
+
 			setPositionsInitialized(true);
 			setIsPublic(desktop.isPublic);
 			if (desktop.background) {
