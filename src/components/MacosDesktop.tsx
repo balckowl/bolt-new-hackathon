@@ -497,7 +497,7 @@ export default function MacosDesktop({ desktop }: Props) {
 			name: memoNameInput.trim(),
 			icon: StickyNote,
 			iconKey: "StickyNote",
-			color: "FFEB3B",
+			color: "#FFEB3B",
 			type: "memo",
 			content: "",
 		};
@@ -559,7 +559,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				name: siteName,
 				icon: Globe,
 				iconKey: "Globe",
-				color: "FFEB3B",
+				color: "#FFEB3B",
 				type: "website",
 				url: url,
 				favicon: favicon,
@@ -591,7 +591,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				name: appUrlInput.trim(),
 				icon: Globe,
 				iconKey: "Globe",
-				color: "FFEB3B",
+				color: "#FFEB3B",
 				type: "website",
 				url: appUrlInput.startsWith("http") ? appUrlInput : `https://${appUrlInput}`,
 			};
@@ -624,7 +624,7 @@ export default function MacosDesktop({ desktop }: Props) {
 			name: folderNameInput.trim(),
 			icon: FolderIcon,
 			iconKey: "FolderIcon",
-			color: "FFEB3B",
+			color: "#FFEB3B",
 			type: "folder",
 		};
 
