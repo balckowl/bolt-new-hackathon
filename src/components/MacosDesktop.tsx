@@ -895,6 +895,14 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 		);
 	};
 
+	const bringHelpWindowToFront = () => {
+		setHelpWindow((prev) => ({
+			...prev,
+			zIndex: nextzIndex,
+		}));
+		setNextzIndex((prev) => prev + 1);
+	};
+
 	const bringMemoToFront = (windowId: string) => {
 		setMemoWindows((prev) =>
 			prev.map((w) => (w.id === windowId ? { ...w, zIndex: nextzIndex } : w)),
@@ -1298,7 +1306,9 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 						}))
 					}
 					// onMinimize={}
-					onBringToFront={() => {}}
+					onBringToFront={() => {
+						bringHelpWindowToFront();
+					}}
 					onPositionChange={(position) => {
 						setHelpWindow((prev) => ({
 							...prev,
