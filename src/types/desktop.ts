@@ -4,6 +4,7 @@ export interface AppIcon {
 	id: string;
 	name: string;
 	icon: LucideIcon;
+	iconKey: "StickyNote" | "Globe" | "FolderIcon";
 	color: string;
 	type?: "app" | "memo" | "website" | "folder";
 	content?: string;

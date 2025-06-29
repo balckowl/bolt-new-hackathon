@@ -5,11 +5,13 @@ import { ContextMenu } from "@/src/components/ContextMenu";
 import { MenuBar } from "@/src/components/MenuBar";
 import { Button } from "@/src/components/ui/button";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
+import { hono } from "@/src/lib/hono-client";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
 import { FolderIcon, Globe, StickyNote } from "lucide-react";
 import * as Icons from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import type z from "zod";
 import { BrowserWindow } from "../components/window/BrowserWindow";
 import { FolderWindow } from "../components/window/FolderWindow";
@@ -80,7 +82,7 @@ export default function MacosDesktop({ desktop }: Props) {
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
 
 	//差分検知用の初期値
-	const [originalApps, setOrigianlApps] = useState<AppIcon[]>([]);
+	const [originalApps, setOriginalApps] = useState<AppIcon[]>([]);
 	const [originalAppPositions, setOriginalAppPositions] = useState<Map<string, GridPosition>>(
 		new Map(),
 	);
@@ -106,13 +108,14 @@ export default function MacosDesktop({ desktop }: Props) {
 				id: app.id,
 				name: app.name,
 				icon: Icons[app.iconKey],
+				iconKey: app.iconKey,
 				color: app.color,
 				type: app.type,
 			}));
 			setAppPositions(positionsMap);
 			setOriginalAppPositions(positionsMap);
 			setApps(responseApps);
-			setOrigianlApps(responseApps);
+			setOriginalApps(responseApps);
 			setPositionsInitialized(true);
 		}
 	}, [desktop, apps.length, positionsInitialized]);
@@ -493,7 +496,8 @@ export default function MacosDesktop({ desktop }: Props) {
 			id: memoId,
 			name: memoNameInput.trim(),
 			icon: StickyNote,
-			color: "bg-yellow-300",
+			iconKey: "StickyNote",
+			color: "#FFEB3B",
 			type: "memo",
 			content: "",
 		};
@@ -554,7 +558,8 @@ export default function MacosDesktop({ desktop }: Props) {
 				id: appId,
 				name: siteName,
 				icon: Globe,
-				color: "bg-blue-500",
+				iconKey: "Globe",
+				color: "#FFEB3B",
 				type: "website",
 				url: url,
 				favicon: favicon,
@@ -585,7 +590,8 @@ export default function MacosDesktop({ desktop }: Props) {
 				id: appId,
 				name: appUrlInput.trim(),
 				icon: Globe,
-				color: "bg-blue-500",
+				iconKey: "Globe",
+				color: "#FFEB3B",
 				type: "website",
 				url: appUrlInput.startsWith("http") ? appUrlInput : `https://${appUrlInput}`,
 			};
@@ -617,7 +623,8 @@ export default function MacosDesktop({ desktop }: Props) {
 			id: folderId,
 			name: folderNameInput.trim(),
 			icon: FolderIcon,
-			color: "bg-blue-600",
+			iconKey: "FolderIcon",
+			color: "#FFEB3B",
 			type: "folder",
 		};
 
@@ -779,11 +786,44 @@ export default function MacosDesktop({ desktop }: Props) {
 		JSON.stringify(Array.from(appPositions.entries())) !==
 		JSON.stringify(Array.from(originalAppPositions.entries()));
 	const showDesktopSaveBtn = positionsInitialized ? appsChanged || positionsChanged : false;
-	const handleSaveDesktop = () => {
-		setOrigianlApps(apps);
+
+	const handleSaveDesktop = async () => {
+		setOriginalApps(apps);
 		setOriginalAppPositions(appPositions);
-		//更新するリクエストを送る
-		// console.log("Saving desktop state...");
+		const apiApps = apps.map((app) => ({
+			id: app.id,
+			name: app.name,
+			iconKey: app.iconKey,
+			color: "#FFEB3B",
+			type: app.type,
+			content: app.content,
+			url: app.url,
+			favicon: app.favicon,
+		}));
+		const state = {
+			apps: apiApps,
+			appPositions: Object.fromEntries(appPositions.entries()),
+		};
+		const prevOriginalApps = originalApps;
+		const prevOriginalAppPositions = originalAppPositions;
+		try {
+			const res = await hono.api.desktop.state.$put({
+				json: { state },
+			});
+			if (!res.ok) {
+				toast("Desktop update failed", {
+					style: { color: "#dc2626" },
+				});
+				setOriginalApps(prevOriginalApps);
+				setOriginalAppPositions(prevOriginalAppPositions);
+				return;
+			}
+			toast("Desktop state saved");
+		} catch (e) {
+			toast("Desktop update failed");
+			setOriginalApps(prevOriginalApps);
+			setOriginalAppPositions(prevOriginalAppPositions);
+		}
 	};
 
 	const updateMemoContent = (windowId: string, content: string) => {
