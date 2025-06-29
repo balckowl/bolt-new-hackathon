@@ -20,7 +20,7 @@ export default function Recommend({ scrollY }: Props) {
 					<CardContent className="p-16 text-center">
 						<h2 className="mb-8 font-bold text-3xl text-gray-800">Your unique link</h2>
 						<p className="mb-8 text-gray-700 text-lg leading-relaxed">
-							Launch your own original "OS" on the web and create something amazing!
+							Launch your own original &quot;OS&quot; on the web and create something amazing!
 						</p>
 						<Button
 							asChild

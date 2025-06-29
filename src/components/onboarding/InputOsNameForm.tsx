@@ -73,7 +73,7 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
 						<div className="mb-8 text-center">
 							<h1 className="mb-2 font-bold text-2xl text-gray-800">Welcome</h1>
-							<p className="text-gray-600">Let's decide on a name for your OS!</p>
+							<p className="text-gray-600">Let&#39;s decide on a name for your OS!</p>
 						</div>
 
 						<Form {...form}>
