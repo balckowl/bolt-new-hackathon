@@ -111,7 +111,6 @@ export function BackgroundSelector({
 
 	const handleBackgroundChange = async (name: BackgroundOptionType, value: string) => {
 		onBackgroundChange(value);
-		setOpen(false);
 		if (currentBackground === value) return;
 		try {
 			const res = await hono.api.desktop.background.$put({
