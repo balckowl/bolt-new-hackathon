@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
@@ -22,11 +23,14 @@ export default function Recommend({ scrollY }: Props) {
 							Launch your own original "OS" on the web and create something amazing!
 						</p>
 						<Button
+							asChild
 							size="lg"
 							className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
 						>
-							Get Started
-							<ArrowRight className="ml-2 h-5 w-5" />
+							<Link href="/login">
+								Get Started
+								<ArrowRight className="ml-2 h-5 w-5" />
+							</Link>
 						</Button>
 					</CardContent>
 				</Card>

@@ -16,6 +16,7 @@ import {
 	Youtube,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
@@ -568,10 +569,11 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 							</div>
 
 							<Button
+								asChild
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-3 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								Sign in with Google
+								<Link href="/login">Sign in with Google</Link>
 							</Button>
 						</div>
 					</div>
@@ -640,11 +642,12 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 					</p>
 
 					<Button
+						asChild
 						size="lg"
 						variant="outline"
-						className="group rounded-lg border-2 border-white bg-transparent px-6 py-3 font-medium text-base text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-purple-700 md:px-8 md:py-4 md:text-lg"
+						className="group rounded-lg border-2 border-white bg-transparent px-6 py-3 font-medium text-base text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-blue-700 md:px-8 md:py-4 md:text-lg"
 					>
-						Sign in with Google
+						<Link href="/login">Sign in with Google</Link>
 					</Button>
 				</div>
 			</section>
