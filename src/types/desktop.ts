@@ -17,6 +17,15 @@ export interface GridPosition {
 	col: number;
 }
 
+export interface HelpWindowType {
+	visible: boolean;
+	content: string;
+	position: { x: number; y: number };
+	size: { width: number; height: number };
+	isMinimized: boolean;
+	zIndex: number;
+}
+
 export interface MemoWindowType {
 	id: string;
 	title: string;

@@ -5,6 +5,7 @@ import { CommonDialog } from "@/src/components/CommonDialog";
 import { ContextMenu } from "@/src/components/ContextMenu";
 import { MenuBar } from "@/src/components/MenuBar";
 import { Button } from "@/src/components/ui/button";
+import { HelpWindow } from "@/src/components/window/HelpWindow";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import { hono } from "@/src/lib/hono-client";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
@@ -26,6 +27,7 @@ import type {
 	FolderNameDialog,
 	FolderWindowType,
 	GridPosition,
+	HelpWindowType,
 	MemoNameDialog,
 	MemoWindowType,
 } from "../types/desktop";
@@ -82,6 +84,16 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	const [background, setBackground] = useState("linear-gradient(135deg, #667eea 0%, #764ba2 100%)");
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
+
+	// help window
+	const [helpWindow, setHelpWindow] = useState<HelpWindowType>({
+		visible: false,
+		content: "welcome",
+		position: { x: 50, y: 50 },
+		size: { width: 650, height: 600 },
+		isMinimized: false,
+		zIndex: nextzIndex + 1000,
+	});
 
 	//差分検知用の初期値
 	const [originalApps, setOriginalApps] = useState<AppIcon[]>([]);
@@ -1073,6 +1085,8 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				setIsPublic={setIsPublic}
 				osName={osName}
 				isEditable={isEdit}
+				helpWindow={helpWindow}
+				setHelpWindow={setHelpWindow}
 			/>
 
 			{/* Desktop grid */}
@@ -1271,6 +1285,33 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 						/>
 					</div>
 				</CommonDialog>
+			)}
+
+			{/* Help Window */}
+			{helpWindow.visible && (
+				<HelpWindow
+					window={helpWindow}
+					onClose={() =>
+						setHelpWindow((prev) => ({
+							...prev,
+							visible: false,
+						}))
+					}
+					// onMinimize={}
+					onBringToFront={() => {}}
+					onPositionChange={(position) => {
+						setHelpWindow((prev) => ({
+							...prev,
+							position,
+						}));
+					}}
+					onSizeChange={(size) => {
+						setHelpWindow((prev) => ({
+							...prev,
+							size,
+						}));
+					}}
+				/>
 			)}
 
 			{/* Memo Windows */}
