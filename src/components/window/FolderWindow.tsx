@@ -194,7 +194,7 @@ export function FolderWindow({
 												onAppClick(app);
 											}
 										}}
-										className={`relative h-12 w-12 rounded-xl ${app.color}shadow-md flex cursor-pointer items-center justify-center border border-white/20 transition-all duration-200 hover:shadow-lg group-hover:scale-110 `}
+										className="relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-gray-300 shadow-md transition-all duration-200 hover:shadow-lg group-hover:scale-110 "
 									>
 										{renderAppIcon(app)}
 										{app.type === "website" && app.favicon && (
