@@ -8,6 +8,7 @@ import { ChevronDown, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
+import { env } from "../env.mjs";
 
 interface BackgroundSelectorProps {
 	onBackgroundChange: (background: string) => void;
@@ -22,34 +23,42 @@ export const backgroundOptions: {
 	preview: React.ReactNode;
 }[] = [
 	{
-		id: "gradient",
-		name: "SUNSET",
-		value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+		id: "default",
+		name: "DEFAULT",
+		value: "linear-gradient(to bottom right,#60A5FA,#2563EB,#6B21A8)",
 		preview: (
-			<div className="h-full w-full rounded bg-gradient-to-br from-blue-400 to-purple-600" />
+			<div className="h-full w-full rounded bg-gradient-to-br from-blue-400 via-blue-600 to-purple-800" />
 		),
 	},
-	// {
-	// 	id: "mountain",
-	// 	name: "Mountain Vista",
-	// 	value:
-	// 		"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-	// 	preview: (
-	// 		<img
-	// 			src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-	// 			alt="Mountain Vista"
-	// 			className="h-full w-full rounded object-cover"
-	// 		/>
-	// 	),
-	// },
 	{
-		id: "ocean",
-		name: "OCEAN",
-		value:
-			"https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
+		id: "warm",
+		name: "WARM",
+		value: "linear-gradient(to bottom right,#FACC15,#F97316,#DC2626)",
+		preview: (
+			<div className="h-full w-full rounded bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600" />
+		),
+	},
+	{
+		id: "green",
+		name: "GREEN",
+		value: "linear-gradient(to bottom right, #4ADE80, #22C55E, #16A34A)",
+		preview: (
+			<div className="h-full w-full rounded bg-gradient-to-br from-green-400 via-green-500 to-green-600" />
+		),
+	},
+	{
+		id: "black",
+		name: "BLACK",
+		value: "linear-gradient(to bottom right,#000)",
+		preview: <div className="h-full w-full rounded bg-black" />,
+	},
+	{
+		id: "sunset",
+		name: "SUNSET",
+		value: `${env.NEXT_PUBLIC_APP_URL}/background/sunset.png`,
 		preview: (
 			<Image
-				src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
+				src="/background/sunset.png"
 				alt="Ocean Waves"
 				className="h-full w-full rounded object-cover"
 				width={500}
@@ -59,14 +68,13 @@ export const backgroundOptions: {
 		),
 	},
 	{
-		id: "forest",
-		name: "FOREST",
-		value:
-			"https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
+		id: "station",
+		name: "STATION",
+		value: `${env.NEXT_PUBLIC_APP_URL}/background/station.png`,
 		preview: (
 			<Image
-				src="https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-				alt="Forest Path"
+				src="/background/station.png"
+				alt="Ocean Waves"
 				className="h-full w-full rounded object-cover"
 				width={500}
 				height={300}
@@ -74,32 +82,51 @@ export const backgroundOptions: {
 			/>
 		),
 	},
-	// {
-	// 	id: "city",
-	// 	name: "City Skyline",
-	// 	value:
-	// 		"https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-	// 	preview: (
-	// 		<img
-	// 			src="https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-	// 			alt="City Skyline"
-	// 			className="h-full w-full rounded object-cover"
-	// 		/>
-	// 	),
-	// },
-	// {
-	// 	id: "desert",
-	// 	name: "Desert Dunes",
-	// 	value:
-	// 		"https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-	// 	preview: (
-	// 		<img
-	// 			src="https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-	// 			alt="Desert Dunes"
-	// 			className="h-full w-full rounded object-cover"
-	// 		/>
-	// 	),
-	// },
+	{
+		id: "ocean",
+		name: "OCEAN",
+		value: `${env.NEXT_PUBLIC_APP_URL}/background/sky.png`,
+		preview: (
+			<Image
+				src="/background/sky.png"
+				alt="Ocean Waves"
+				className="h-full w-full rounded object-cover"
+				width={500}
+				height={300}
+				priority
+			/>
+		),
+	},
+	{
+		id: "sakura",
+		name: "SAKURA",
+		value: `${env.NEXT_PUBLIC_APP_URL}/background/sakura.png`,
+		preview: (
+			<Image
+				src="/background/sakura.png"
+				alt="Ocean Waves"
+				className="h-full w-full rounded object-cover"
+				width={500}
+				height={300}
+				priority
+			/>
+		),
+	},
+	{
+		id: "mountain",
+		name: "MOUNTAIN",
+		value: `${env.NEXT_PUBLIC_APP_URL}/background/mountain.png`,
+		preview: (
+			<Image
+				src="/background/mountain.png"
+				alt="Ocean Waves"
+				className="h-full w-full rounded object-cover"
+				width={500}
+				height={300}
+				priority
+			/>
+		),
+	},
 ];
 
 export function BackgroundSelector({
