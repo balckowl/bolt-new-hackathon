@@ -31,12 +31,13 @@ import type {
 
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
+	osName: string;
 };
 
 const GRID_COLS = 6;
 const GRID_ROWS = 10;
 
-export default function MacosDesktop({ desktop }: Props) {
+export default function MacosDesktop({ desktop, osName }: Props) {
 	const [apps, setApps] = useState<AppIcon[]>([]);
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
@@ -87,6 +88,9 @@ export default function MacosDesktop({ desktop }: Props) {
 		new Map(),
 	);
 
+	// public or private
+	const [isPublic, setIsPublic] = useState(false);
+
 	const dragSourceRef = useRef<GridPosition | null>(null);
 
 	// Update time every second
@@ -117,6 +121,7 @@ export default function MacosDesktop({ desktop }: Props) {
 			setApps(responseApps);
 			setOriginalApps(responseApps);
 			setPositionsInitialized(true);
+			setIsPublic(desktop.isPublic);
 		}
 	}, [desktop, apps.length, positionsInitialized]);
 
@@ -820,7 +825,9 @@ export default function MacosDesktop({ desktop }: Props) {
 			}
 			toast("Desktop state saved");
 		} catch (e) {
-			toast("Desktop update failed");
+			toast("Desktop update failed", {
+				style: { color: "#dc2626" },
+			});
 			setOriginalApps(prevOriginalApps);
 			setOriginalAppPositions(prevOriginalAppPositions);
 		}
@@ -1049,6 +1056,9 @@ export default function MacosDesktop({ desktop }: Props) {
 				onBackgroundChange={handleBackgroundChange}
 				background={background}
 				currentTime={currentTime}
+				isPublic={isPublic}
+				setIsPublic={setIsPublic}
+				osName={osName}
 			/>
 
 			{/* Desktop grid */}

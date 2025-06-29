@@ -1,13 +1,25 @@
 import { BackgroundSelector } from "@/src/components/BackgroundSelector";
+import { PublicSelector } from "@/src/components/PublicSelector";
+import { Switch } from "@/src/components/ui/switch";
 import { Battery, Clock, Search, Wifi } from "lucide-react";
 
 type Props = {
 	onBackgroundChange: (newBackground: string) => void;
 	background: string;
 	currentTime: Date;
+	isPublic: boolean;
+	setIsPublic: (isPublic: boolean) => void;
+	osName: string;
 };
 
-export const MenuBar = ({ onBackgroundChange, background, currentTime }: Props) => {
+export const MenuBar = ({
+	onBackgroundChange,
+	background,
+	currentTime,
+	isPublic,
+	setIsPublic,
+	osName,
+}: Props) => {
 	const formatTime = (date: Date) => {
 		return date.toLocaleTimeString("en-US", {
 			weekday: "short",
@@ -25,17 +37,12 @@ export const MenuBar = ({ onBackgroundChange, background, currentTime }: Props) 
 				<div className="flex items-center space-x-4">
 					{/* Apple Logo */}
 					<div
-						className="font-bold text-lg text-white leading-none"
+						className="flex items-center font-bold text-lg text-white leading-none"
 						style={{
 							fontFamily: "system-ui",
 						}}
 					>
-						🍎
-					</div>
-					{/* Finder */}
-					<div className="flex items-center space-x-1">
-						<Search size={14} className="text-white" />
-						<span className="font-medium text-sm text-white">Finder</span>
+						<p className="mb-1 text-sm"> {osName ? osName : "🍎"}</p>
 					</div>
 					{/* Background Selector */}
 					<BackgroundSelector
@@ -44,14 +51,11 @@ export const MenuBar = ({ onBackgroundChange, background, currentTime }: Props) 
 					/>
 				</div>
 				<div className="flex items-center space-x-3 text-sm text-white">
-					{/* Wi-Fi Icon */}
+					{/* public or private toggle */}
 					<div className="flex items-center">
-						<Wifi size={14} className="text-white" />
+						<PublicSelector isPublic={isPublic} setIsPublic={setIsPublic} />
 					</div>
-					{/* Battery Icon */}
-					<div className="flex items-center">
-						<Battery size={14} className="text-white" />
-					</div>
+
 					{/* Time */}
 					<div className="flex items-center space-x-1">
 						<Clock size={14} className="text-white" />
