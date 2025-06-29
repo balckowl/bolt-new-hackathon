@@ -2,14 +2,15 @@
 
 import { CommonDialog } from "@/src/components/CommonDialog";
 import { ContextMenu } from "@/src/components/ContextMenu";
+import { MenuBar } from "@/src/components/MenuBar";
 import { Button } from "@/src/components/ui/button";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
-import { Battery, Clock, FolderIcon, Globe, Search, StickyNote, Wifi } from "lucide-react";
+import { FolderIcon, Globe, StickyNote } from "lucide-react";
+import * as Icons from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type z from "zod";
-import { BackgroundSelector } from "../components/BackgroundSelector";
 import { BrowserWindow } from "../components/window/BrowserWindow";
 import { FolderWindow } from "../components/window/FolderWindow";
 import { MemoWindow } from "../components/window/MemoWindow";
@@ -34,16 +35,7 @@ const GRID_COLS = 6;
 const GRID_ROWS = 10;
 
 export default function MacosDesktop({ desktop }: Props) {
-	const [apps, setApps] = useState<AppIcon[]>([
-		{
-			id: "memo-default",
-			name: "My Notes",
-			icon: StickyNote,
-			color: "bg-yellow-300",
-			type: "memo",
-			content: "Welcome to your memo app!\n\nClick on this memo to start writing notes.",
-		},
-	]);
+	const [apps, setApps] = useState<AppIcon[]>([]);
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
 	const [draggedOver, setDraggedOver] = useState<GridPosition | null>(null);
@@ -88,16 +80,7 @@ export default function MacosDesktop({ desktop }: Props) {
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
 
 	//差分検知用の初期値
-	const [originalApps, setOrigianlApps] = useState<AppIcon[]>([
-		{
-			id: "memo-default",
-			name: "My Notes",
-			icon: StickyNote,
-			color: "bg-yellow-300",
-			type: "memo",
-			content: "Welcome to your memo app!\n\nClick on this memo to start writing notes.",
-		},
-	]);
+	const [originalApps, setOrigianlApps] = useState<AppIcon[]>([]);
 	const [originalAppPositions, setOriginalAppPositions] = useState<Map<string, GridPosition>>(
 		new Map(),
 	);
@@ -112,21 +95,27 @@ export default function MacosDesktop({ desktop }: Props) {
 		return () => clearInterval(timer);
 	}, []);
 
-	// Initialize app positions only once
+	//initialize app positions
 	useEffect(() => {
-		if (!positionsInitialized && apps.length > 0) {
-			const initialPositions = new Map<string, GridPosition>();
-			// Only set position for the default memo at (0, 0)
-			if (apps[0]) {
-				initialPositions.set(apps[0].id, {
-					row: 0,
-					col: 0,
-				});
-			}
-			setAppPositions(initialPositions);
+		if (!positionsInitialized && apps.length === 0) {
+			const positionsMap = new Map<string, { row: number; col: number }>(
+				Object.entries(desktop.state.appPositions),
+			);
+			const responseApps = desktop.state.apps.map((app) => ({
+				...app,
+				id: app.id,
+				name: app.name,
+				icon: Icons[app.iconKey],
+				color: app.color,
+				type: app.type,
+			}));
+			setAppPositions(positionsMap);
+			setOriginalAppPositions(positionsMap);
+			setApps(responseApps);
+			setOrigianlApps(responseApps);
 			setPositionsInitialized(true);
 		}
-	}, [apps, positionsInitialized]);
+	}, [desktop, apps.length, positionsInitialized]);
 
 	// Close context menu and dialogs when clicking elsewhere
 	useEffect(() => {
@@ -786,9 +775,10 @@ export default function MacosDesktop({ desktop }: Props) {
 
 	// difference detection
 	const appsChanged = JSON.stringify(apps) !== JSON.stringify(originalApps);
-	const positionsChanged = JSON.stringify(appPositions) !== JSON.stringify(originalAppPositions);
-	const showDesktopSaveBtn = appsChanged || positionsChanged;
-
+	const positionsChanged =
+		JSON.stringify(Array.from(appPositions.entries())) !==
+		JSON.stringify(Array.from(originalAppPositions.entries()));
+	const showDesktopSaveBtn = positionsInitialized ? appsChanged || positionsChanged : false;
 	const handleSaveDesktop = () => {
 		setOrigianlApps(apps);
 		setOriginalAppPositions(appPositions);
@@ -886,17 +876,6 @@ export default function MacosDesktop({ desktop }: Props) {
 		} else if (app.type === "folder") {
 			openFolder(app);
 		}
-	};
-
-	const formatTime = (date: Date) => {
-		return date.toLocaleTimeString("en-US", {
-			weekday: "short",
-			month: "short",
-			day: "numeric",
-			hour: "numeric",
-			minute: "2-digit",
-			hour12: true,
-		});
 	};
 
 	const handleBackgroundChange = (newBackground: string) => {
@@ -1026,46 +1005,11 @@ export default function MacosDesktop({ desktop }: Props) {
 			<div className="absolute inset-0 bg-black/20" />
 
 			{/* Menu bar */}
-			<div className="relative z-10 h-8 border-white/10 border-b bg-black/20 backdrop-blur-md">
-				<div className="flex h-full items-center justify-between px-4">
-					<div className="flex items-center space-x-4">
-						{/* Apple Logo */}
-						<div
-							className="font-bold text-lg text-white leading-none"
-							style={{
-								fontFamily: "system-ui",
-							}}
-						>
-							🍎
-						</div>
-						{/* Finder */}
-						<div className="flex items-center space-x-1">
-							<Search size={14} className="text-white" />
-							<span className="font-medium text-sm text-white">Finder</span>
-						</div>
-						{/* Background Selector */}
-						<BackgroundSelector
-							onBackgroundChange={handleBackgroundChange}
-							currentBackground={background}
-						/>
-					</div>
-					<div className="flex items-center space-x-3 text-sm text-white">
-						{/* Wi-Fi Icon */}
-						<div className="flex items-center">
-							<Wifi size={14} className="text-white" />
-						</div>
-						{/* Battery Icon */}
-						<div className="flex items-center">
-							<Battery size={14} className="text-white" />
-						</div>
-						{/* Time */}
-						<div className="flex items-center space-x-1">
-							<Clock size={14} className="text-white" />
-							<span className="font-medium">{formatTime(currentTime)}</span>
-						</div>
-					</div>
-				</div>
-			</div>
+			<MenuBar
+				onBackgroundChange={handleBackgroundChange}
+				background={background}
+				currentTime={currentTime}
+			/>
 
 			{/* Desktop grid */}
 			<div className="relative z-10 h-[calc(100vh-2rem)] p-8">
