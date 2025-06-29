@@ -3,7 +3,6 @@ import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 import type { MemoWindowType } from "../../types/desktop";
 import TiptapEditor from "../TiptapEditor";
-import { Button } from "../ui/button";
 
 export function MemoWindow({
 	window,
@@ -13,6 +12,7 @@ export function MemoWindow({
 	onBringToFront,
 	onPositionChange,
 	onSizeChange,
+	isEditable = false,
 }: {
 	window: MemoWindowType;
 	onClose: () => void;
@@ -21,6 +21,7 @@ export function MemoWindow({
 	onBringToFront: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
+	isEditable: boolean;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -35,6 +36,7 @@ export function MemoWindow({
 	const editor = useEditor({
 		extensions: [StarterKit],
 		content: window.content,
+		editable: isEditable,
 		editorProps: {
 			attributes: {
 				class:
