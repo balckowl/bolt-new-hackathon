@@ -1,7 +1,8 @@
 import { BackgroundSelector } from "@/src/components/BackgroundSelector";
 import { PublicSelector } from "@/src/components/PublicSelector";
-import { Switch } from "@/src/components/ui/switch";
-import { Battery, Clock, Search, Wifi } from "lucide-react";
+import { Button } from "@/src/components/ui/button";
+import type { HelpWindowType } from "@/src/types/desktop";
+import { ChevronDown, Clock, HelpCircle } from "lucide-react";
 
 type Props = {
 	onBackgroundChange: (newBackground: string) => void;
@@ -12,6 +13,8 @@ type Props = {
 	setIsPublic: (isPublic: boolean) => void;
 	osName: string;
 	isEditable: boolean;
+	setHelpWindow: React.Dispatch<React.SetStateAction<HelpWindowType>>;
+	helpWindow: HelpWindowType;
 };
 
 export const MenuBar = ({
@@ -23,6 +26,8 @@ export const MenuBar = ({
 	setIsPublic,
 	osName,
 	isEditable = false,
+	setHelpWindow,
+	helpWindow,
 }: Props) => {
 	const formatTime = (date: Date) => {
 		return date.toLocaleTimeString("en-US", {
@@ -50,11 +55,28 @@ export const MenuBar = ({
 					</div>
 					{/* Background Selector */}
 					{isEditable && (
-						<BackgroundSelector
-							onBackgroundChange={onBackgroundChange}
-							currentBackground={background}
-							setBackground={setBackground}
-						/>
+						<>
+							<BackgroundSelector
+								onBackgroundChange={onBackgroundChange}
+								currentBackground={background}
+								setBackground={setBackground}
+							/>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-6 px-2 text-white text-xs hover:bg-white/10"
+								onClick={() => {
+									setHelpWindow((prev) => ({
+										...prev,
+										visible: !helpWindow.visible,
+									}));
+								}}
+							>
+								<HelpCircle className="mr-1 h-3 w-3" />
+								Instructions
+								<ChevronDown className="ml-1 h-3 w-3" />
+							</Button>
+						</>
 					)}
 				</div>
 				<div className="flex items-center space-x-3 text-sm text-white">
