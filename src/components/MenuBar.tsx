@@ -9,6 +9,7 @@ type Props = {
 	currentTime: Date;
 	isPublic: boolean;
 	setIsPublic: (isPublic: boolean) => void;
+	osName: string;
 };
 
 export const MenuBar = ({
@@ -17,6 +18,7 @@ export const MenuBar = ({
 	currentTime,
 	isPublic,
 	setIsPublic,
+	osName,
 }: Props) => {
 	const formatTime = (date: Date) => {
 		return date.toLocaleTimeString("en-US", {
@@ -35,12 +37,12 @@ export const MenuBar = ({
 				<div className="flex items-center space-x-4">
 					{/* Apple Logo */}
 					<div
-						className="font-bold text-lg text-white leading-none"
+						className="flex items-center font-bold text-lg text-white leading-none"
 						style={{
 							fontFamily: "system-ui",
 						}}
 					>
-						🍎
+						<p className="mb-1 text-sm"> {osName ? osName : "🍎"}</p>
 					</div>
 					{/* Background Selector */}
 					<BackgroundSelector

@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { osName: string } }) {
 	}
 	return (
 		<>
-			<MacosDesktop desktop={data} />
+			<MacosDesktop desktop={data} osName={params.osName} />
 		</>
 	);
 }

@@ -31,12 +31,13 @@ import type {
 
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
+	osName: string;
 };
 
 const GRID_COLS = 6;
 const GRID_ROWS = 10;
 
-export default function MacosDesktop({ desktop }: Props) {
+export default function MacosDesktop({ desktop, osName }: Props) {
 	const [apps, setApps] = useState<AppIcon[]>([]);
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
@@ -1057,6 +1058,7 @@ export default function MacosDesktop({ desktop }: Props) {
 				currentTime={currentTime}
 				isPublic={isPublic}
 				setIsPublic={setIsPublic}
+				osName={osName}
 			/>
 
 			{/* Desktop grid */}
