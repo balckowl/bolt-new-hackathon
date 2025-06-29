@@ -34,14 +34,18 @@ export const getDesktopStateHandler: RouteHandler<
 		return c.json(null, 404);
 	}
 
-	const rawJson = userWithDesktop.desktop.state;
-	const parsedState = stateSchema.parse(rawJson);
-
 	const session = await auth.api.getSession({
 		headers: c.req.raw.headers,
 	});
 
 	const isEdit = session?.user.id === userWithDesktop.id;
+
+	if (!userWithDesktop.desktop.isPublic && !isEdit) {
+		return c.json(null, 403);
+	}
+
+	const rawJson = userWithDesktop.desktop.state;
+	const parsedState = stateSchema.parse(rawJson);
 
 	const result = {
 		state: parsedState,

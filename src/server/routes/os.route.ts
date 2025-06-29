@@ -27,6 +27,10 @@ export const getDesktopStateRoute = createRoute({
 				},
 			},
 		},
+		403: {
+			description: "権限がありません。",
+			content: { "application/json": { schema: z.null() } },
+		},
 	},
 });
 
