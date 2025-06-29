@@ -14,6 +14,7 @@ import { Input } from "@/src/components/ui/input";
 import { hono } from "@/src/lib/hono-client";
 import { osNameBaseSchema } from "@/src/server/models/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -60,24 +61,50 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 	};
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<FormField
-					control={form.control}
-					name="osName"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>OS name</FormLabel>
-							<FormControl>
-								<Input placeholder="shadcn" {...field} />
-							</FormControl>
-							<FormDescription>This is your OS name.</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button type="submit">Submit</Button>
-			</form>
-		</Form>
+		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-purple-800 px-4">
+			<div className="w-full max-w-md">
+				<div className="relative">
+					<div className="-top-8 -translate-x-1/2 absolute left-1/2 z-10 transform">
+						<div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-gray-100 bg-white text-4xl">
+							✋
+						</div>
+					</div>
+
+					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
+						<div className="mb-8 text-center">
+							<h1 className="mb-2 font-bold text-2xl text-gray-800">Welcome</h1>
+							<p className="text-gray-600">Let's decide on a name for your OS!</p>
+						</div>
+
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+								<FormField
+									control={form.control}
+									name="osName"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>OS Name</FormLabel>
+											<FormControl>
+												<Input placeholder="shadcn" {...field} />
+											</FormControl>
+											<FormDescription>It cannot be changed later.</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<Button
+									type="submit"
+									className="flex w-full items-center justify-center space-x-3 rounded-lg bg-blue-600 py-3 font-medium text-lg text-white transition-all duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+									disabled={form.formState.isSubmitting}
+								>
+									{form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+									Create My OS
+								</Button>
+							</form>
+						</Form>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
