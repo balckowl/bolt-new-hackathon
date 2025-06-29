@@ -1,107 +1,145 @@
 "use client";
 
+import type { BackgroundOptionType } from "@/prisma/prisma/zod";
 import { Button } from "@/src/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/src/components/ui/popover";
-import { ChevronDown, Image } from "lucide-react";
+import { hono } from "@/src/lib/hono-client";
+import { ChevronDown, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface BackgroundSelectorProps {
 	onBackgroundChange: (background: string) => void;
 	currentBackground: string;
+	setBackground: (background: string) => void;
 }
 
-const backgroundOptions = [
+export const backgroundOptions: {
+	id: string;
+	name: BackgroundOptionType;
+	value: string;
+	preview: React.ReactNode;
+}[] = [
 	{
 		id: "gradient",
-		name: "Default Gradient",
+		name: "SUNSET",
 		value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 		preview: (
 			<div className="h-full w-full rounded bg-gradient-to-br from-blue-400 to-purple-600" />
 		),
 	},
-	{
-		id: "mountain",
-		name: "Mountain Vista",
-		value:
-			"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-		preview: (
-			<img
-				src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-				alt="Mountain Vista"
-				className="h-full w-full rounded object-cover"
-			/>
-		),
-	},
+	// {
+	// 	id: "mountain",
+	// 	name: "Mountain Vista",
+	// 	value:
+	// 		"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
+	// 	preview: (
+	// 		<img
+	// 			src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
+	// 			alt="Mountain Vista"
+	// 			className="h-full w-full rounded object-cover"
+	// 		/>
+	// 	),
+	// },
 	{
 		id: "ocean",
-		name: "Ocean Waves",
+		name: "OCEAN",
 		value:
 			"https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
 		preview: (
-			<img
+			<Image
 				src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
 				alt="Ocean Waves"
 				className="h-full w-full rounded object-cover"
+				width={500}
+				height={300}
+				priority
 			/>
 		),
 	},
 	{
 		id: "forest",
-		name: "Forest Path",
+		name: "FOREST",
 		value:
 			"https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
 		preview: (
-			<img
+			<Image
 				src="https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
 				alt="Forest Path"
 				className="h-full w-full rounded object-cover"
+				width={500}
+				height={300}
+				priority
 			/>
 		),
 	},
-	{
-		id: "city",
-		name: "City Skyline",
-		value:
-			"https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-		preview: (
-			<img
-				src="https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-				alt="City Skyline"
-				className="h-full w-full rounded object-cover"
-			/>
-		),
-	},
-	{
-		id: "desert",
-		name: "Desert Dunes",
-		value:
-			"https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
-		preview: (
-			<img
-				src="https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
-				alt="Desert Dunes"
-				className="h-full w-full rounded object-cover"
-			/>
-		),
-	},
+	// {
+	// 	id: "city",
+	// 	name: "City Skyline",
+	// 	value:
+	// 		"https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
+	// 	preview: (
+	// 		<img
+	// 			src="https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
+	// 			alt="City Skyline"
+	// 			className="h-full w-full rounded object-cover"
+	// 		/>
+	// 	),
+	// },
+	// {
+	// 	id: "desert",
+	// 	name: "Desert Dunes",
+	// 	value:
+	// 		"https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop",
+	// 	preview: (
+	// 		<img
+	// 			src="https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop"
+	// 			alt="Desert Dunes"
+	// 			className="h-full w-full rounded object-cover"
+	// 		/>
+	// 	),
+	// },
 ];
 
 export function BackgroundSelector({
 	onBackgroundChange,
 	currentBackground,
+	setBackground,
 }: BackgroundSelectorProps) {
 	const [open, setOpen] = useState(false);
 
-	const handleBackgroundChange = (background: string) => {
-		onBackgroundChange(background);
-		setOpen(false);
+	const handleBackgroundChange = async (name: BackgroundOptionType, value: string) => {
+		onBackgroundChange(value);
+		if (currentBackground === value) return;
+		try {
+			const res = await hono.api.desktop.background.$put({
+				json: {
+					background: name,
+				},
+			});
+			if (!res.ok) {
+				toast("Background change failed", {
+					style: { color: "#dc2626" },
+				});
+				return;
+			}
+			toast("background changed");
+			setBackground(value);
+			setOpen(false);
+		} catch (e) {
+			toast("Background change failed", {
+				style: { color: "#dc2626" },
+			});
+			console.error("Failed to update visibility:", e);
+		}
 	};
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button variant="ghost" size="sm" className="h-6 px-2 text-white text-xs hover:bg-white/10">
-					<Image className="mr-1 h-3 w-3" />
+					<ImageIcon className="mr-1 h-3 w-3" />
 					Background
 					<ChevronDown className="ml-1 h-3 w-3" />
 				</Button>
@@ -120,7 +158,7 @@ export function BackgroundSelector({
 							return (
 								<button
 									key={option.id}
-									onClick={() => handleBackgroundChange(option.value)}
+									onClick={() => handleBackgroundChange(option.name, option.value)}
 									className={`group relative aspect-video overflow-hidden rounded-lg border-2 transition-all duration-200 hover:scale-105 ${
 										isSelected
 											? "border-blue-500 ring-2 ring-blue-200"
