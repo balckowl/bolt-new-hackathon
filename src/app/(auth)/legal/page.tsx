@@ -108,7 +108,7 @@ export default function LegalPage() {
 									<section>
 										<h2 className="mb-4 font-semibold text-gray-800 text-xl">5. Disclaimer</h2>
 										<p className="text-gray-600 leading-relaxed">
-											The materials on MyOS are provided on an 'as is' basis. MyOS makes no
+											The materials on MyOS are provided on an &#39;as is&#39; basis. MyOS makes no
 											warranties, expressed or implied, and hereby disclaims and negates all other
 											warranties including without limitation, implied warranties or conditions of
 											merchantability, fitness for a particular purpose, or non-infringement of

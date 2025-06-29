@@ -58,7 +58,7 @@ export default function LoginPage() {
 						{/* Header */}
 						<div className="mb-8 text-center">
 							<h1 className="mb-2 font-bold text-2xl text-gray-800">Sign In to MyOS</h1>
-							<p className="text-gray-600">Now, let's develop your very own OS!</p>
+							<p className="text-gray-600">Now, let&#39;s develop your very own OS!</p>
 						</div>
 
 						{/* Login Form */}
@@ -135,8 +135,8 @@ export default function LoginPage() {
 
 							{/* Additional Info */}
 							<div className="text-center text-gray-500 text-xs leading-relaxed">
-								By signing in, you'll be able to create and organize your personal web OS, including
-								folders, apps, and memos.
+								By signing in, you&#39;ll be able to create and organize your personal web OS,
+								including folders, apps, and memos.
 							</div>
 						</form>
 					</div>
