@@ -145,7 +145,17 @@ export const JsonNullValueFilterSchema = z
 					: value,
 	);
 
-export const BackgroundOptionSchema = z.enum(["SUNSET", "FOREST", "OCEAN"]);
+export const BackgroundOptionSchema = z.enum([
+	"DEFAULT",
+	"WARM",
+	"GREEN",
+	"BLACK",
+	"SUNSET",
+	"STATION",
+	"OCEAN",
+	"SAKURA",
+	"MOUNTAIN",
+]);
 
 export type BackgroundOptionType = `${z.infer<typeof BackgroundOptionSchema>}`;
 

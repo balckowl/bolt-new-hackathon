@@ -40,19 +40,26 @@ model User {
 }
 
 enum BackgroundOption {
+  DEFAULT
+  WARM
+  GREEN
+  BLACK
   SUNSET
-  FOREST
+  STATION
   OCEAN
+  SAKURA
+  MOUNTAIN
 }
+
 model Desktop {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
-  state Json 
-  isPublic Boolean @default(false)
+  id         String           @id @default(uuid())
+  userId     String           @unique
+  user       User             @relation(fields: [userId], references: [id])
+  state      Json
+  isPublic   Boolean          @default(false)
   background BackgroundOption @default(SUNSET)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 
   @@map("desktop")
 }
