@@ -13,7 +13,7 @@ type Props = {
 
 export const PublicSelector = ({ isPublic, setIsPublic }: Props) => {
 	const [open, setOpen] = useState(false);
-	const handleSelect = async (select: boolean) => {
+	const handleChange = async (select: boolean) => {
 		if (select === isPublic) return;
 		try {
 			const res = await hono.api.desktop.visibility.$put({
@@ -56,13 +56,17 @@ export const PublicSelector = ({ isPublic, setIsPublic }: Props) => {
 				<div className="space-y-3 text-sm">
 					<h3 className="font-medium text-gray-900 text-sm">Public or Private</h3>
 					<div className="grid grid-cols-3 gap-3">
-						<RadioGroup className="flex" value={isPublic ? "Public" : "Private"}>
+						<RadioGroup
+							className="flex"
+							value={isPublic ? "Public" : "Private"}
+							onValueChange={(value) => handleChange(value === "Public")}
+						>
 							<label htmlFor="public" className="flex cursor-pointer items-center gap-2">
-								<RadioGroupItem value="Public" id="public" onClick={() => handleSelect(true)} />
+								<RadioGroupItem value="Public" id="public" />
 								<span>Public</span>
 							</label>
 							<label htmlFor="private" className="flex cursor-pointer items-center gap-2">
-								<RadioGroupItem value="Private" id="private" onClick={() => handleSelect(false)} />
+								<RadioGroupItem value="Private" id="private" />
 								<span>Private</span>
 							</label>
 						</RadioGroup>
