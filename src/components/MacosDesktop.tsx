@@ -1,8 +1,6 @@
 "use client";
 
 import { backgroundOptions } from "@/src/components/BackgroundSelector";
-import { CommonDialog } from "@/src/components/CommonDialog";
-import { ContextMenu } from "@/src/components/ContextMenu";
 import { MenuBar } from "@/src/components/MenuBar";
 import { Button } from "@/src/components/ui/button";
 import { HelpWindow } from "@/src/components/window/HelpWindow";
@@ -31,6 +29,9 @@ import type {
 	MemoNameDialog,
 	MemoWindowType,
 } from "../types/desktop";
+import { ContextMenu } from "./ContextMenu";
+import CreateAppUrlDialog from "./CreateAppUrlDialog";
+import DefaultDialog from "./DefaultDialog";
 
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
@@ -76,9 +77,21 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 		newName: "",
 		newUrl: "",
 	});
+	//editDialogを更新する関数
+	const changeNameEditDialog = (value: string) =>
+		setEditDialog((prev) => ({
+			...prev,
+			newName: value,
+		}));
 	const [memoNameInput, setMemoNameInput] = useState("");
+	//memoNameInputを更新関数
+	const changeMemoNameInput = (value: string) => setMemoNameInput(value);
 	const [appUrlInput, setAppUrlInput] = useState("");
+	//appUrlInputを更新関数
+	const changeAppUrlInput = (value: string) => setAppUrlInput(value);
 	const [folderNameInput, setFolderNameInput] = useState("");
+	//folderNameInputを更新関数
+	const changeFolderNameInput = (value: string) => setFolderNameInput(value);
 	const [isLoadingApp, setIsLoadingApp] = useState(false);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [background, setBackground] = useState("linear-gradient(135deg, #667eea 0%, #764ba2 100%)");
@@ -1017,6 +1030,11 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 		return folderContents.get(folderId)?.length || 0;
 	};
 
+	//アプリの長さが長すぎた時に短くする関数
+	function truncate(str: string, max = 5) {
+		return str.length > max ? `${str.slice(0, max)}…` : str;
+	}
+
 	const renderGrid = () => {
 		const grid = [];
 
@@ -1072,7 +1090,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 									<div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-white/10" />
 								</div>
 								<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
-									{app.name}
+									{truncate(app.name, 5)}
 								</div>
 							</div>
 						)}
@@ -1129,110 +1147,141 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			)}
 
 			{/* Edit Dialog */}
+			{/* {editDialog.visible && editDialog.app && (
+        <CommonDialog
+          visible={editDialog.visible}
+          title={`Edit ${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
+          onCancel={cancelEdit}
+          onSave={saveEdit}
+          saveDisabled={!editDialog.newName.trim()}
+          dialogZIndex={nextzIndex}
+          dialogClassName="edit-dialog"
+        >
+          <div>
+            <label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
+              Name
+            </label>
+            <input
+              id="edit-name"
+              type="text"
+              value={editDialog.newName}
+              onChange={(e) =>
+                setEditDialog((prev) => ({
+                  ...prev,
+                  newName: e.target.value,
+                }))
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  saveEdit();
+                } else if (e.key === "Escape") {
+                  cancelEdit();
+                }
+              }}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter name..."
+            // autoFocus
+            />
+          </div>
+          {editDialog.app.type === "website" && (
+            <div>
+              <label htmlFor="edit-url" className="mb-2 block font-medium text-gray-700 text-sm">
+                URL
+              </label>
+              <input
+                id="edit-url"
+                type="url"
+                value={editDialog.newUrl}
+                onChange={(e) =>
+                  setEditDialog((prev) => ({
+                    ...prev,
+                    newUrl: e.target.value,
+                  }))
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    saveEdit();
+                  } else if (e.key === "Escape") {
+                    cancelEdit();
+                  }
+                }}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                placeholder="https://example.com"
+              />
+            </div>
+          )}
+        </CommonDialog>
+      )} */}
+
 			{editDialog.visible && editDialog.app && (
-				<CommonDialog
+				<DefaultDialog
+					formLabel={`${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"} Name`}
 					visible={editDialog.visible}
 					title={`Edit ${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
 					onCancel={cancelEdit}
 					onSave={saveEdit}
-					saveDisabled={!editDialog.newName.trim()}
 					dialogZIndex={nextzIndex}
 					dialogClassName="edit-dialog"
-				>
-					<div>
-						<label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
-							Name
-						</label>
-						<input
-							id="edit-name"
-							type="text"
-							value={editDialog.newName}
-							onChange={(e) =>
-								setEditDialog((prev) => ({
-									...prev,
-									newName: e.target.value,
-								}))
-							}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									saveEdit();
-								} else if (e.key === "Escape") {
-									cancelEdit();
-								}
-							}}
-							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter name..."
-							// autoFocus
-						/>
-					</div>
-					{editDialog.app.type === "website" && (
-						<div>
-							<label htmlFor="edit-url" className="mb-2 block font-medium text-gray-700 text-sm">
-								URL
-							</label>
-							<input
-								id="edit-url"
-								type="url"
-								value={editDialog.newUrl}
-								onChange={(e) =>
-									setEditDialog((prev) => ({
-										...prev,
-										newUrl: e.target.value,
-									}))
-								}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										saveEdit();
-									} else if (e.key === "Escape") {
-										cancelEdit();
-									}
-								}}
-								className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-								placeholder="https://example.com"
-							/>
-						</div>
-					)}
-				</CommonDialog>
+					placeholder="Enter name..."
+					nameInput={editDialog.newName}
+					changeNameInput={changeNameEditDialog}
+				/>
 			)}
 
 			{/* App URL Dialog */}
+			{/* {appUrlDialog.visible && (
+        <CommonDialog
+          visible={appUrlDialog.visible}
+          title="Create New App"
+          onCancel={cancelAppCreation}
+          onSave={createAppWithUrl}
+          saveDisabled={!appUrlInput.trim() || isLoadingApp}
+          saveLabel={isLoadingApp ? "Creating..." : "Save"}
+          dialogZIndex={nextzIndex}
+          dialogClassName="app-dialog"
+        >
+          <div className="mb-4">
+            <label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
+              Website URL
+            </label>
+            <input
+              id="app-url"
+              type="url"
+              value={appUrlInput}
+              onChange={(e) => setAppUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  createAppWithUrl();
+                } else if (e.key === "Escape") {
+                  cancelAppCreation();
+                }
+              }}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              placeholder="https://example.com"
+            // autoFocus
+            />
+          </div>
+        </CommonDialog>
+      )} */}
+
 			{appUrlDialog.visible && (
-				<CommonDialog
-					visible={appUrlDialog.visible}
-					title="Create New App"
-					onCancel={cancelAppCreation}
-					onSave={createAppWithUrl}
-					saveDisabled={!appUrlInput.trim() || isLoadingApp}
-					saveLabel={isLoadingApp ? "Creating..." : "Save"}
+				<CreateAppUrlDialog
+					nameInput={appUrlInput}
 					dialogZIndex={nextzIndex}
 					dialogClassName="app-dialog"
-				>
-					<div className="mb-4">
-						<label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
-							Website URL
-						</label>
-						<input
-							id="app-url"
-							type="url"
-							value={appUrlInput}
-							onChange={(e) => setAppUrlInput(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									createAppWithUrl();
-								} else if (e.key === "Escape") {
-									cancelAppCreation();
-								}
-							}}
-							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-							placeholder="https://example.com"
-							// autoFocus
-						/>
-					</div>
-				</CommonDialog>
+					changeNameInput={changeAppUrlInput}
+					onSave={createAppWithUrl}
+					onCancel={cancelAppCreation}
+					visible={appUrlDialog.visible}
+					saveLabel={isLoadingApp ? "Creating..." : "Save"}
+					isLoadingApp={isLoadingApp}
+					title="Create New App"
+					placeholder="https://example.com"
+				/>
 			)}
 
 			{/* Memo Name Dialog */}
-			{memoNameDialog.visible && (
+			{/* {memoNameDialog.visible && (
 				<CommonDialog
 					visible={memoNameDialog.visible}
 					title="Create New Memo"
@@ -1264,41 +1313,71 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 						/>
 					</div>
 				</CommonDialog>
+			)} */}
+
+			{memoNameDialog.visible && (
+				<DefaultDialog
+					formLabel="Memo Name"
+					nameInput={memoNameInput}
+					dialogZIndex={nextzIndex}
+					dialogClassName="memo-dialog"
+					changeNameInput={changeMemoNameInput}
+					onSave={createMemoWithName}
+					onCancel={cancelMemoCreation}
+					visible={memoNameDialog.visible}
+					title="Create New Memo"
+					placeholder="Enter memo name..."
+				/>
 			)}
 
 			{/* Folder Name Dialog */}
+			{/* {folderNameDialog.visible && (
+        <CommonDialog
+          visible={folderNameDialog.visible}
+          title="Create New Folder"
+          onCancel={cancelFolderCreation}
+          onSave={createFolderWithName}
+          saveDisabled={!folderNameInput.trim()}
+          dialogZIndex={nextzIndex}
+          dialogClassName="folder-dialog"
+        >
+          <div className="mb-4">
+            <label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
+              Folder Name
+            </label>
+            <input
+              id="folder-name"
+              type="text"
+              value={folderNameInput}
+              onChange={(e) => setFolderNameInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  createFolderWithName();
+                } else if (e.key === "Escape") {
+                  cancelFolderCreation();
+                }
+              }}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter folder name..."
+            // autoFocus
+            />
+          </div>
+        </CommonDialog>
+      )} */}
+
 			{folderNameDialog.visible && (
-				<CommonDialog
-					visible={folderNameDialog.visible}
-					title="Create New Folder"
-					onCancel={cancelFolderCreation}
-					onSave={createFolderWithName}
-					saveDisabled={!folderNameInput.trim()}
+				<DefaultDialog
+					formLabel="Folder Name"
+					nameInput={folderNameInput}
 					dialogZIndex={nextzIndex}
 					dialogClassName="folder-dialog"
-				>
-					<div className="mb-4">
-						<label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
-							Folder Name
-						</label>
-						<input
-							id="folder-name"
-							type="text"
-							value={folderNameInput}
-							onChange={(e) => setFolderNameInput(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									createFolderWithName();
-								} else if (e.key === "Escape") {
-									cancelFolderCreation();
-								}
-							}}
-							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter folder name..."
-							// autoFocus
-						/>
-					</div>
-				</CommonDialog>
+					changeNameInput={changeFolderNameInput}
+					onSave={createFolderWithName}
+					onCancel={cancelFolderCreation}
+					visible={folderNameDialog.visible}
+					title="Create New Folder"
+					placeholder="Enter folder name..."
+				/>
 			)}
 
 			{/* Help Window */}
