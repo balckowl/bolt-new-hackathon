@@ -58,7 +58,8 @@ export const UserIcon = ({ isPublic, currentUserInfo }: Props) => {
 									onClick={() => router.push(`/os/${currentUserInfo.currentUserOsName}`)}
 								>
 									<Monitor size={15} />
-									{truncate(currentUserInfo.currentUserOsName, 7)}'s 0S
+									{truncate(currentUserInfo.currentUserOsName, 7)}
+									{"'s OS"}
 								</button>
 								<button
 									type="button"

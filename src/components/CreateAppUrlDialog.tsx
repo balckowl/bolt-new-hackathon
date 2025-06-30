@@ -41,8 +41,6 @@ export default function CreateAppUrlDialog({
 	placeholder,
 	isLoadingApp,
 }: Props) {
-	if (!visible) return null;
-
 	const form = useForm<urlSchemaType>({
 		resolver: zodResolver(urlSchema),
 		defaultValues: {
@@ -55,6 +53,8 @@ export default function CreateAppUrlDialog({
 	const onSubmit = () => {
 		onSave();
 	};
+
+	if (!visible) return null;
 
 	return (
 		<div

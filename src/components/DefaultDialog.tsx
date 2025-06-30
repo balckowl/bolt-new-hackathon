@@ -38,8 +38,6 @@ export default function DefaultDialog({
 	placeholder,
 	formLabel,
 }: Props) {
-	if (!visible) return null;
-
 	const form = useForm<nameSchemaType>({
 		resolver: zodResolver(nameSchema),
 		defaultValues: {
@@ -52,6 +50,8 @@ export default function DefaultDialog({
 	const onSubmit = () => {
 		onSave();
 	};
+
+	if (!visible) return null;
 
 	return (
 		<div
