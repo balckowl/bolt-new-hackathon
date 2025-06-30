@@ -58,20 +58,20 @@ export const ContextMenu = ({
 				// Menu for empty cells
 				<>
 					<button
+						onClick={showMemoNameDialog}
+						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
+						type="button"
+					>
+						<StickyNote size={16} />
+						<span>Create Note</span>
+					</button>
+					<button
 						onClick={showAppUrlDialog}
 						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
 						type="button"
 					>
 						<Plus size={16} />
 						<span>Create App</span>
-					</button>
-					<button
-						onClick={showMemoNameDialog}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-						type="button"
-					>
-						<StickyNote size={16} />
-						<span>Create Memo</span>
 					</button>
 					<button
 						onClick={showFolderNameDialog}

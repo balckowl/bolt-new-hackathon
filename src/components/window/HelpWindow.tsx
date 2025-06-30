@@ -117,14 +117,14 @@ export function HelpWindow({
 							type="button"
 						/>
 					</div>
-					<span className="ml-4 font-medium text-gray-700 text-sm">How to use</span>
+					<span className="ml-4 font-medium text-gray-700 text-sm">Instructions</span>
 					{/* <span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span> */}
 				</div>
 			</div>
 
 			{/* Window Content */}
 			<div className="min-h-0 flex-1 overflow-y-auto ">
-				<h2 className="mb-4 pt-4 pl-2 font-extrabold text-2xl tracking-tight">How to use</h2>
+				<h2 className="mb-4 pt-4 pl-2 font-extrabold text-2xl tracking-tight">Instructions</h2>
 				<ol className="list-decimal space-y-6 pl-7 text-base text-gray-800">
 					<li>
 						<span className="font-semibold text-blue-700">Notepad</span> allows you to write notes
