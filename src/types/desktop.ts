@@ -1,4 +1,6 @@
+import type { desktopStateSchema } from "@/src/server/models/os.schema";
 import type { LucideIcon } from "lucide-react";
+import type z from "zod";
 
 export interface AppIcon {
 	id: string;
@@ -16,6 +18,11 @@ export interface GridPosition {
 	row: number;
 	col: number;
 }
+
+export type CurrentUserType = Pick<
+	z.infer<typeof desktopStateSchema>,
+	"currentUserIcon" | "currentUserOsName" | "currentUsername"
+> | null;
 
 export interface HelpWindowType {
 	visible: boolean;
