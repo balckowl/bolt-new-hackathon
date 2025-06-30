@@ -7,3 +7,16 @@ export const signIn = async () => {
 		callbackURL: "/enter/callback/welcome",
 	});
 };
+
+export const signOut = async (isPublic: boolean) => {
+	await authClient.signOut({
+		fetchOptions: {
+			onSuccess: () => {
+				window.location.reload();
+				if (!isPublic) {
+					window.location.href = "/";
+				}
+			},
+		},
+	});
+};
