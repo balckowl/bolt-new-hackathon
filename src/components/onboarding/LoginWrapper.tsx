@@ -57,8 +57,8 @@ export default function LoginWrapper() {
 					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
 						{/* Header */}
 						<div className="mb-8 text-center">
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">Sign In to MyOS</h1>
-							<p className="text-gray-600">Now, let&#39;s develop your very own OS!</p>
+							<h1 className="mb-2 font-bold text-2xl text-gray-800">Sign in to MyOS</h1>
+							<p className="text-gray-600">Create your very own web‑based OS.</p>
 						</div>
 
 						{/* Login Form */}
@@ -117,7 +117,7 @@ export default function LoginWrapper() {
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-											Terms of Service and Privacy Policy
+											Terms of Service and Privacy Policy.
 										</Link>
 									</div>
 								</div>
@@ -135,8 +135,8 @@ export default function LoginWrapper() {
 
 							{/* Additional Info */}
 							<div className="text-center text-gray-500 text-xs leading-relaxed">
-								By signing in, you&#39;ll be able to create and organize your personal web OS,
-								including folders, apps, and memos.
+								By signing in, you&#39;ll be able to create and organize folders, apps, and notes in
+								your personal web OS. Continue with Google
 							</div>
 						</form>
 					</div>
