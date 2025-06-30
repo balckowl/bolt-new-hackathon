@@ -32,7 +32,6 @@ export default async function Page({ params }: { params: { osName: string } }) {
 	return (
 		<>
 			<MacosDesktop desktop={data} osName={params.osName} />
-			<UserIcon isPublic={data.isPublic} />
 		</>
 	);
 }
