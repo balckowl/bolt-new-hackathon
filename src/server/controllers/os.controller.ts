@@ -53,6 +53,9 @@ export const getDesktopStateHandler: RouteHandler<
 		isPublic: userWithDesktop.desktop.isPublic,
 		background: userWithDesktop.desktop.background,
 		isEdit,
+		currentUsername: session?.user.name ?? null,
+		currentUserOsName: session?.user.osName ?? null,
+		currentUserIcon: session?.user.image ?? null,
 	};
 
 	return c.json(result, 200);
@@ -83,20 +86,20 @@ export const updateDesktopStateHandler: RouteHandler<
 	}
 
 	//prismaでjsonの中を型付けできないのでここで検証する必要があるのかよ！
-	const rawJson = desktop.state;
-	const parsedState = stateSchema.parse(rawJson);
+	// const rawJson = desktop.state;
+	// const parsedState = stateSchema.parse(rawJson);
 
-	const result = {
-		state: parsedState,
-		isPublic: desktop.isPublic,
-		background: desktop.background,
-		isEdit: true,
-	};
+	// const result = {
+	//   state: parsedState,
+	//   isPublic: desktop.isPublic,
+	//   background: desktop.background,
+	//   isEdit: true,
+	// };
 
 	//cacheを更新
 	revalidateTag("desktop");
 
-	return c.json(result, 200);
+	return c.json(null, 200);
 };
 
 export const updateDesktopVisibilityHandler: RouteHandler<

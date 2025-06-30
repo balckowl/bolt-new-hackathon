@@ -52,7 +52,7 @@ export const updateDesktopStateRoute = createRoute({
 	responses: {
 		200: {
 			description: "更新成功",
-			content: { "application/json": { schema: desktopStateSchema } },
+			content: { "application/json": { schema: z.null() } },
 		},
 		404: {
 			description: "デスクトップ情報が見つかりませんでした。",

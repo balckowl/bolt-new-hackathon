@@ -150,6 +150,9 @@ export const desktopStateSchema = z
 		state: stateSchema,
 		//編集ができるかどうか
 		isEdit: z.boolean(),
+		currentUserOsName: z.string().nullable(),
+		currentUsername: z.string().nullable(),
+		currentUserIcon: z.string().url().nullable(),
 	})
 	.extend(isPublicSchema.shape)
 	.extend(backgroundSchema.shape);
