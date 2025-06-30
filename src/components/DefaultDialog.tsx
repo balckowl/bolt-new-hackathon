@@ -3,15 +3,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { appSchema } from "../server/models/os.schema";
 import { Button } from "./ui/button";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 
 type Props = {
@@ -89,7 +81,6 @@ export default function DefaultDialog({
 											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
 										/>
 									</FormControl>
-									<FormDescription>This is your public display name.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
