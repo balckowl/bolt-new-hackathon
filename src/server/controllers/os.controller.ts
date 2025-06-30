@@ -1,6 +1,7 @@
 import { auth } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 import type { RouteHandler } from "@hono/zod-openapi";
+import { revalidateTag } from "next/cache";
 import type { WithAuthenticatedRequest } from "../middleware/authMIddleware";
 import { stateSchema } from "../models/os.schema";
 import type {
@@ -92,6 +93,9 @@ export const updateDesktopStateHandler: RouteHandler<
 		isEdit: true,
 	};
 
+	//cacheを更新
+	revalidateTag("desktop");
+
 	return c.json(result, 200);
 };
 
@@ -108,6 +112,9 @@ export const updateDesktopVisibilityHandler: RouteHandler<
 
 	if (result.count === 0) return c.json(null, 404);
 
+	//cacheを更新
+	revalidateTag("desktop");
+
 	return c.json(null, 200);
 };
 
@@ -123,6 +130,9 @@ export const updateDesktopBackgroundHandler: RouteHandler<
 	});
 
 	if (result.count === 0) return c.json(null, 404);
+
+	//cacheを更新
+	revalidateTag("desktop");
 
 	return c.json(null, 200);
 };

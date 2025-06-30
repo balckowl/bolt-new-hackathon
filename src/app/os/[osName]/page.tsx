@@ -11,8 +11,9 @@ export default async function Page({ params }: { params: { osName: string } }) {
 		},
 		{
 			init: {
-				cache: "no-store",
-				headers: await headers(),
+				cache: "force-cache",
+				next: { tags: ["desktop"] },
+				headers: headers(),
 			},
 		},
 	);
