@@ -1,3 +1,4 @@
+import { SquareArrowOutUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { BrowserWindowType } from "../../types/desktop";
 
@@ -120,7 +121,15 @@ export function BrowserWindow({
 					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
 				</div>
 				<div className="flex items-center space-x-2">
-					<div className="rounded bg-gray-100 px-2 py-1 text-gray-500 text-xs">{window.url}</div>
+					<a
+						href={window.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="flex items-center gap-2 rounded bg-gray-100 px-2 py-1 text-gray-500 text-xs"
+					>
+						{window.url}
+						<SquareArrowOutUpRight size={12} />
+					</a>
 				</div>
 			</div>
 
