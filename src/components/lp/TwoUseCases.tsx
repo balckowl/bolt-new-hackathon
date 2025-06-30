@@ -1,5 +1,6 @@
 import { env } from "@/src/env.mjs";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
@@ -52,8 +53,10 @@ export default function TwoUseCases({ scrollY }: Props) {
 						{/* Right: Sample Image */}
 						<div className="relative">
 							<div className="rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 p-8 shadow-lg">
-								<img
-									src="https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+								<Image
+									src="/case-1.png"
+									width={400}
+									height={100}
 									alt="Organized workspace with folders and documents"
 									className="h-64 w-full rounded-xl object-cover shadow-md"
 								/>
@@ -66,9 +69,11 @@ export default function TwoUseCases({ scrollY }: Props) {
 						{/* Left: Sample Image */}
 						<div className="relative order-2 lg:order-1">
 							<div className="rounded-2xl bg-gradient-to-br from-green-50 to-blue-50 p-8 shadow-lg">
-								<img
-									src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
-									alt="Professional portfolio website on laptop screen"
+								<Image
+									src="/case-2.png"
+									width={400}
+									height={100}
+									alt="Organized workspace with folders and documents"
 									className="h-64 w-full rounded-xl object-cover shadow-md"
 								/>
 							</div>

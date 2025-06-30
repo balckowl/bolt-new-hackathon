@@ -1,8 +1,26 @@
 import MacosDesktop from "@/src/components/MacosDesktop";
 import { hono } from "@/src/lib/hono-client";
-import { headers } from "next/headers";
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
-export default async function Page({ params }: { params: { osName: string } }) {
+type Props = {
+	params: { osName: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	return {
+		title: `${params.osName}'s OS`,
+		description: `This is ${params.osName}'s OS page.`,
+		openGraph: {
+			title: `${params.osName}'s OS`,
+			description: `This is ${params.osName}'s OS page.`,
+		},
+	};
+}
+
+export default async function Page({ params }: Props) {
+	const cookieHeader = cookies().toString();
+
 	const res = await hono.api.desktop[":osName"].state.$get(
 		{
 			param: {
@@ -13,7 +31,7 @@ export default async function Page({ params }: { params: { osName: string } }) {
 			init: {
 				cache: "force-cache",
 				next: { tags: ["desktop"] },
-				headers: headers(),
+				headers: { cookie: cookieHeader },
 			},
 		},
 	);

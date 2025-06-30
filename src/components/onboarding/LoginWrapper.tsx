@@ -57,7 +57,7 @@ export default function LoginWrapper() {
 					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
 						{/* Header */}
 						<div className="mb-8 text-center">
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">Sign in to MyOS</h1>
+							<h1 className="mb-2 font-bold text-2xl text-gray-800">Sign in to OSpace</h1>
 							<p className="text-gray-600">Create your very own web‑based OS.</p>
 						</div>
 
