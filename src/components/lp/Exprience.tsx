@@ -14,7 +14,7 @@ export default function Exprience({ scrollY }: Props) {
 		>
 			<div className="mx-auto max-w-6xl">
 				<div className="mb-8 text-center">
-					<h2 className="mb-4 font-bold text-4xl text-gray-800">Experience</h2>
+					<h2 className="mb-4 font-bold text-4xl text-gray-800">Try the Demo</h2>
 				</div>
 
 				{/* Enlarged Safari-style Browser Window */}
