@@ -595,6 +595,15 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 					transform: `translateY(${scrollY * 0.3}px)`,
 				}}
 			>
+				<a href="https://bolt.new" target="_blank" rel="noreferrer">
+					<Image
+						src="/bolt-logo.png"
+						width={170}
+						height={170}
+						alt="bolt-logo"
+						className="absolute right-[50%] bottom-[50px] z-40 translate-x-[50%] md:right-[60px] md:translate-x-0"
+					/>
+				</a>
 				{/* Hero Icons with White Backgrounds and Labels - Only show on desktop */}
 				{!isMobile && (
 					<div className="pointer-events-none absolute inset-0">
@@ -632,7 +641,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 					{/* Site Icon with White Rounded Background */}
 					<div className="mb-6">
 						<div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-lg">
-							<Globe className="h-10 w-10 text-blue-600" strokeWidth={1.5} />
+							<Image src="/logo.png" width={80} height={80} alt="logo" className="rounded-2xl" />
 						</div>
 					</div>
 
@@ -697,7 +706,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
                 </p>
               </div> */}
 							<Image
-								src="/lp-sample.png"
+								src="/hero.png"
 								className="w-full"
 								width={1000}
 								height={650}

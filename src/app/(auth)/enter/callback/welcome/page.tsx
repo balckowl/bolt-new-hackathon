@@ -1,7 +1,12 @@
 import WelcomeWrapper from "@/src/components/onboarding/WelcomeWrapper";
 import { auth } from "@/src/lib/auth";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+	title: "Welcome",
+};
 
 export default async function Page() {
 	const session = await auth.api.getSession({
