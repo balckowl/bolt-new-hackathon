@@ -1,5 +1,4 @@
 import MacosDesktop from "@/src/components/MacosDesktop";
-import { UserIcon } from "@/src/components/UserIcon";
 import { hono } from "@/src/lib/hono-client";
 import { headers } from "next/headers";
 
@@ -28,7 +27,6 @@ export default async function Page({ params }: { params: { osName: string } }) {
 	}
 
 	const data = await res.json();
-
 	return (
 		<>
 			<MacosDesktop desktop={data} osName={params.osName} />

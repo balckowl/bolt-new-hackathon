@@ -22,6 +22,7 @@ import type {
 	AppUrlDialog,
 	BrowserWindowType,
 	ContextMenuType,
+	CurrentUserType,
 	EditDialog,
 	FolderNameDialog,
 	FolderWindowType,
@@ -118,6 +119,9 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	// public or private
 	const [isPublic, setIsPublic] = useState(false);
 
+	// currentUserInfo
+	const [currentUserInfo, setCurrentUserInfo] = useState<CurrentUserType>(null);
+
 	// isEdit
 	const isEdit = desktop.isEdit ?? false;
 
@@ -162,6 +166,13 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				if (!backgroundImg) return;
 				setBackground(backgroundImg.value);
 			}
+
+			// initialize loginUserInfo
+			setCurrentUserInfo({
+				currentUsername: desktop.currentUsername || null,
+				currentUserOsName: desktop.currentUserOsName || null,
+				currentUserIcon: desktop.currentUserIcon || null,
+			});
 		}
 	}, [desktop, apps.length, positionsInitialized]);
 
@@ -1105,7 +1116,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 	return (
 		<div className="relative min-h-screen overflow-hidden" style={getBackgroundStyle()}>
-			<UserIcon isPublic={isPublic} />
+			<UserIcon isPublic={isPublic} currentUserInfo={currentUserInfo} />
 			{/* Background overlay for better contrast */}
 			<div className="absolute inset-0 bg-black/20" />
 
