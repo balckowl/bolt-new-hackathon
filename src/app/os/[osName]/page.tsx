@@ -1,7 +1,7 @@
 import MacosDesktop from "@/src/components/MacosDesktop";
 import { hono } from "@/src/lib/hono-client";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 
 type Props = {
 	params: { osName: string };
@@ -19,6 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
+	const cookieHeader = cookies().toString();
+
 	const res = await hono.api.desktop[":osName"].state.$get(
 		{
 			param: {
@@ -29,7 +31,7 @@ export default async function Page({ params }: Props) {
 			init: {
 				cache: "force-cache",
 				next: { tags: ["desktop"] },
-				headers: headers(),
+				headers: { cookie: cookieHeader },
 			},
 		},
 	);
