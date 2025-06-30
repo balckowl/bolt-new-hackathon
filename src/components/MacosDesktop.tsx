@@ -1102,7 +1102,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 									<div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-white/10" />
 								</div>
 								<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
-									{truncate(app.name, 5)}
+									{truncate(app.name, 6)}
 								</div>
 							</div>
 						)}
@@ -1228,9 +1228,9 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 			{editDialog.visible && editDialog.app && (
 				<DefaultDialog
-					formLabel={`${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"} Name`}
+					formLabel={`${editDialog.app.type === "memo" ? "Notes" : editDialog.app.type === "folder" ? "Folder" : "App"} Name`}
 					visible={editDialog.visible}
-					title={`Edit ${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
+					title={`Edit ${editDialog.app.type === "memo" ? "Notes" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
 					onCancel={cancelEdit}
 					onSave={saveEdit}
 					dialogZIndex={nextzIndex}
@@ -1330,7 +1330,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 			{memoNameDialog.visible && (
 				<DefaultDialog
-					formLabel="Memo Name"
+					formLabel="Notes Name"
 					nameInput={memoNameInput}
 					dialogZIndex={nextzIndex}
 					dialogClassName="memo-dialog"
@@ -1338,8 +1338,8 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 					onSave={createMemoWithName}
 					onCancel={cancelMemoCreation}
 					visible={memoNameDialog.visible}
-					title="Create New Memo"
-					placeholder="Enter memo name..."
+					title="Create New Notes"
+					placeholder="Enter notes name..."
 				/>
 			)}
 

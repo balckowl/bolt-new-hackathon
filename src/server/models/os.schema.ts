@@ -8,14 +8,19 @@ const positionSchema = z.object({
 
 export const appSchema = z.object({
 	id: z.string(),
-	name: z.string().min(1, { message: "1文字以上" }).max(20, { message: "20文字以下" }),
-	//enumで与える
+	name: z
+		.string()
+		.min(1, { message: "Name must be at least 1 character long." })
+		.max(30, { message: "Name must be at most 30 characters long." }),
+	// Choose from predefined icons
 	iconKey: z.enum(["StickyNote", "Globe", "FolderIcon"]),
-	color: z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
+	color: z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
+		message: "Color must be a valid hex code (e.g. #FFF or #FFFFFF).",
+	}),
 	type: z.enum(["app", "memo", "website", "folder"]).optional(),
 	content: z.string().optional(),
-	url: z.string().url({ message: "不正なURL形式です。" }).optional(),
-	favicon: z.string().url().optional(),
+	url: z.string().url({ message: "Invalid URL format." }).optional(),
+	favicon: z.string().url({ message: "Invalid URL format." }).optional(),
 });
 
 export const stateSchema = z

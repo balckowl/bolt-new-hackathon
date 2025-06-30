@@ -85,7 +85,11 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 										<FormItem>
 											<FormLabel>OS Name</FormLabel>
 											<FormControl>
-												<Input placeholder="shadcn" {...field} />
+												<Input
+													placeholder="shadcn"
+													{...field}
+													className="focus-visible:ring-transparent"
+												/>
 											</FormControl>
 											<FormDescription>It cannot be changed later.</FormDescription>
 											<FormMessage />

@@ -3,15 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { appSchema } from "../server/models/os.schema";
 import { Button } from "./ui/button";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 
 type Props = {
@@ -89,10 +81,9 @@ export default function CreateAppUrlDialog({
 												field.onChange(e);
 												changeNameInput(e.target.value);
 											}}
-											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus-visible:ring-transparent"
 										/>
 									</FormControl>
-									<FormDescription>This is your public display url.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
