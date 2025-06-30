@@ -10,7 +10,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { signIn, signOut } from "@/src/lib/auth-client";
 import type { CurrentUserType } from "@/src/types/desktop";
-import { Monitor, User } from "lucide-react";
+import { Globe, LogIn, LogOut, Monitor, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -34,7 +34,7 @@ export const UserIcon = ({ isPublic, currentUserInfo }: Props) => {
 		return str.length > max ? `${str.slice(0, max)}…` : str;
 	}
 	return (
-		<div className="fixed bottom-4 left-4 z-50">
+		<div className="fixed bottom-7 left-7 z-50">
 			<DropdownMenu>
 				<DropdownMenuTrigger>
 					<Avatar>
@@ -44,37 +44,52 @@ export const UserIcon = ({ isPublic, currentUserInfo }: Props) => {
 						</AvatarFallback>
 					</Avatar>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="min-w-[100px] gap-2 text-sm" align="start">
-					<DropdownMenuGroup>
+				<DropdownMenuContent className="m-0 w-[150px] gap-2 p-0 text-sm" align="start">
+					<div className="m-0 w-[150px]">
 						{currentUserInfo?.currentUserOsName && currentUserInfo?.currentUsername ? (
 							<>
-								<DropdownMenuItem style={{ display: "flex", justifyContent: "center" }}>
-									<User size={15} className="mr-2" />
-									{truncate(currentUserInfo.currentUsername, 5)}
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									style={{ display: "flex", justifyContent: "center" }}
+								<div className="flex w-full items-center justify-between border-b px-2 py-3">
+									<User size={15} />
+									{truncate(currentUserInfo.currentUsername, 7)}
+								</div>
+								<button
+									type="button"
+									className="flex w-full items-center justify-between border-b px-2 py-3 hover:bg-gray-100"
 									onClick={() => router.push(`/os/${currentUserInfo.currentUserOsName}`)}
 								>
-									<Monitor size={15} className="mr-2" />
-									{truncate(currentUserInfo.currentUserOsName, 5)}
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									style={{ display: "flex", justifyContent: "center", color: "#dc2626" }}
+									<Monitor size={15} />
+									{truncate(currentUserInfo.currentUserOsName, 7)}'s 0S
+								</button>
+								<button
+									type="button"
+									className="flex w-full items-center justify-between border-b px-2 py-3 text-red-500 hover:bg-gray-100"
 									onClick={() => handleSignOut()}
 								>
-									logout
-								</DropdownMenuItem>
+									<LogOut size={15} />
+									Sign Out
+								</button>
 							</>
 						) : (
-							<DropdownMenuItem
-								style={{ display: "flex", justifyContent: "center" }}
-								onClick={() => signIn()}
-							>
-								login
-							</DropdownMenuItem>
+							<>
+								<button
+									type="button"
+									className="flex w-full items-center justify-between border-b px-2 py-3 hover:bg-gray-100"
+									onClick={() => signIn()}
+								>
+									<LogIn size={15} />
+									Sign In
+								</button>
+								<button
+									type="button"
+									className="flex w-full items-center justify-between border-b px-2 py-3 hover:bg-gray-100"
+									onClick={() => router.push("/")}
+								>
+									<Globe size={15} />
+									Top Page
+								</button>
+							</>
 						)}
-					</DropdownMenuGroup>
+					</div>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>

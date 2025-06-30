@@ -85,7 +85,11 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 										<FormItem>
 											<FormLabel>OS Name</FormLabel>
 											<FormControl>
-												<Input placeholder="Enter your OS name..." {...field} />
+												<Input
+													placeholder="Enter your OS name..."
+													{...field}
+													className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500"
+												/>
 											</FormControl>
 											<FormDescription>This can’t be changed later.</FormDescription>
 											<FormMessage />

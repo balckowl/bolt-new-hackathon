@@ -67,11 +67,12 @@ export const setOsNameHandler: RouteHandler<
 						apps: [
 							{
 								id: "app-1",
-								name: "メモ帳",
+								name: "Intro",
 								iconKey: "StickyNote",
 								color: "#FFEB3B",
 								type: "memo",
-								content: "これはサンプルのメモです。",
+								content:
+									"<p>Thank you for using this site! 🎉✨<br>You can find instructions on how to use it under <strong>Instructions</strong> in the menu bar.</p>",
 							},
 						],
 						appPositions: {
