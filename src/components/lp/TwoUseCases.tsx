@@ -1,4 +1,6 @@
+import { env } from "@/src/env.mjs";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 
 type Props = {
@@ -36,11 +38,14 @@ export default function TwoUseCases({ scrollY }: Props) {
 								for different projects and keep your notes organized.
 							</p>
 							<Button
+								asChild
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								View Sample
-								<ArrowRight className="ml-2 h-5 w-5" />
+								<Link href={`${env.NEXT_PUBLIC_APP_URL}/os/gogo`}>
+									View sample
+									<ArrowRight className="ml-2 h-5 w-5" />
+								</Link>
 							</Button>
 						</div>
 
@@ -82,11 +87,14 @@ export default function TwoUseCases({ scrollY }: Props) {
 								projects and create a professional online presence.
 							</p>
 							<Button
+								asChild
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								View Sample
-								<ArrowRight className="ml-2 h-5 w-5" />
+								<Link href={`${env.NEXT_PUBLIC_APP_URL}/os/yta`}>
+									View sample
+									<ArrowRight className="ml-2 h-5 w-5" />
+								</Link>
 							</Button>
 						</div>
 					</div>

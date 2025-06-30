@@ -1,23 +1,25 @@
 "use client";
 
+import { env } from "@/src/env.mjs";
 import {
-	Edit,
-	FileText,
+	ArrowRight,
 	Folder,
-	Github,
 	Globe,
 	Heart,
 	MousePointer2,
+	PenLine,
+	Plus,
 	Pointer,
 	Rocket,
 	Sparkles,
 	Star,
+	StickyNote,
 	Trash2,
-	Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FaGithub as Github, FaYoutube as Youtube } from "react-icons/fa";
 import { Button } from "../ui/button";
 
 type Props = {
@@ -325,13 +327,13 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 		},
 		{ Icon: Globe, x: "88%", y: "38%", color: "text-green-600", rotation: "-15deg", name: "Globe" },
 		{
-			Icon: FileText,
+			Icon: StickyNote,
 			x: "82%",
 			y: "25%",
 			color: "text-blue-600",
 			rotation: "-10deg",
-			id: "notepad",
-			name: "Notepad",
+			id: "notes",
+			name: "Notes",
 		},
 	];
 
@@ -404,19 +406,19 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 							setShowNewFolder(true);
 						}}
 					>
-						<Folder className="mr-2 h-4 w-4 flex-shrink-0 text-yellow-600" />
-						<span className="flex-1">Create folder</span>
+						<Folder className="mr-2 h-4 w-4 flex-shrink-0" />
+						<span className="flex-1">Create Folder</span>
 
 						{/* Click animation rings for Create folder button */}
 						{showCreateFolderClick && (
 							<>
-								<div className="absolute inset-0 animate-ping rounded border-2 border-yellow-500 opacity-75" />
+								<div className="absolute inset-0 animate-ping rounded border-2 opacity-75" />
 								<div
-									className="absolute inset-1 animate-ping rounded border border-yellow-400 opacity-50"
+									className="absolute inset-1 animate-ping rounded border opacity-50"
 									style={{ animationDelay: "0.1s" }}
 								/>
 								<div
-									className="absolute inset-2 animate-ping rounded border border-yellow-300 opacity-25"
+									className="absolute inset-2 animate-ping rounded border opacity-25"
 									style={{ animationDelay: "0.2s" }}
 								/>
 							</>
@@ -425,15 +427,18 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 					<hr className="my-1 border-gray-200" />
 					<button
 						type="button"
-						className="w-full px-4 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100"
+						className="flex w-full items-center px-4 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100"
 					>
-						Paste
+						<Plus className="mr-2 h-4 w-4 flex-shrink-0 " />
+						<span className="flex-1">Create App</span>
 					</button>
+					<hr className="my-1 border-gray-200" />
 					<button
 						type="button"
-						className="w-full px-4 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100"
+						className="flex w-full items-center px-4 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100"
 					>
-						Refresh
+						<StickyNote className="mr-2 h-4 w-4 flex-shrink-0" />
+						<span className="flex-1">Create Notes</span>
 					</button>
 				</div>
 			)}
@@ -451,7 +456,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 						type="button"
 						className="flex w-full items-center px-4 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100"
 					>
-						<Edit className="mr-2 h-4 w-4 flex-shrink-0 text-blue-600" />
+						<PenLine className="mr-2 h-4 w-4 flex-shrink-0" />
 						<span className="flex-1">Edit</span>
 					</button>
 					<button
@@ -549,7 +554,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 							</div>
 							<div className="mx-4 flex-1">
 								<div className="rounded-md border border-gray-300 bg-white px-3 py-1 text-gray-600 text-sm">
-									http://localhost:3000/login
+									{env.NEXT_PUBLIC_APP_URL}/get-started
 								</div>
 							</div>
 							<div className="w-16" />
@@ -573,7 +578,10 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-3 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								<Link href="/login">Sign in with Google</Link>
+								<Link href="/login">
+									Get Started
+									<ArrowRight className="ml-2 h-5 w-5" />
+								</Link>
 							</Button>
 						</div>
 					</div>
@@ -639,7 +647,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 
 					{/* Updated Subtitle with lighter color */}
 					<p className="mb-12 text-lg text-white/75 leading-relaxed drop-shadow-md md:text-xl lg:text-2xl">
-						Organize info or showcase your portfolio.
+						Organize your info or showcase your portfolio.
 					</p>
 
 					<Button
@@ -648,7 +656,10 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 						variant="outline"
 						className="group rounded-lg border-2 border-white bg-transparent px-6 py-3 font-medium text-base text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-blue-700 md:px-8 md:py-4 md:text-lg"
 					>
-						<Link href="/login">Sign in with Google</Link>
+						<Link href="/login">
+							Get Started
+							<ArrowRight className="ml-2 h-5 w-5" />
+						</Link>
 					</Button>
 				</div>
 			</section>
@@ -673,7 +684,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 								</div>
 								<div className="mx-4 flex-1">
 									<div className="rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-gray-600 text-sm">
-										http://localhost:3000/os/demo
+										{env.NEXT_PUBLIC_APP_URL}/os/demo
 									</div>
 								</div>
 								<div className="w-16" />

@@ -1,4 +1,4 @@
-import { FileText, Folder, Github } from "lucide-react";
+import { Folder, Globe, StickyNote } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 type Props = {
@@ -43,7 +43,7 @@ export default function CoreFunctions({ scrollY }: Props) {
 						<CardContent className="relative p-6 text-center">
 							{/* Popping Icon - Using Github from hero icons */}
 							<div className="-top-8 -translate-x-1/2 absolute left-1/2 z-10 flex h-[90px] w-[90px] transform items-center justify-center rounded-2xl border-2 bg-white shadow-lg">
-								<Github className="h-12 w-12 text-gray-800" />
+								<Globe className="h-12 w-12 text-gray-800" />
 							</div>
 							<div className="pt-12">
 								{/* Styled Title with Black Background */}
@@ -62,12 +62,12 @@ export default function CoreFunctions({ scrollY }: Props) {
 						<CardContent className="relative p-6 text-center">
 							{/* Popping Icon - Using FileText from hero icons */}
 							<div className="-top-8 -translate-x-1/2 absolute left-1/2 z-10 flex h-[90px] w-[90px] transform items-center justify-center rounded-2xl border-2 bg-white shadow-lg">
-								<FileText className="h-12 w-12 text-blue-600" />
+								<StickyNote className="h-12 w-12 text-blue-600" />
 							</div>
 							<div className="pt-12">
 								{/* Styled Title with Black Background */}
 								<div className="mb-4 inline-block rounded bg-black/90 px-2 py-1 text-white">
-									<h3 className="font-semibold text-xs">Notepad</h3>
+									<h3 className="font-semibold text-xs">Notes</h3>
 								</div>
 								<p className="text-gray-600 text-sm leading-relaxed">
 									Using the notepad, you can write notes in Markdown format.

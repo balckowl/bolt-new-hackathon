@@ -18,9 +18,9 @@ export default function Recommend({ scrollY }: Props) {
 			<div className="mx-auto mb-20 max-w-4xl">
 				<Card className="border-none shadow-none">
 					<CardContent className="p-16 text-center">
-						<h2 className="mb-8 font-bold text-3xl text-gray-800">Your unique link</h2>
+						<h2 className="mb-8 font-bold text-3xl text-gray-800">Ready to build?</h2>
 						<p className="mb-8 text-gray-700 text-lg leading-relaxed">
-							Launch your own original &quot;OS&quot; on the web and create something amazing!
+							Use your unique link to launch a web OS and make something incredible!
 						</p>
 						<Button
 							asChild
