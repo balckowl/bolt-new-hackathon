@@ -2,6 +2,7 @@
 
 import { backgroundOptions } from "@/src/components/BackgroundSelector";
 import { MenuBar } from "@/src/components/MenuBar";
+import { UserIcon } from "@/src/components/UserIcon";
 import { Button } from "@/src/components/ui/button";
 import { HelpWindow } from "@/src/components/window/HelpWindow";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
@@ -1104,6 +1105,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 	return (
 		<div className="relative min-h-screen overflow-hidden" style={getBackgroundStyle()}>
+			<UserIcon isPublic={isPublic} />
 			{/* Background overlay for better contrast */}
 			<div className="absolute inset-0 bg-black/20" />
 
