@@ -72,8 +72,8 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 
 					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
 						<div className="mb-8 text-center">
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">Welcome</h1>
-							<p className="text-gray-600">Let&#39;s decide on a name for your OS!</p>
+							<h1 className="mb-2 font-bold text-2xl text-gray-800">Welcome!</h1>
+							<p className="text-gray-600">Let&#39;s pick a name for your OS.</p>
 						</div>
 
 						<Form {...form}>
@@ -85,9 +85,9 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 										<FormItem>
 											<FormLabel>OS Name</FormLabel>
 											<FormControl>
-												<Input placeholder="shadcn" {...field} />
+												<Input placeholder="Enter your OS name..." {...field} />
 											</FormControl>
-											<FormDescription>It cannot be changed later.</FormDescription>
+											<FormDescription>This can’t be changed later.</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}

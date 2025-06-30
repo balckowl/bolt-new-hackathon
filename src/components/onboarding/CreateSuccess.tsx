@@ -28,8 +28,8 @@ export default function CreateSuccess({ osName }: Props) {
 						{/* Success State */}
 						<div className="text-center">
 							{/* Success Message */}
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">OS Created Successfully!</h1>
-							<p className="mb-8 text-gray-600">Your web OS is ready to use</p>
+							<h1 className="mb-2 font-bold text-2xl text-gray-800">Your OS is ready!</h1>
+							<p className="mb-8 text-gray-600">OS created successfully.</p>
 
 							{/* OS URL Display */}
 							<div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4">
