@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, string } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { env } from "../env.mjs";
 import { prisma } from "./prisma";
@@ -11,6 +11,8 @@ export const auth = betterAuth({
 		additionalFields: {
 			osName: {
 				type: "string",
+				required: false,
+				defaultValue: null,
 			},
 		},
 	},
