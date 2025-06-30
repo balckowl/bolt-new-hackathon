@@ -1,6 +1,4 @@
-import { auth } from "@/src/lib/auth";
 import { createAuthClient } from "better-auth/client";
-import { headers } from "next/headers";
 export const authClient = createAuthClient();
 
 export const signIn = async () => {
@@ -10,6 +8,15 @@ export const signIn = async () => {
 	});
 };
 
-export const signOut = async () => {
-	const data = await authClient.signOut();
+export const signOut = async (isPublic: boolean) => {
+	await authClient.signOut({
+		fetchOptions: {
+			onSuccess: () => {
+				window.location.reload();
+				if (!isPublic) {
+					window.location.href = "/";
+				}
+			},
+		},
+	});
 };

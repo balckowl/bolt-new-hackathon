@@ -1,19 +1,11 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
-import { Button } from "@/src/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuPortal,
-	DropdownMenuSeparator,
-	DropdownMenuShortcut,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
 import { signOut } from "@/src/lib/auth-client";
@@ -24,17 +16,18 @@ import { toast } from "sonner";
 type Props = {
 	userName?: string;
 	loginUserOsName?: string;
+	isPublic: boolean;
 };
 
 export const UserIcon = ({
 	userName = "hoge",
 	loginUserOsName = "gogofasdfasfasfasdflkjfasd;ljfal;skjfl;akjfd;laskj",
+	isPublic,
 }: Props) => {
 	const router = useRouter();
 	const handleSignOut = async () => {
 		try {
-			await signOut();
-			router.push("/");
+			await signOut(isPublic);
 		} catch (error) {
 			toast("Failed to sign out. Please try again.", { style: { color: "#dc2626" } });
 		}
