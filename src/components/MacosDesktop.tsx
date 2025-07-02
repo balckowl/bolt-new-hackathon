@@ -433,14 +433,9 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			// Move folder contents back to desktop
 			const contents = folderContents.get(appToDelete.id) || [];
 			if (contents.length > 0) {
-				const newPositions = new Map(appPositions);
-				for (const appId of contents) {
-					const emptyPosition = findNextEmptyPosition();
-					if (emptyPosition) {
-						newPositions.set(appId, emptyPosition);
-					}
-				}
-				setAppPositions(newPositions);
+				setApps((prev) => prev.filter((app) => !contents.includes(app.id)));
+				setMemoWindows((prev) => prev.filter((w) => !contents.includes(w.id)));
+				setBrowserWindows((prev) => prev.filter((w) => !contents.includes(w.id)));
 			}
 			// Remove folder from folderContents
 			setFolderContents((prev) => {
