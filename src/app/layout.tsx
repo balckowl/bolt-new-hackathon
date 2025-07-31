@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { env } from "../env.mjs";
@@ -7,7 +6,7 @@ import { env } from "../env.mjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
+	metadataBase: new URL(env.NEXT_PUBLIC_VERCEL_URL),
 	title: {
 		default: "OSpace",
 		// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
@@ -31,10 +30,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
-				{children}
-				<Toaster />
-			</body>
+			<body className={inter.className}>{children}</body>
 		</html>
 	);
 }
