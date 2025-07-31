@@ -5,11 +5,15 @@
 	"scripts": {
 		"dev": "next dev",
 		"prebuild": "npx prisma generate",
-		"build": "next build",
+		"build": "npx prisma migrate deploy && next build",
 		"start": "next start",
 		"lint:fix": "biome lint --write ./src",
 		"format:fix": "biome format --write ./src",
-		"check:fix": "biome check --write ./src"
+		"check:fix": "biome check --write ./src",
+		"db:seed": "prisma db seed"
+	},
+	"prisma": {
+		"seed": "npx tsx prisma/seed.ts"
 	},
 	"dependencies": {
 		"@hono/zod-openapi": "^0.19.8",
@@ -89,6 +93,7 @@
 		"@commitlint/config-conventional": "^19.8.1",
 		"lefthook": "^1.11.13",
 		"prisma": "^6.9.0",
+		"tsx": "^4.20.3",
 		"zod-prisma-types": "^3.2.4"
 	}
 }
