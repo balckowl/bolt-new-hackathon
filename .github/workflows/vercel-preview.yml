@@ -1,0 +1,87 @@
+name: Vercel Preview
+
+on:
+  pull_request:
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: SetUp Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Pull Vercel Env Info
+        run: vercel pull --yes --enviroment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ sercrets.VERCEL_PROJECT_ID }}
+
+      - name: Set Vercel Env
+        run: |
+          vercel env rm DATABASE_URL preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm DIRECT_URL preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm DATABASE_URL preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm BETTER_AUTH_URL preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm BETTER_AUTH_SECRET preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm GOOGLE_CLIENT_ID preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm GOOGLE_CLIENT_SECRET preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm API_DOC_BASIC_AUTH_USER preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm API_DOC_BASIC_AUTH_PASS preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel env rm NEXT_PUBLIC_APP_URL preview --yes --token=${{ secrets.VERCEL_TOKEN }} || true
+          echo "${{ secrets.PREVIEW_DATABASE_URL }}" | vercel env add DATABASE_URL preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.PREVIEW_DIRECT_URL }}" | vercel env add DIRECT_URL preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.BETTER_AUTH_URL }}" | vercel env add BETTER_AUTH_URL preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.BETTER_AUTH_SECRET }}" | vercel env add BETTER_AUTH_SECRET preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.GOOGLE_CLIENT_ID }}" | vercel env add GOOGLE_CLIENT_ID preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.GOOGLE_CLIENT_SECRET }}" | vercel env add GOOGLE_CLIENT_SECRET preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.API_DOC_BASIC_AUTH_USER }}" | vercel env add API_DOC_BASIC_AUTH_USER preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.API_DOC_BASIC_AUTH_PASS }}" | vercel env add API_DOC_BASIC_AUTH_PASS preview --token=${{ secrets.VERCEL_TOKEN }}
+          echo "${{ secrets.NEXT_PUBLIC_APP_URL }}" | vercel env add NEXT_PUBLIC_APP_URL preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ sercrets.VERCEL_PROJECT_ID }}
+
+      - name: Apply Migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.PREVIEW_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.PREVIEW_DIRECT_URL }}
+
+      - name: Seeding
+        run: npx prisma db seed
+        env:
+          DATABASE_URL: ${{ secrets.PREVIEW_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.PREVIEW_DIRECT_URL }}
+
+      - name: Build
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ sercrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.PREVIEW_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.PREVIEW_DIRECT_URL }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          API_DOC_BASIC_AUTH_USER: ${{ secrets.API_DOC_BASIC_AUTH_USER }}
+          API_DOC_BASIC_AUTH_PASS: ${{ secrets.API_DOC_BASIC_AUTH_PASS }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+        
+      - name: Deploy To Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ sercrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.PREVIEW_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.PREVIEW_DIRECT_URL }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          API_DOC_BASIC_AUTH_USER: ${{ secrets.API_DOC_BASIC_AUTH_USER }}
+          API_DOC_BASIC_AUTH_PASS: ${{ secrets.API_DOC_BASIC_AUTH_PASS }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
