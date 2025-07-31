@@ -12,7 +12,7 @@ export const env = createEnv({
 		API_DOC_BASIC_AUTH_PASS: z.string(),
 	},
 	client: {
-		NEXT_PUBLIC_VERCEL_URL: z.string(),
+		NEXT_PUBLIC_VERCEL_URL: z.string().optional(),
 	},
 	runtimeEnv: {
 		NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
@@ -24,4 +24,5 @@ export const env = createEnv({
 		API_DOC_BASIC_AUTH_USER: process.env.API_DOC_BASIC_AUTH_USER,
 		API_DOC_BASIC_AUTH_PASS: process.env.API_DOC_BASIC_AUTH_PASS,
 	},
+	emptyStringAsUndefined: true,
 });
