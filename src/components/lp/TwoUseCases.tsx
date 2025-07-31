@@ -43,7 +43,7 @@ export default function TwoUseCases({ scrollY }: Props) {
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								<Link href={`${env.NEXT_PUBLIC_VERCEL_URL}/os/gogo`}>
+								<Link href={`${`https://${env.NEXT_PUBLIC_VERCEL_URL}`}/os/gogo`}>
 									View sample
 									<ArrowRight className="ml-2 h-5 w-5" />
 								</Link>
@@ -96,7 +96,7 @@ export default function TwoUseCases({ scrollY }: Props) {
 								size="lg"
 								className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
 							>
-								<Link href={`${env.NEXT_PUBLIC_VERCEL_URL}/os/yta`}>
+								<Link href={`${`https://${env.NEXT_PUBLIC_VERCEL_URL}`}/os/yta`}>
 									View sample
 									<ArrowRight className="ml-2 h-5 w-5" />
 								</Link>

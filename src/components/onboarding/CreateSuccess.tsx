@@ -9,7 +9,7 @@ type Props = {
 	osName: string;
 };
 export default function CreateSuccess({ osName }: Props) {
-	const osUrl = `${env.NEXT_PUBLIC_VERCEL_URL}/os/${osName}`;
+	const osUrl = `${`https://${env.NEXT_PUBLIC_VERCEL_URL}`}/os/${osName}`;
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-purple-800 px-4">

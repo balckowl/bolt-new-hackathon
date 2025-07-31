@@ -55,7 +55,7 @@ export const backgroundOptions: {
 	{
 		id: "sunset",
 		name: "SUNSET",
-		value: `${env.NEXT_PUBLIC_VERCEL_URL}/background/sunset.png`,
+		value: `https://${env.NEXT_PUBLIC_VERCEL_URL}/background/sunset.png`,
 		preview: (
 			<Image
 				src="/background/sunset.png"
@@ -70,7 +70,7 @@ export const backgroundOptions: {
 	{
 		id: "station",
 		name: "STATION",
-		value: `${env.NEXT_PUBLIC_VERCEL_URL}/background/station.png`,
+		value: `https://${env.NEXT_PUBLIC_VERCEL_URL}/background/station.png`,
 		preview: (
 			<Image
 				src="/background/station.png"
@@ -85,7 +85,7 @@ export const backgroundOptions: {
 	{
 		id: "ocean",
 		name: "OCEAN",
-		value: `${env.NEXT_PUBLIC_VERCEL_URL}/background/sky.png`,
+		value: `https://${env.NEXT_PUBLIC_VERCEL_URL}/background/sky.png`,
 		preview: (
 			<Image
 				src="/background/sky.png"
@@ -100,7 +100,7 @@ export const backgroundOptions: {
 	{
 		id: "sakura",
 		name: "SAKURA",
-		value: `${env.NEXT_PUBLIC_VERCEL_URL}/background/sakura.png`,
+		value: `https://${env.NEXT_PUBLIC_VERCEL_URL}/background/sakura.png`,
 		preview: (
 			<Image
 				src="/background/sakura.png"
@@ -115,7 +115,7 @@ export const backgroundOptions: {
 	{
 		id: "mountain",
 		name: "MOUNTAIN",
-		value: `${env.NEXT_PUBLIC_VERCEL_URL}/background/mountain.png`,
+		value: `https://${env.NEXT_PUBLIC_VERCEL_URL}/background/mountain.png`,
 		preview: (
 			<Image
 				src="/background/mountain.png"

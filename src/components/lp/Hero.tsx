@@ -554,7 +554,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 							</div>
 							<div className="mx-4 flex-1">
 								<div className="rounded-md border border-gray-300 bg-white px-3 py-1 text-gray-600 text-sm">
-									{env.NEXT_PUBLIC_VERCEL_URL}/get-started
+									{`https://${env.NEXT_PUBLIC_VERCEL_URL}`}/get-started
 								</div>
 							</div>
 							<div className="w-16" />
@@ -693,7 +693,7 @@ export default function Hero({ changeScrollY, scrollY }: Props) {
 								</div>
 								<div className="mx-4 flex-1">
 									<div className="rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-gray-600 text-sm">
-										{env.NEXT_PUBLIC_VERCEL_URL}/os/demo
+										{`https://${env.NEXT_PUBLIC_VERCEL_URL}`}/os/demo
 									</div>
 								</div>
 								<div className="w-16" />

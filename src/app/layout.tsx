@@ -6,7 +6,7 @@ import { env } from "../env.mjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(env.NEXT_PUBLIC_VERCEL_URL),
+	metadataBase: new URL(`https://${env.NEXT_PUBLIC_VERCEL_URL}`),
 	title: {
 		default: "OSpace",
 		// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
