@@ -7,7 +7,7 @@
 		"prebuild": "npx prisma generate",
 		"build": "npx prisma migrate deploy && next build",
 		"build:production": "npx prisma migrate deploy && npx prisma generat && next build",
-		"build:preview": "npx prisma migrate deploy && npx prisma generate && next build",
+		"build:preview": "npx prisma migrate deploy && npx prisma db seed &&  npx prisma generate && next build",
 		"start": "next start",
 		"lint:fix": "biome lint --write ./src",
 		"format:fix": "biome format --write ./src",
