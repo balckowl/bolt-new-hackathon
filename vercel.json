@@ -1,11 +1,4 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"buildCommand": "sh vercel.sh",
-	"git": {
-		"deploymentEnabled": {
-			"main": true,
-			"develop": true,
-			"*": false
-		}
-	}
+	"buildCommand": "sh vercel.sh"
 }
