@@ -5,13 +5,16 @@ import { hono } from "@/src/lib/hono-client";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { FontOptionType } from "../types/desktop";
 
 type Props = {
 	isPublic: boolean;
 	setIsPublic: (isPublic: boolean) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
+	currentFont: FontOptionType;
 };
 
-export const PublicSelector = ({ isPublic, setIsPublic }: Props) => {
+export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFont }: Props) => {
 	const [open, setOpen] = useState(false);
 	const handleChange = async (select: boolean) => {
 		if (select === isPublic) return;
@@ -48,7 +51,7 @@ export const PublicSelector = ({ isPublic, setIsPublic }: Props) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent
-				className="w-[200px] border border-white/20 bg-white/95 p-4 shadow-xl backdrop-blur-md"
+				className={`w-[200px] border border-white/20 bg-white/95 p-4 shadow-xl backdrop-blur-md ${getFontStyle(currentFont)}`}
 				align="start"
 				side="bottom"
 				sideOffset={8}

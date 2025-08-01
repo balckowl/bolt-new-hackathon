@@ -1,4 +1,4 @@
-import type { desktopStateSchema } from "@/src/server/models/os.schema";
+import type { desktopStateSchema, fontSchema } from "@/src/server/models/os.schema";
 import type { LucideIcon } from "lucide-react";
 import type z from "zod";
 
@@ -91,3 +91,5 @@ export interface EditDialog {
 	newName: string;
 	newUrl?: string;
 }
+
+export type FontOptionType = z.infer<typeof fontSchema>["font"];
