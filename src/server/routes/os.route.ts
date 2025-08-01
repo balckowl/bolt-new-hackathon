@@ -2,6 +2,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 import {
 	backgroundSchema,
 	desktopStateSchema,
+	fontSchema,
 	isPublicSchema,
 	stateSchema,
 } from "../models/os.schema";
@@ -110,6 +111,27 @@ export const updateBackgroundRoute = createRoute({
 		},
 		404: {
 			description: "デスクトップ情報が見つかりませんでした。",
+			content: { "application/json": { schema: z.null() } },
+		},
+	},
+});
+
+export const updateDesktopFontRoute = createRoute({
+	path: "/desktop/font",
+	method: "put",
+	description: "自分のデスクトップのフォントを更新",
+	request: {
+		body: {
+			content: {
+				"application/json": {
+					schema: fontSchema,
+				},
+			},
+		},
+	},
+	responses: {
+		200: {
+			description: "更新成功",
 			content: { "application/json": { schema: z.null() } },
 		},
 	},

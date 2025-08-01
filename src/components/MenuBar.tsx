@@ -1,12 +1,17 @@
+import type { FontOptionType } from "@/prisma/prisma/zod";
 import { BackgroundSelector } from "@/src/components/BackgroundSelector";
 import { PublicSelector } from "@/src/components/PublicSelector";
 import { Button } from "@/src/components/ui/button";
 import type { HelpWindowType } from "@/src/types/desktop";
 import { ChevronDown, Clock, HelpCircle } from "lucide-react";
+import FontSelector from "./FontSelector";
 
 type Props = {
 	onBackgroundChange: (newBackground: string) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
+	onFontChange: (newFont: FontOptionType) => void;
 	background: string;
+	font: FontOptionType;
 	setBackground: (background: string) => void;
 	currentTime: Date;
 	isPublic: boolean;
@@ -19,7 +24,10 @@ type Props = {
 
 export const MenuBar = ({
 	onBackgroundChange,
+	getFontStyle,
+	onFontChange,
 	background,
+	font,
 	setBackground,
 	currentTime,
 	isPublic,
@@ -76,6 +84,11 @@ export const MenuBar = ({
 								Instructions
 								<ChevronDown className="ml-1 h-3 w-3" />
 							</Button>
+							<FontSelector
+								onFontChange={onFontChange}
+								getFontStyle={getFontStyle}
+								currentFont={font}
+							/>
 						</>
 					)}
 				</div>
@@ -83,7 +96,12 @@ export const MenuBar = ({
 					{/* public or private toggle */}
 					{isEditable && (
 						<div className="flex items-center">
-							<PublicSelector isPublic={isPublic} setIsPublic={setIsPublic} />
+							<PublicSelector
+								isPublic={isPublic}
+								setIsPublic={setIsPublic}
+								getFontStyle={getFontStyle}
+								currentFont={font}
+							/>
 						</div>
 					)}
 

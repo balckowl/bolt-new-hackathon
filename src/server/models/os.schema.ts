@@ -149,6 +149,7 @@ export const stateSchema = z
 
 export const isPublicSchema = DesktopSchema.pick({ isPublic: true });
 export const backgroundSchema = DesktopSchema.pick({ background: true });
+export const fontSchema = DesktopSchema.pick({ font: true });
 
 export const desktopStateSchema = z
 	.object({
@@ -160,4 +161,5 @@ export const desktopStateSchema = z
 		currentUserIcon: z.string().url().nullable(),
 	})
 	.extend(isPublicSchema.shape)
-	.extend(backgroundSchema.shape);
+	.extend(backgroundSchema.shape)
+	.extend(fontSchema.shape);

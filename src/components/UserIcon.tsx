@@ -1,5 +1,6 @@
 "use client";
 
+import type { FontOptionType } from "@/prisma/prisma/zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -19,9 +20,11 @@ type Props = {
 	loginUserOsName?: string;
 	isPublic: boolean;
 	currentUserInfo: CurrentUserType;
+	getFontStyle: (newFont: FontOptionType) => void;
+	currentFont: FontOptionType;
 };
 
-export const UserIcon = ({ isPublic, currentUserInfo }: Props) => {
+export const UserIcon = ({ isPublic, currentUserInfo, getFontStyle, currentFont }: Props) => {
 	const router = useRouter();
 	const handleSignOut = async () => {
 		try {
@@ -44,7 +47,10 @@ export const UserIcon = ({ isPublic, currentUserInfo }: Props) => {
 						</AvatarFallback>
 					</Avatar>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="m-0 w-[150px] gap-2 p-0 text-sm" align="start">
+				<DropdownMenuContent
+					className={`m-0 w-[150px] gap-2 p-0 text-sm ${getFontStyle(currentFont)}`}
+					align="start"
+				>
 					<div className="m-0 w-[150px]">
 						{currentUserInfo?.currentUserOsName && currentUserInfo?.currentUsername ? (
 							<>
