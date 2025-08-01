@@ -10,9 +10,10 @@ import { hono } from "@/src/lib/hono-client";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
 import { FolderIcon, Globe, StickyNote } from "lucide-react";
 import * as Icons from "lucide-react";
+import { Alegreya, Allan, Comfortaa, Inter, Lobster, Lora } from "next/font/google";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import type z from "zod";
 import { BrowserWindow } from "../components/window/BrowserWindow";
 import { FolderWindow } from "../components/window/FolderWindow";
@@ -26,6 +27,7 @@ import type {
 	EditDialog,
 	FolderNameDialog,
 	FolderWindowType,
+	FontOptionType,
 	GridPosition,
 	HelpWindowType,
 	MemoNameDialog,
@@ -39,6 +41,13 @@ type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
 	osName: string;
 };
+
+const inter = Inter({ subsets: ["latin"] });
+const alegreya = Alegreya({ subsets: ["latin"] });
+const lobster = Lobster({ subsets: ["latin"], weight: "400" });
+const allan = Allan({ subsets: ["latin"], weight: "400" });
+const lora = Lora({ subsets: ["latin"] });
+const comfortea = Comfortaa({ subsets: ["latin"] });
 
 const GRID_COLS = 6;
 const GRID_ROWS = 10;
@@ -97,6 +106,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	const [isLoadingApp, setIsLoadingApp] = useState(false);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [background, setBackground] = useState("linear-gradient(135deg, #667eea 0%, #764ba2 100%)");
+	const [font, setFont] = useState<FontOptionType>(desktop.font);
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
 
@@ -165,6 +175,10 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				const backgroundImg = backgroundOptions.find((opt) => opt.name === desktop.background);
 				if (!backgroundImg) return;
 				setBackground(backgroundImg.value);
+			}
+
+			if (desktop.font) {
+				setFont(desktop.font);
 			}
 
 			// initialize loginUserInfo
@@ -1005,6 +1019,37 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			background: background,
 		};
 	};
+
+	const handleFontChange = (newFont: FontOptionType) => {
+		setFont(newFont);
+	};
+
+	const getFontStyle = (newFont: FontOptionType) => {
+		if (newFont === "INTER") {
+			return inter.className;
+		}
+
+		if (newFont === "ALEGREYA") {
+			return alegreya.className;
+		}
+
+		if (newFont === "LOBSTER") {
+			return lobster.className;
+		}
+
+		if (newFont === "ALLAN") {
+			return allan.className;
+		}
+
+		if (newFont === "LORA") {
+			return lora.className;
+		}
+
+		if (newFont === "COMFORTAA") {
+			return comfortea.className;
+		}
+	};
+
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
 			return (
@@ -1115,15 +1160,27 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	};
 
 	return (
-		<div className="relative min-h-screen overflow-hidden" style={getBackgroundStyle()}>
-			<UserIcon isPublic={isPublic} currentUserInfo={currentUserInfo} />
+		<div
+			className={`relative min-h-screen overflow-hidden ${getFontStyle(font)}`}
+			style={getBackgroundStyle()}
+		>
+			<Toaster className={getFontStyle(font)} />
+			<UserIcon
+				isPublic={isPublic}
+				currentUserInfo={currentUserInfo}
+				getFontStyle={getFontStyle}
+				currentFont={font}
+			/>
 			{/* Background overlay for better contrast */}
 			<div className="absolute inset-0 bg-black/20" />
 
 			{/* Menu bar */}
 			<MenuBar
 				onBackgroundChange={handleBackgroundChange}
+				getFontStyle={getFontStyle}
+				onFontChange={handleFontChange}
 				background={background}
+				font={font}
 				setBackground={setBackground}
 				currentTime={currentTime}
 				isPublic={isPublic}

@@ -83,6 +83,7 @@ export const DesktopScalarFieldEnumSchema = z.enum([
 	"state",
 	"isPublic",
 	"background",
+	"font",
 	"createdAt",
 	"updatedAt",
 ]);
@@ -159,6 +160,17 @@ export const BackgroundOptionSchema = z.enum([
 
 export type BackgroundOptionType = `${z.infer<typeof BackgroundOptionSchema>}`;
 
+export const FontOptionSchema = z.enum([
+	"INTER",
+	"ALEGREYA",
+	"LOBSTER",
+	"ALLAN",
+	"COMFORTAA",
+	"LORA",
+]);
+
+export type FontOptionType = `${z.infer<typeof FontOptionSchema>}`;
+
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -190,6 +202,7 @@ export type User = z.infer<typeof UserSchema>;
 
 export const DesktopSchema = z.object({
 	background: BackgroundOptionSchema,
+	font: FontOptionSchema,
 	id: z.string().uuid(),
 	userId: z.string(),
 	state: JsonValueSchema,
@@ -330,6 +343,7 @@ export const DesktopSelectSchema: z.ZodType<Prisma.DesktopSelect> = z
 		state: z.boolean().optional(),
 		isPublic: z.boolean().optional(),
 		background: z.boolean().optional(),
+		font: z.boolean().optional(),
 		createdAt: z.boolean().optional(),
 		updatedAt: z.boolean().optional(),
 		user: z.union([z.boolean(), z.lazy(() => UserArgsSchema)]).optional(),
@@ -637,6 +651,9 @@ export const DesktopWhereInputSchema: z.ZodType<Prisma.DesktopWhereInput> = z
 		background: z
 			.union([z.lazy(() => EnumBackgroundOptionFilterSchema), z.lazy(() => BackgroundOptionSchema)])
 			.optional(),
+		font: z
+			.union([z.lazy(() => EnumFontOptionFilterSchema), z.lazy(() => FontOptionSchema)])
+			.optional(),
 		createdAt: z.union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()]).optional(),
 		updatedAt: z.union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()]).optional(),
 		user: z
@@ -653,6 +670,7 @@ export const DesktopOrderByWithRelationInputSchema: z.ZodType<Prisma.DesktopOrde
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
+			font: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
 			updatedAt: z.lazy(() => SortOrderSchema).optional(),
 			user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
@@ -701,6 +719,9 @@ export const DesktopWhereUniqueInputSchema: z.ZodType<Prisma.DesktopWhereUniqueI
 						z.lazy(() => BackgroundOptionSchema),
 					])
 					.optional(),
+				font: z
+					.union([z.lazy(() => EnumFontOptionFilterSchema), z.lazy(() => FontOptionSchema)])
+					.optional(),
 				createdAt: z.union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()]).optional(),
 				updatedAt: z.union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()]).optional(),
 				user: z
@@ -718,6 +739,7 @@ export const DesktopOrderByWithAggregationInputSchema: z.ZodType<Prisma.DesktopO
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
+			font: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
 			updatedAt: z.lazy(() => SortOrderSchema).optional(),
 			_count: z.lazy(() => DesktopCountOrderByAggregateInputSchema).optional(),
@@ -753,6 +775,12 @@ export const DesktopScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Deskt
 				.union([
 					z.lazy(() => EnumBackgroundOptionWithAggregatesFilterSchema),
 					z.lazy(() => BackgroundOptionSchema),
+				])
+				.optional(),
+			font: z
+				.union([
+					z.lazy(() => EnumFontOptionWithAggregatesFilterSchema),
+					z.lazy(() => FontOptionSchema),
 				])
 				.optional(),
 			createdAt: z
@@ -1516,6 +1544,7 @@ export const DesktopCreateInputSchema: z.ZodType<Prisma.DesktopCreateInput> = z
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
+		font: z.lazy(() => FontOptionSchema).optional(),
 		createdAt: z.coerce.date().optional(),
 		updatedAt: z.coerce.date().optional(),
 		user: z.lazy(() => UserCreateNestedOneWithoutDesktopInputSchema),
@@ -1529,6 +1558,7 @@ export const DesktopUncheckedCreateInputSchema: z.ZodType<Prisma.DesktopUnchecke
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
+		font: z.lazy(() => FontOptionSchema).optional(),
 		createdAt: z.coerce.date().optional(),
 		updatedAt: z.coerce.date().optional(),
 	})
@@ -1545,6 +1575,12 @@ export const DesktopUpdateInputSchema: z.ZodType<Prisma.DesktopUpdateInput> = z
 			.union([
 				z.lazy(() => BackgroundOptionSchema),
 				z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
+			])
+			.optional(),
+		font: z
+			.union([
+				z.lazy(() => FontOptionSchema),
+				z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
 			])
 			.optional(),
 		createdAt: z
@@ -1571,6 +1607,12 @@ export const DesktopUncheckedUpdateInputSchema: z.ZodType<Prisma.DesktopUnchecke
 				z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
 			])
 			.optional(),
+		font: z
+			.union([
+				z.lazy(() => FontOptionSchema),
+				z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
+			])
+			.optional(),
 		createdAt: z
 			.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputSchema)])
 			.optional(),
@@ -1587,6 +1629,7 @@ export const DesktopCreateManyInputSchema: z.ZodType<Prisma.DesktopCreateManyInp
 		state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 		isPublic: z.boolean().optional(),
 		background: z.lazy(() => BackgroundOptionSchema).optional(),
+		font: z.lazy(() => FontOptionSchema).optional(),
 		createdAt: z.coerce.date().optional(),
 		updatedAt: z.coerce.date().optional(),
 	})
@@ -1606,6 +1649,12 @@ export const DesktopUpdateManyMutationInputSchema: z.ZodType<Prisma.DesktopUpdat
 				.union([
 					z.lazy(() => BackgroundOptionSchema),
 					z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
+				])
+				.optional(),
+			font: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
 				])
 				.optional(),
 			createdAt: z
@@ -1634,6 +1683,12 @@ export const DesktopUncheckedUpdateManyInputSchema: z.ZodType<Prisma.DesktopUnch
 				.union([
 					z.lazy(() => BackgroundOptionSchema),
 					z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
+				])
+				.optional(),
+			font: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
 				])
 				.optional(),
 			createdAt: z
@@ -2412,6 +2467,23 @@ export const EnumBackgroundOptionFilterSchema: z.ZodType<Prisma.EnumBackgroundOp
 	})
 	.strict();
 
+export const EnumFontOptionFilterSchema: z.ZodType<Prisma.EnumFontOptionFilter> = z
+	.object({
+		equals: z.lazy(() => FontOptionSchema).optional(),
+		in: z
+			.lazy(() => FontOptionSchema)
+			.array()
+			.optional(),
+		notIn: z
+			.lazy(() => FontOptionSchema)
+			.array()
+			.optional(),
+		not: z
+			.union([z.lazy(() => FontOptionSchema), z.lazy(() => NestedEnumFontOptionFilterSchema)])
+			.optional(),
+	})
+	.strict();
+
 export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelationFilter> = z
 	.object({
 		is: z.lazy(() => UserWhereInputSchema).optional(),
@@ -2427,6 +2499,7 @@ export const DesktopCountOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopCo
 			state: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
+			font: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
 			updatedAt: z.lazy(() => SortOrderSchema).optional(),
 		})
@@ -2439,6 +2512,7 @@ export const DesktopMaxOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopMaxO
 			userId: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
+			font: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
 			updatedAt: z.lazy(() => SortOrderSchema).optional(),
 		})
@@ -2451,6 +2525,7 @@ export const DesktopMinOrderByAggregateInputSchema: z.ZodType<Prisma.DesktopMinO
 			userId: z.lazy(() => SortOrderSchema).optional(),
 			isPublic: z.lazy(() => SortOrderSchema).optional(),
 			background: z.lazy(() => SortOrderSchema).optional(),
+			font: z.lazy(() => SortOrderSchema).optional(),
 			createdAt: z.lazy(() => SortOrderSchema).optional(),
 			updatedAt: z.lazy(() => SortOrderSchema).optional(),
 		})
@@ -2499,6 +2574,30 @@ export const EnumBackgroundOptionWithAggregatesFilterSchema: z.ZodType<Prisma.En
 			_count: z.lazy(() => NestedIntFilterSchema).optional(),
 			_min: z.lazy(() => NestedEnumBackgroundOptionFilterSchema).optional(),
 			_max: z.lazy(() => NestedEnumBackgroundOptionFilterSchema).optional(),
+		})
+		.strict();
+
+export const EnumFontOptionWithAggregatesFilterSchema: z.ZodType<Prisma.EnumFontOptionWithAggregatesFilter> =
+	z
+		.object({
+			equals: z.lazy(() => FontOptionSchema).optional(),
+			in: z
+				.lazy(() => FontOptionSchema)
+				.array()
+				.optional(),
+			notIn: z
+				.lazy(() => FontOptionSchema)
+				.array()
+				.optional(),
+			not: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => NestedEnumFontOptionWithAggregatesFilterSchema),
+				])
+				.optional(),
+			_count: z.lazy(() => NestedIntFilterSchema).optional(),
+			_min: z.lazy(() => NestedEnumFontOptionFilterSchema).optional(),
+			_max: z.lazy(() => NestedEnumFontOptionFilterSchema).optional(),
 		})
 		.strict();
 
@@ -3182,6 +3281,13 @@ export const EnumBackgroundOptionFieldUpdateOperationsInputSchema: z.ZodType<Pri
 		})
 		.strict();
 
+export const EnumFontOptionFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumFontOptionFieldUpdateOperationsInput> =
+	z
+		.object({
+			set: z.lazy(() => FontOptionSchema).optional(),
+		})
+		.strict();
+
 export const UserUpdateOneRequiredWithoutDesktopNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutDesktopNestedInput> =
 	z
 		.object({
@@ -3461,6 +3567,23 @@ export const NestedEnumBackgroundOptionFilterSchema: z.ZodType<Prisma.NestedEnum
 		})
 		.strict();
 
+export const NestedEnumFontOptionFilterSchema: z.ZodType<Prisma.NestedEnumFontOptionFilter> = z
+	.object({
+		equals: z.lazy(() => FontOptionSchema).optional(),
+		in: z
+			.lazy(() => FontOptionSchema)
+			.array()
+			.optional(),
+		notIn: z
+			.lazy(() => FontOptionSchema)
+			.array()
+			.optional(),
+		not: z
+			.union([z.lazy(() => FontOptionSchema), z.lazy(() => NestedEnumFontOptionFilterSchema)])
+			.optional(),
+	})
+	.strict();
+
 export const NestedJsonFilterSchema: z.ZodType<Prisma.NestedJsonFilter> = z
 	.object({
 		equals: InputJsonValueSchema.optional(),
@@ -3501,6 +3624,30 @@ export const NestedEnumBackgroundOptionWithAggregatesFilterSchema: z.ZodType<Pri
 			_count: z.lazy(() => NestedIntFilterSchema).optional(),
 			_min: z.lazy(() => NestedEnumBackgroundOptionFilterSchema).optional(),
 			_max: z.lazy(() => NestedEnumBackgroundOptionFilterSchema).optional(),
+		})
+		.strict();
+
+export const NestedEnumFontOptionWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumFontOptionWithAggregatesFilter> =
+	z
+		.object({
+			equals: z.lazy(() => FontOptionSchema).optional(),
+			in: z
+				.lazy(() => FontOptionSchema)
+				.array()
+				.optional(),
+			notIn: z
+				.lazy(() => FontOptionSchema)
+				.array()
+				.optional(),
+			not: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => NestedEnumFontOptionWithAggregatesFilterSchema),
+				])
+				.optional(),
+			_count: z.lazy(() => NestedIntFilterSchema).optional(),
+			_min: z.lazy(() => NestedEnumFontOptionFilterSchema).optional(),
+			_max: z.lazy(() => NestedEnumFontOptionFilterSchema).optional(),
 		})
 		.strict();
 
@@ -3653,6 +3800,7 @@ export const DesktopCreateWithoutUserInputSchema: z.ZodType<Prisma.DesktopCreate
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 			isPublic: z.boolean().optional(),
 			background: z.lazy(() => BackgroundOptionSchema).optional(),
+			font: z.lazy(() => FontOptionSchema).optional(),
 			createdAt: z.coerce.date().optional(),
 			updatedAt: z.coerce.date().optional(),
 		})
@@ -3665,6 +3813,7 @@ export const DesktopUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Desk
 			state: z.union([z.lazy(() => JsonNullValueInputSchema), InputJsonValueSchema]),
 			isPublic: z.boolean().optional(),
 			background: z.lazy(() => BackgroundOptionSchema).optional(),
+			font: z.lazy(() => FontOptionSchema).optional(),
 			createdAt: z.coerce.date().optional(),
 			updatedAt: z.coerce.date().optional(),
 		})
@@ -3887,6 +4036,12 @@ export const DesktopUpdateWithoutUserInputSchema: z.ZodType<Prisma.DesktopUpdate
 					z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
 				])
 				.optional(),
+			font: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
+				])
+				.optional(),
 			createdAt: z
 				.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputSchema)])
 				.optional(),
@@ -3910,6 +4065,12 @@ export const DesktopUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Desk
 				.union([
 					z.lazy(() => BackgroundOptionSchema),
 					z.lazy(() => EnumBackgroundOptionFieldUpdateOperationsInputSchema),
+				])
+				.optional(),
+			font: z
+				.union([
+					z.lazy(() => FontOptionSchema),
+					z.lazy(() => EnumFontOptionFieldUpdateOperationsInputSchema),
 				])
 				.optional(),
 			createdAt: z
