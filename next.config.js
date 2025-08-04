@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	experimental: {
+		serverActions: true,
+	},
 	images: {
-		domains: ["www.google.com", "images.pexels.com"],
+		domains: ["www.google.com", "images.pexels.com", "openweathermap.org"],
 		remotePatterns: [
 			{
 				protocol: "https",

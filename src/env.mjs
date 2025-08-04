@@ -11,6 +11,8 @@ export const env = createEnv({
 		GOOGLE_CLIENT_SECRET: z.string(),
 		API_DOC_BASIC_AUTH_USER: z.string(),
 		API_DOC_BASIC_AUTH_PASS: z.string(),
+		OPENWEATHERMAP_API_KEY: z.string(),
+		OPENWEATHERMAP_API_URL: z.string().url(),
 	},
 	client: {
 		NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -25,5 +27,7 @@ export const env = createEnv({
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 		API_DOC_BASIC_AUTH_USER: process.env.API_DOC_BASIC_AUTH_USER,
 		API_DOC_BASIC_AUTH_PASS: process.env.API_DOC_BASIC_AUTH_PASS,
+		OPENWEATHERMAP_API_KEY: process.env.OPENWEATHERMAP_API_KEY,
+		OPENWEATHERMAP_API_URL: process.env.OPENWEATHERMAP_API_URL,
 	},
 });

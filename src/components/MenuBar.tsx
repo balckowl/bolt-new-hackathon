@@ -1,6 +1,7 @@
 import type { FontOptionType } from "@/prisma/prisma/zod";
 import { BackgroundSelector } from "@/src/components/BackgroundSelector";
 import { PublicSelector } from "@/src/components/PublicSelector";
+import { WeatherIcon } from "@/src/components/WeatherIcon";
 import { Button } from "@/src/components/ui/button";
 import type { HelpWindowType } from "@/src/types/desktop";
 import { ChevronDown, Clock, HelpCircle } from "lucide-react";
@@ -109,6 +110,10 @@ export const MenuBar = ({
 					<div className="flex items-center space-x-1">
 						<Clock size={14} className="text-white" />
 						<span className="font-medium">{formatTime(currentTime)}</span>
+					</div>
+
+					<div className="flex items-center space-x-1">
+						<WeatherIcon />
 					</div>
 				</div>
 			</div>
