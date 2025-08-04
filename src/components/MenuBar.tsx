@@ -81,8 +81,7 @@ export const MenuBar = ({
 									}));
 								}}
 							>
-								<HelpCircle className="mr-1 h-3 w-3" />
-								Instructions
+								<HelpCircle className="mr-1 h-4 w-4" />
 								<ChevronDown className="ml-1 h-3 w-3" />
 							</Button>
 							<FontSelector

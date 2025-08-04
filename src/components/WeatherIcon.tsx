@@ -24,7 +24,7 @@ export const WeatherIcon = () => {
 	}
 	return (
 		<Image
-			src={`${env.OPENWEATHERMAP_API_URL}/img/wn/${weather}@2x.png`}
+			src={`https://openweathermap.org/img/wn/${weather}@2x.png`}
 			alt="天気"
 			width={30}
 			height={30}
