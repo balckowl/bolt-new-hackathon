@@ -42,8 +42,12 @@ export default function FontSelector({ onFontChange, currentFont, getFontStyle }
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button variant="ghost" size="sm" className="h-6 px-2 text-white text-xs hover:bg-white/10">
-					Font
+				<Button
+					variant="ghost"
+					size="sm"
+					className="group h-6 px-2 text-white text-xs hover:bg-white/10"
+				>
+					<p className="mr-1 h-4 w-4 border group-hover:border-black">F</p>
 					<ChevronDown className="ml-1 h-3 w-3" />
 				</Button>
 			</PopoverTrigger>

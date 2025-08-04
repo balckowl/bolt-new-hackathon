@@ -166,8 +166,7 @@ export function BackgroundSelector({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button variant="ghost" size="sm" className="h-6 px-2 text-white text-xs hover:bg-white/10">
-					<ImageIcon className="mr-1 h-3 w-3" />
-					Background
+					<ImageIcon className="mr-1 h-4 w-4" />
 					<ChevronDown className="ml-1 h-3 w-3" />
 				</Button>
 			</PopoverTrigger>
