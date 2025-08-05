@@ -8,7 +8,10 @@ type Props = {
 	appName: string;
 };
 
-export const AppIconMock = forwardRef<HTMLDivElement, Props>(({ children, appName }, ref) => {
+const AppIconMock = forwardRef<HTMLDivElement, Props>(function AppIconMock(
+	{ children, appName },
+	ref,
+) {
 	return (
 		<div className="relative" ref={ref}>
 			<div className="mb-1 flex h-20 w-20 items-center justify-center rounded-xl border bg-white shadow-md">
@@ -18,3 +21,6 @@ export const AppIconMock = forwardRef<HTMLDivElement, Props>(({ children, appNam
 		</div>
 	);
 });
+AppIconMock.displayName = "AppIconMock";
+
+export { AppIconMock };
