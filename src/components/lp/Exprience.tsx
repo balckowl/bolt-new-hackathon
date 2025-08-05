@@ -1,27 +1,18 @@
+import { Chewy } from "next/font/google";
 import { ArcadeEmbed } from "./ArcadeEmbed";
+import Container from "./Container";
 
-type Props = {
-	scrollY: number;
-};
+const chewy = Chewy({ subsets: ["latin"], weight: "400" });
 
-export default function Exprience({ scrollY }: Props) {
+export default function Exprience() {
 	return (
-		<section
-			className="relative px-4 py-[130px]"
-			style={{
-				transform: `translateY(${scrollY * 0.04}px)`,
-			}}
-		>
-			<div className="mx-auto max-w-6xl">
-				<div className="mb-8 text-center">
-					<h2 className="mb-4 font-bold text-4xl text-gray-800">Try the Demo</h2>
-				</div>
-
-				{/* Enlarged Safari-style Browser Window */}
+		<section className="relative to-white px-4 py-[130px]">
+			<Container>
+				<h2 className={`${chewy.className} mb-20 text-center text-4xl text-black`}>Try The Demo</h2>
 				<div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl">
 					<ArcadeEmbed />
 				</div>
-			</div>
+			</Container>
 		</section>
 	);
 }

@@ -4,18 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-type Props = {
-	scrollY: number;
-};
-
-export default function TwoUseCases({ scrollY }: Props) {
+export default function TwoUseCases() {
 	return (
-		<section
-			className="relative px-4 py-[130px]"
-			style={{
-				transform: `translateY(${scrollY * 0.08}px)`,
-			}}
-		>
+		<section className="relative px-4 py-[130px]">
 			<div className="mx-auto max-w-6xl">
 				<div className="mb-16 text-center">
 					<h2 className="mb-4 font-bold text-4xl text-gray-800">Two Use Cases</h2>
