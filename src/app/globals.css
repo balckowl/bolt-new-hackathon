@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+video {
+	display: block;
+	width: 100%;
+	border: none;
+	outline: none;
+}
+
+video::-webkit-media-controls-panel {
+	display: none !important;
+}
+
+video::-moz-media-controls {
+	display: none !important;
+}
+
 :root {
 	--foreground-rgb: 0, 0, 0;
 	--background-start-rgb: 214, 219, 220;

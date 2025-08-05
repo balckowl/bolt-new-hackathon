@@ -1,35 +1,27 @@
 import { ArrowRight } from "lucide-react";
+import { Chewy, Noto_Sans } from "next/font/google";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
-type Props = {
-	scrollY: number;
-};
+const chewy = Chewy({ subsets: ["latin"], weight: "400" });
+const notoSans = Noto_Sans({ subsets: ["latin"], weight: "300" });
 
-export default function Recommend({ scrollY }: Props) {
+export default function Recommend() {
 	return (
-		<section
-			className="relative px-4 py-20"
-			style={{
-				transform: `translateY(${scrollY * 0.02}px)`,
-			}}
-		>
+		<section className="relative px-4 py-20">
 			<div className="mx-auto mb-20 max-w-4xl">
 				<Card className="border-none shadow-none">
 					<CardContent className="p-16 text-center">
-						<h2 className="mb-8 font-bold text-3xl text-gray-800">Ready to build?</h2>
-						<p className="mb-8 text-gray-700 text-lg leading-relaxed">
+						<h2 className={`${chewy.className} mb-8 font-bold text-3xl text-gray-800`}>
+							Ready to build?
+						</h2>
+						<p className={`${notoSans.className} mb-8 text-gray-700 text-lg leading-relaxed`}>
 							Use your unique link to launch a web OS and make something incredible!
 						</p>
-						<Button
-							asChild
-							size="lg"
-							className="rounded-lg bg-blue-600 px-8 py-4 font-medium text-lg text-white hover:bg-blue-700"
-						>
+						<Button className="rounded-xl bg-blue-600 px-5 py-4 text-md hover:bg-blue-700" asChild>
 							<Link href="/login">
-								Get Started
-								<ArrowRight className="ml-2 h-5 w-5" />
+								Get Started <ArrowRight className="ml-2 h-5 w-5" />
 							</Link>
 						</Button>
 					</CardContent>
