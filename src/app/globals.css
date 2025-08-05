@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 video {
-  display: block;
-  width: 100%;
-  border: none;
-  outline: none;
+	display: block;
+	width: 100%;
+	border: none;
+	outline: none;
 }
 
 video::-webkit-media-controls-panel {
-  display: none !important;
+	display: none!important;
 }
 
 video::-moz-media-controls {
-  display: none !important;
+	display: none!important;
 }
 
 :root {
