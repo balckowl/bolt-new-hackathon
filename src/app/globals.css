@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 video {
-  display: block;      
+  display: block;
   width: 100%;
   border: none;
   outline: none;
