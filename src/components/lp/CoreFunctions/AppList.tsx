@@ -31,4 +31,4 @@ export const APPLIST: AppListItem[] = [
 		name: "folder",
 		icon: <Folder width={35} height={35} />,
 	},
-] as const;
+];

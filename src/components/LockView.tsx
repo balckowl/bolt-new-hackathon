@@ -22,7 +22,7 @@ export default function LockView({ osName }: Props) {
 				<div className="relative z-10 flex h-[100dvh] items-center justify-center text-white">
 					<div className="text-center">
 						<EyeOff width={35} height={35} className="mx-auto mb-3" />
-						<p className="mb-3">You tried to reach "{osName}", but access is restricted.</p>
+						<p className="mb-3">You tried to reach {osName}, but access is restricted.</p>
 						<Button className="rounded-xl" asChild>
 							<Link href="/" className="flex items-center gap-2">
 								Back to Top

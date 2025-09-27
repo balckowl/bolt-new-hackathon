@@ -1,10 +1,7 @@
 import { LanguageProvider } from "@/src/i18n/client";
 import { getTranslation } from "@/src/i18n/server";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { Fragment } from "react";
-import { Button } from "../../ui/button";
-import CoreFunctions from "../corefunctions/CoreFunctions";
+import CoreFunctions from "../CoreFunctions/CoreFunctions";
 import Exprience from "../experience/Exprience";
 import Hero from "../hero/Hero";
 import Footer from "../layout/Footer";

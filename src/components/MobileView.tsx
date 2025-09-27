@@ -56,13 +56,7 @@ export default function MobileView({ desktop }: Props) {
 									<span className="text-left font-medium">{memo.name}</span>
 								</div>
 							</AccordionTrigger>
-							<AccordionContent>
-								{/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-								<div
-									dangerouslySetInnerHTML={{ __html: displayText }}
-									className="prose prose-sm m-5 prose-blockquote:m-0 prose-headings:m-0 prose-hr:m-0 prose-ol:m-0 prose-p:m-0 prose-pre:m-0 prose-ul:m-0 text-left prose-li:marker:text-black focus:outline-none"
-								/>
-							</AccordionContent>
+							<AccordionContent>{displayText}</AccordionContent>
 						</AccordionItem>
 					);
 				})}

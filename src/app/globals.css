@@ -10,7 +10,7 @@ video {
 }
 
 video::-webkit-media-controls-panel {
-	display: none !important;
+  display: none !important;
 }
 
 video::-moz-media-controls {
@@ -181,10 +181,10 @@ video::-moz-media-controls {
 
 :where([data-sonner-toast][data-mounted="true"]).custom-toast {
   opacity: 1;
-  transform: translateX(0); /* 入ってくる */
+  transform: translateX(0); 
 }
 
 :where([data-sonner-toast][data-removed="true"]).custom-toast {
   opacity: 0;
-  transform: translateX(100%); /* 横に戻って消える */
+  transform: translateX(100%); 
 }
