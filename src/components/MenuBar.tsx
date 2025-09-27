@@ -2,9 +2,9 @@ import type { FontOptionType } from "@/prisma/prisma/zod";
 import { BackgroundSelector } from "@/src/components/BackgroundSelector";
 import { PublicSelector } from "@/src/components/PublicSelector";
 import { WeatherIcon } from "@/src/components/WeatherIcon";
-import { Button } from "@/src/components/ui/button";
 import type { HelpWindowType } from "@/src/types/desktop";
-import { ChevronDown, Clock, HelpCircle } from "lucide-react";
+import { Clock } from "lucide-react";
+import AboutSelector from "./AboutSelector";
 import FontSelector from "./FontSelector";
 
 type Props = {
@@ -49,18 +49,25 @@ export const MenuBar = ({
 		});
 	};
 
+	const getHelpWindow = () => {
+		setHelpWindow((prev) => ({
+			...prev,
+			visible: !helpWindow.visible,
+		}));
+	};
+
 	return (
-		<div className="relative z-10 h-8 border-white/10 border-b bg-black/20 backdrop-blur-md">
-			<div className="flex h-full items-center justify-between px-4">
-				<div className="flex items-center space-x-4">
+		<div className="relative z-10 h-9 border-white/10 border-b bg-black/20 backdrop-blur-md">
+			<div className="flex h-full items-center justify-between">
+				<div className="flex items-center">
 					{/* Apple Logo */}
 					<div
-						className="flex items-center font-bold text-lg text-white leading-none"
+						className="flex items-center px-3 font-bold text-lg text-white leading-none"
 						style={{
 							fontFamily: "system-ui",
 						}}
 					>
-						<p className="mb-1 text-sm"> {osName ? osName : "🍎"}</p>
+						<p className="text-sm uppercase tracking-wide">{osName}</p>
 					</div>
 					{/* Background Selector */}
 					{isEditable && (
@@ -70,25 +77,12 @@ export const MenuBar = ({
 								currentBackground={background}
 								setBackground={setBackground}
 							/>
-							<Button
-								variant="ghost"
-								size="sm"
-								className="h-6 px-2 text-white text-xs hover:bg-white/10"
-								onClick={() => {
-									setHelpWindow((prev) => ({
-										...prev,
-										visible: !helpWindow.visible,
-									}));
-								}}
-							>
-								<HelpCircle className="mr-1 h-4 w-4" />
-								<ChevronDown className="ml-1 h-3 w-3" />
-							</Button>
 							<FontSelector
 								onFontChange={onFontChange}
 								getFontStyle={getFontStyle}
 								currentFont={font}
 							/>
+							<AboutSelector getHelpWindow={getHelpWindow} />
 						</>
 					)}
 				</div>
@@ -107,7 +101,6 @@ export const MenuBar = ({
 
 					{/* Time */}
 					<div className="flex items-center space-x-1">
-						<Clock size={14} className="text-white" />
 						<span className="font-medium">{formatTime(currentTime)}</span>
 					</div>
 

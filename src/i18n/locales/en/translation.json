@@ -1,0 +1,52 @@
+{
+	"get_started": "Get Started",
+	"hero": {
+		"title": "Launch your very own planet into<br/> the universe of ospace."
+	},
+	"core_functions": {
+		"title": "Core Functions",
+		"desc": "A desktop-like experience on the web.",
+		"openWithinOspace": {
+			"title": "Open website within ospace",
+			"body": "Once converted into an app, you can open the site within ospace."
+		},
+		"chooseBackground": {
+			"title": "Choose the background",
+			"body": "Choose your favorite from 9 different backgrounds."
+		},
+		"privacy": {
+			"title": "Private or Public",
+			"body": "Publish it and use it as your portfolio."
+		},
+		"turnSites": {
+			"title": "Turn your favorite sites into apps",
+			"body": "You can turn the site into an app and place it on your desktop."
+		}
+	},
+	"try_the_demo": {
+		"title": "Try The Demo",
+		"desc": "Experience your first step into ospace.",
+		"click_here": "Click Here"
+	},
+	"recommend": {
+		"title": "Ready to launch your planet?",
+		"desc": "Launch your planet and expand your universe."
+	},
+	"login": {
+		"title": "Welcome",
+		"desc": "Let's open the door to ospace",
+		"btn": "Continue with Google",
+		"agreement": "By continuing, you agree to ospace’s terms of service and privacy policy."
+	},
+	"inputName": {
+		"title": "Name your planet",
+		"desc": "Plant your flag on a new world.",
+		"placeholder": "My planet is called...",
+		"btn": "Confirm"
+	},
+	"createSuccess": {
+		"title": "Your planet {{osName}} is born",
+		"desc": "Begin your journey.",
+		"btn": "Explore Now"
+	}
+}

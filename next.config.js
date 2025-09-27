@@ -4,7 +4,7 @@ const nextConfig = {
 		serverActions: true,
 	},
 	images: {
-		domains: ["www.google.com", "images.pexels.com", "openweathermap.org"],
+		domains: ["www.google.com", "images.pexels.com", "openweathermap.org", "api.microlink.io"],
 		remotePatterns: [
 			{
 				protocol: "https",

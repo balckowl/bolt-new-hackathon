@@ -1,12 +1,12 @@
 "use client";
 
-import Footer from "@/src/components/lp/Footer";
 import { Button } from "@/src/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import Footer from "../lp/layout/Footer";
 
 export default function LegalWrapper() {
 	const [activeTab, setActiveTab] = useState("terms");
