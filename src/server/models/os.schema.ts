@@ -17,7 +17,7 @@ export const appSchema = z.object({
 	color: z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
 		message: "Color must be a valid hex code (e.g. #FFF or #FFFFFF).",
 	}),
-	type: z.enum(["app", "memo", "website", "folder"]).optional(),
+	type: z.enum(["app", "memo", "website", "folder", "stamp"]).optional(),
 	content: z.string().optional(),
 	url: z.string().url({ message: "Invalid URL format." }).optional(),
 	favicon: z.string().url({ message: "Invalid URL format." }).optional(),
