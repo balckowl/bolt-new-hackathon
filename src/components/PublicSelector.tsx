@@ -2,10 +2,11 @@ import { Button } from "@/src/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/src/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/src/components/ui/radio-group";
 import { hono } from "@/src/lib/hono-client";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Lock, LockOpen } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { FontOptionType } from "../types/desktop";
+import SwitchButton from "./SwitchButton";
 
 type Props = {
 	isPublic: boolean;
@@ -16,6 +17,7 @@ type Props = {
 
 export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFont }: Props) => {
 	const [open, setOpen] = useState(false);
+
 	const handleChange = async (select: boolean) => {
 		if (select === isPublic) return;
 		try {
@@ -28,7 +30,6 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 				toast("Failed to change public information", {
 					style: { color: "#dc2626" },
 				});
-				return;
 			}
 			toast("Public information has been changed");
 			setIsPublic(select);
@@ -42,36 +43,44 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 	};
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover
+			open={open}
+			onOpenChange={(next) => {
+				setOpen(next);
+				if (next) {
+					toast.dismiss();
+				}
+			}}
+		>
 			<PopoverTrigger asChild>
-				<Button variant="ghost" size="sm" className="h-6 px-2 text-white text-xs hover:bg-white/10">
-					{/* <Image className="mr-1 h-3 w-3" /> */}
-					{isPublic ? "Public" : "Private"}
-					<ChevronDown className="ml-1 h-3 w-3" />
-				</Button>
+				<button type="button" className="h-6 px-2 text-sm text-white hover:bg-white/10">
+					{isPublic ? <LockOpen width={17} height={17} /> : <Lock width={17} height={17} />}
+				</button>
 			</PopoverTrigger>
 			<PopoverContent
-				className={`w-[200px] border border-white/20 bg-white/95 p-4 shadow-xl backdrop-blur-md ${getFontStyle(currentFont)}`}
+				className={`w-[200px] border-white/10 border-b bg-white/40 px-4 py-2 shadow-xl backdrop-blur-md ${getFontStyle(currentFont)}`}
 				align="start"
 				side="bottom"
-				sideOffset={8}
+				sideOffset={12}
 			>
-				<div className="space-y-3 text-sm">
-					<h3 className="font-medium text-gray-900 text-sm">Public or Private</h3>
+				<div className="text-sm">
 					<div className="grid grid-cols-3 gap-3">
 						<RadioGroup
-							className="flex"
 							value={isPublic ? "Public" : "Private"}
 							onValueChange={(value) => handleChange(value === "Public")}
 						>
-							<label htmlFor="public" className="flex cursor-pointer items-center gap-2">
-								<RadioGroupItem value="Public" id="public" />
-								<span>Public</span>
-							</label>
-							<label htmlFor="private" className="flex cursor-pointer items-center gap-2">
-								<RadioGroupItem value="Private" id="private" />
-								<span>Private</span>
-							</label>
+							<div>
+								<label htmlFor="public" className="flex cursor-pointer items-center gap-2">
+									<RadioGroupItem value="Public" id="public" />
+									<span>Public</span>
+								</label>
+							</div>
+							<div>
+								<label htmlFor="private" className="flex cursor-pointer items-center gap-2">
+									<RadioGroupItem value="Private" id="private" />
+									<span>Private</span>
+								</label>
+							</div>
 						</RadioGroup>
 					</div>
 				</div>

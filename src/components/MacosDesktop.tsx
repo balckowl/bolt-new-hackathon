@@ -1,6 +1,5 @@
 "use client";
 
-import { backgroundOptions } from "@/src/components/BackgroundSelector";
 import { MenuBar } from "@/src/components/MenuBar";
 import { UserIcon } from "@/src/components/UserIcon";
 import { Button } from "@/src/components/ui/button";
@@ -18,6 +17,7 @@ import type z from "zod";
 import { BrowserWindow } from "../components/window/BrowserWindow";
 import { FolderWindow } from "../components/window/FolderWindow";
 import { MemoWindow } from "../components/window/MemoWindow";
+import { cn } from "../lib/utils";
 import type {
 	AppIcon,
 	AppUrlDialog,
@@ -33,6 +33,7 @@ import type {
 	MemoNameDialog,
 	MemoWindowType,
 } from "../types/desktop";
+import { type BackgroundOption, backgroundOptions } from "./BackgroundImage";
 import { ContextMenu } from "./ContextMenu";
 import CreateAppUrlDialog from "./CreateAppUrlDialog";
 import DefaultDialog from "./DefaultDialog";
@@ -40,6 +41,7 @@ import DefaultDialog from "./DefaultDialog";
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
 	osName: string;
+	backgroundImg?: BackgroundOption;
 };
 
 const inter = Inter({ subsets: ["latin"] });
@@ -50,9 +52,9 @@ const lora = Lora({ subsets: ["latin"] });
 const comfortea = Comfortaa({ subsets: ["latin"] });
 
 const GRID_COLS = 6;
-const GRID_ROWS = 10;
+const GRID_ROWS = 8;
 
-export default function MacosDesktop({ desktop, osName }: Props) {
+export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) {
 	const [apps, setApps] = useState<AppIcon[]>([]);
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
 	const [draggedApp, setDraggedApp] = useState<string | null>(null);
@@ -105,7 +107,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	const changeFolderNameInput = (value: string) => setFolderNameInput(value);
 	const [isLoadingApp, setIsLoadingApp] = useState(false);
 	const [currentTime, setCurrentTime] = useState(new Date());
-	const [background, setBackground] = useState("linear-gradient(135deg, #667eea 0%, #764ba2 100%)");
+	const [background, setBackground] = useState(backgroundImg?.value);
 	const [font, setFont] = useState<FontOptionType>(desktop.font);
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
@@ -171,6 +173,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 			setPositionsInitialized(true);
 			setIsPublic(desktop.isPublic);
+
 			if (desktop.background) {
 				const backgroundImg = backgroundOptions.find((opt) => opt.name === desktop.background);
 				if (!backgroundImg) return;
@@ -862,6 +865,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 
 	const handleSaveDesktop = async () => {
 		setOriginalApps(apps);
+		toast.dismiss();
 		setOriginalAppPositions(appPositions);
 		const apiApps = apps.map((app) => ({
 			id: app.id,
@@ -893,6 +897,17 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				return;
 			}
 			toast("Desktop state saved");
+			// toastify('🦄 Wow so easy!', {
+			//   position: "top-right",
+			//   autoClose: 5000,
+			//   hideProgressBar: false,
+			//   closeOnClick: false,
+			//   pauseOnHover: true,
+			//   draggable: true,
+			//   progress: undefined,
+			//   theme: "light",
+			//   transition: Bounce,
+			// });
 		} catch (e) {
 			toast("Desktop update failed", {
 				style: { color: "#dc2626" },
@@ -1007,7 +1022,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 	};
 
 	const getBackgroundStyle = () => {
-		if (background.startsWith("http")) {
+		if (background?.startsWith("http")) {
 			return {
 				backgroundImage: `url(${background})`,
 				backgroundSize: "cover",
@@ -1104,7 +1119,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				grid.push(
 					<div
 						key={`${row}-${col}`}
-						className={`relative flex items-center justify-center border border-white/10 transition-all duration-200 ease-in-out ${
+						className={`relative flex items-center justify-center border border-white/5 transition-all duration-200 ease-in-out ${
 							isDropTarget ? "scale-105 rounded-2xl bg-white/10" : ""
 						}
               ${
@@ -1130,10 +1145,10 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 										handleAppClick(app);
 									}
 								}}
-								className="group hover:-translate-y-1 flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out hover:scale-110 active:cursor-grabbing"
+								className="group flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out active:cursor-grabbing"
 							>
 								<div
-									className={`relative h-14 w-14 rounded-2xl ${app.color}shadow-lg flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 hover:shadow-xl group-hover:border-white/30 group-hover:shadow-2xl `}
+									className={`relative h-14 w-14 rounded-2xl ${app.color} flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 group-hover:border-white/30`}
 								>
 									{renderAppIcon(app)}
 									{app.type === "website" && app.favicon && (
@@ -1164,7 +1179,17 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			className={`relative min-h-screen overflow-hidden ${getFontStyle(font)}`}
 			style={getBackgroundStyle()}
 		>
-			<Toaster className={getFontStyle(font)} />
+			<Toaster
+				visibleToasts={1}
+				className={cn(getFontStyle(font), "top-[50px] right-4")}
+				position="top-right"
+				toastOptions={{
+					classNames: {
+						toast: "custom-toast",
+					},
+				}}
+			/>
+
 			<UserIcon
 				isPublic={isPublic}
 				currentUserInfo={currentUserInfo}
@@ -1179,7 +1204,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				onBackgroundChange={handleBackgroundChange}
 				getFontStyle={getFontStyle}
 				onFontChange={handleFontChange}
-				background={background}
+				background={background ?? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"}
 				font={font}
 				setBackground={setBackground}
 				currentTime={currentTime}
@@ -1192,7 +1217,7 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 			/>
 
 			{/* Desktop grid */}
-			<div className="relative z-10 h-[calc(100vh-2rem)] p-8">
+			<div className="relative z-10 h-[calc(100vh-36px)] p-8">
 				<div
 					className="mx-auto grid h-full max-w-6xl gap-0"
 					style={{
@@ -1216,73 +1241,6 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				/>
 			)}
 
-			{/* Edit Dialog */}
-			{/* {editDialog.visible && editDialog.app && (
-        <CommonDialog
-          visible={editDialog.visible}
-          title={`Edit ${editDialog.app.type === "memo" ? "Memo" : editDialog.app.type === "folder" ? "Folder" : "App"}`}
-          onCancel={cancelEdit}
-          onSave={saveEdit}
-          saveDisabled={!editDialog.newName.trim()}
-          dialogZIndex={nextzIndex}
-          dialogClassName="edit-dialog"
-        >
-          <div>
-            <label htmlFor="edit-name" className="mb-2 block font-medium text-gray-700 text-sm">
-              Name
-            </label>
-            <input
-              id="edit-name"
-              type="text"
-              value={editDialog.newName}
-              onChange={(e) =>
-                setEditDialog((prev) => ({
-                  ...prev,
-                  newName: e.target.value,
-                }))
-              }
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  saveEdit();
-                } else if (e.key === "Escape") {
-                  cancelEdit();
-                }
-              }}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter name..."
-            // autoFocus
-            />
-          </div>
-          {editDialog.app.type === "website" && (
-            <div>
-              <label htmlFor="edit-url" className="mb-2 block font-medium text-gray-700 text-sm">
-                URL
-              </label>
-              <input
-                id="edit-url"
-                type="url"
-                value={editDialog.newUrl}
-                onChange={(e) =>
-                  setEditDialog((prev) => ({
-                    ...prev,
-                    newUrl: e.target.value,
-                  }))
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    saveEdit();
-                  } else if (e.key === "Escape") {
-                    cancelEdit();
-                  }
-                }}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-                placeholder="https://example.com"
-              />
-            </div>
-          )}
-        </CommonDialog>
-      )} */}
-
 			{editDialog.visible && editDialog.app && (
 				<DefaultDialog
 					formLabel={`${editDialog.app.type === "memo" ? "Notes" : editDialog.app.type === "folder" ? "Folder" : "App"} Name`}
@@ -1297,42 +1255,6 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 					changeNameInput={changeNameEditDialog}
 				/>
 			)}
-
-			{/* App URL Dialog */}
-			{/* {appUrlDialog.visible && (
-        <CommonDialog
-          visible={appUrlDialog.visible}
-          title="Create New App"
-          onCancel={cancelAppCreation}
-          onSave={createAppWithUrl}
-          saveDisabled={!appUrlInput.trim() || isLoadingApp}
-          saveLabel={isLoadingApp ? "Creating..." : "Save"}
-          dialogZIndex={nextzIndex}
-          dialogClassName="app-dialog"
-        >
-          <div className="mb-4">
-            <label htmlFor="app-url" className="mb-2 block font-medium text-gray-700 text-sm">
-              Website URL
-            </label>
-            <input
-              id="app-url"
-              type="url"
-              value={appUrlInput}
-              onChange={(e) => setAppUrlInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  createAppWithUrl();
-                } else if (e.key === "Escape") {
-                  cancelAppCreation();
-                }
-              }}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              placeholder="https://example.com"
-            // autoFocus
-            />
-          </div>
-        </CommonDialog>
-      )} */}
 
 			{appUrlDialog.visible && (
 				<CreateAppUrlDialog
@@ -1350,41 +1272,6 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 				/>
 			)}
 
-			{/* Memo Name Dialog */}
-			{/* {memoNameDialog.visible && (
-				<CommonDialog
-					visible={memoNameDialog.visible}
-					title="Create New Memo"
-					onCancel={cancelMemoCreation}
-					onSave={createMemoWithName}
-					saveDisabled={!memoNameInput.trim()}
-					dialogZIndex={nextzIndex}
-					dialogClassName="memo-dialog"
-				>
-					<div className="mb-4">
-						<label htmlFor="memo-name" className="mb-2 block font-medium text-gray-700 text-sm">
-							Memo Name
-						</label>
-						<input
-							id="memo-name"
-							type="text"
-							value={memoNameInput}
-							onChange={(e) => setMemoNameInput(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									createMemoWithName();
-								} else if (e.key === "Escape") {
-									cancelMemoCreation();
-								}
-							}}
-							className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter memo name..."
-							// autoFocus
-						/>
-					</div>
-				</CommonDialog>
-			)} */}
-
 			{memoNameDialog.visible && (
 				<DefaultDialog
 					formLabel="Notes Name"
@@ -1399,41 +1286,6 @@ export default function MacosDesktop({ desktop, osName }: Props) {
 					placeholder="Enter notes name..."
 				/>
 			)}
-
-			{/* Folder Name Dialog */}
-			{/* {folderNameDialog.visible && (
-        <CommonDialog
-          visible={folderNameDialog.visible}
-          title="Create New Folder"
-          onCancel={cancelFolderCreation}
-          onSave={createFolderWithName}
-          saveDisabled={!folderNameInput.trim()}
-          dialogZIndex={nextzIndex}
-          dialogClassName="folder-dialog"
-        >
-          <div className="mb-4">
-            <label htmlFor="folder-name" className="mb-2 block font-medium text-gray-700 text-sm">
-              Folder Name
-            </label>
-            <input
-              id="folder-name"
-              type="text"
-              value={folderNameInput}
-              onChange={(e) => setFolderNameInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  createFolderWithName();
-                } else if (e.key === "Escape") {
-                  cancelFolderCreation();
-                }
-              }}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter folder name..."
-            // autoFocus
-            />
-          </div>
-        </CommonDialog>
-      )} */}
 
 			{folderNameDialog.visible && (
 				<DefaultDialog

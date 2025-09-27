@@ -3,8 +3,12 @@ const nextConfig = {
 	experimental: {
 		serverActions: true,
 	},
+	webpack: (config) => {
+		config.externals.push("encoding" /* add any other modules that might be causing the error */);
+		return config;
+	},
 	images: {
-		domains: ["www.google.com", "images.pexels.com", "openweathermap.org"],
+		domains: ["www.google.com", "images.pexels.com", "openweathermap.org", "api.microlink.io"],
 		remotePatterns: [
 			{
 				protocol: "https",
