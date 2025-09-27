@@ -32,11 +32,13 @@ import type {
 	HelpWindowType,
 	MemoNameDialog,
 	MemoWindowType,
+	SelectStampDialog,
 } from "../types/desktop";
 import { type BackgroundOption, backgroundOptions } from "./BackgroundImage";
 import { ContextMenu } from "./ContextMenu";
 import CreateAppUrlDialog from "./CreateAppUrlDialog";
 import DefaultDialog from "./DefaultDialog";
+import StampDialog, { stampOptions } from "./SelectStampDialog";
 
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
@@ -81,6 +83,10 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		position: null,
 	});
 	const [folderNameDialog, setFolderNameDialog] = useState<FolderNameDialog>({
+		visible: false,
+		position: null,
+	});
+	const [selectStampDialog, setSelectStampDialog] = useState<SelectStampDialog>({
 		visible: false,
 		position: null,
 	});
@@ -226,6 +232,10 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				visible: false,
 				position: null,
 			});
+			setSelectStampDialog({
+				visible: false,
+				position: null,
+			});
 			setEditDialog({
 				visible: false,
 				app: null,
@@ -366,7 +376,6 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			visible: true,
 			position: contextMenu.position,
 		});
-		setAppUrlInput("");
 		setContextMenu({
 			visible: false,
 			x: 0,
@@ -384,6 +393,22 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			position: contextMenu.position,
 		});
 		setFolderNameInput(`Folder ${folderCounter}`);
+		setContextMenu({
+			visible: false,
+			x: 0,
+			y: 0,
+			position: null,
+		});
+	};
+
+	const showSelectStampDialog = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		setSelectStampDialog({
+			visible: true,
+			position: contextMenu.position,
+		});
 		setContextMenu({
 			visible: false,
 			x: 0,
@@ -727,6 +752,35 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		setFolderCounter((prev) => prev + 1);
 		setFolderNameDialog({ visible: false, position: null });
 		setFolderNameInput("");
+	};
+
+	const onSelectStamp = (stampName: string) => {
+		if (!selectStampDialog.position) return;
+		const selectedStamp = stampOptions.find((option) => option.id === stampName);
+		if (!selectedStamp) return;
+
+		const stampId = `stamp-${Date.now()}`;
+		const stamp: AppIcon = {
+			id: stampId,
+			name: selectedStamp.id,
+			icon: StickyNote,
+			iconKey: "StickyNote",
+			color: "#FFEB3B",
+			type: "stamp",
+			content: "",
+		};
+
+		setApps((prev) => [...prev, stamp]);
+
+		setAppPositions((prev) => {
+			const newPositions = new Map(prev);
+			if (selectStampDialog.position) {
+				newPositions.set(stampId, selectStampDialog.position);
+			}
+			return newPositions;
+		});
+
+		setSelectStampDialog({ visible: false, position: null });
 	};
 
 	const cancelMemoCreation = () => {
@@ -1122,48 +1176,59 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 						className={`relative flex items-center justify-center border border-white/5 transition-all duration-200 ease-in-out ${
 							isDropTarget ? "scale-105 rounded-2xl bg-white/10" : ""
 						}
-              ${
-								isFolderDropTarget
-									? "scale-105 rounded-2xl bg-blue-500/20 ring-2 ring-blue-400"
-									: ""
-							}
-            `}
+              				${
+												isFolderDropTarget
+													? "scale-105 rounded-2xl bg-blue-500/20 ring-2 ring-blue-400"
+													: ""
+											}`}
 						onDragOver={(e) => handleDragOver(e, row, col)}
 						onDragLeave={handleDragLeave}
 						onDrop={(e) => handleDrop(e, row, col)}
 						onContextMenu={(e) => handleRightClick(e, row, col)}
 					>
 						{app && (
-							<div
-								draggable={isEdit}
-								onDragStart={(e) => handleDragStart(e, app.id)}
-								onDragEnd={handleDragEnd}
-								onClick={() => handleAppClick(app)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter" || e.key === " ") {
-										e.preventDefault();
-										handleAppClick(app);
-									}
-								}}
-								className="group flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out active:cursor-grabbing"
-							>
-								<div
-									className={`relative h-14 w-14 rounded-2xl ${app.color} flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 group-hover:border-white/30`}
-								>
-									{renderAppIcon(app)}
-									{app.type === "website" && app.favicon && (
-										<Globe size={28} className="hidden text-white drop-shadow-sm" />
-									)}
-									{app.type === "folder" && getFolderAppCount(app.id) > 0 && (
-										<div className="-top-1 -right-1 absolute flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-red-500 font-bold text-white text-xs">
-											{getFolderAppCount(app.id)}
+							<div>
+								{app.type === "stamp" ? (
+									<div
+										draggable={isEdit}
+										onDragStart={(e) => handleDragStart(e, app.id)}
+										onDragEnd={handleDragEnd}
+									>
+										<Image src={`/${app.name}.png`} alt={app.name} width={56} height={56} />
+									</div>
+								) : (
+									<div
+										draggable={isEdit}
+										onDragStart={(e) => handleDragStart(e, app.id)}
+										onDragEnd={handleDragEnd}
+										onClick={() => handleAppClick(app)}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												e.preventDefault();
+												handleAppClick(app);
+											}
+										}}
+										className="group flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out active:cursor-grabbing"
+									>
+										<div
+											className={`relative h-14 w-14 rounded-2xl ${app.color} flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 group-hover:border-white/30`}
+										>
+											{renderAppIcon(app)}
+											{app.type === "website" && app.favicon && (
+												<Globe size={28} className="hidden text-white drop-shadow-sm" />
+											)}
+											{app.type === "folder" && getFolderAppCount(app.id) > 0 && (
+												<div className="-top-1 -right-1 absolute flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-red-500 font-bold text-white text-xs">
+													{getFolderAppCount(app.id)}
+												</div>
+											)}
+											<div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-white/10" />
 										</div>
-									)}
-									<div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-white/10" />
-								</div>
-								<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
-									{truncate(app.name, 6)}
-								</div>
+										<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
+											{truncate(app.name, 6)}
+										</div>
+									</div>
+								)}
 							</div>
 						)}
 					</div>,
@@ -1238,6 +1303,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 					showAppUrlDialog={showAppUrlDialog}
 					showMemoNameDialog={showMemoNameDialog}
 					showFolderNameDialog={showFolderNameDialog}
+					showSelectStampDialog={showSelectStampDialog}
 				/>
 			)}
 
@@ -1299,6 +1365,14 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 					visible={folderNameDialog.visible}
 					title="Create New Folder"
 					placeholder="Enter folder name..."
+				/>
+			)}
+
+			{selectStampDialog.visible && (
+				<StampDialog
+					dialogZIndex={nextzIndex}
+					visible={selectStampDialog.visible}
+					onSelectStamp={onSelectStamp}
 				/>
 			)}
 

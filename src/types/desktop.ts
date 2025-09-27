@@ -8,7 +8,7 @@ export interface AppIcon {
 	icon: LucideIcon;
 	iconKey: "StickyNote" | "Globe" | "FolderIcon";
 	color: string;
-	type?: "app" | "memo" | "website" | "folder";
+	type?: "app" | "memo" | "website" | "folder" | "stamp";
 	content?: string;
 	url?: string;
 	favicon?: string;
@@ -81,6 +81,11 @@ export interface AppUrlDialog {
 }
 
 export interface FolderNameDialog {
+	visible: boolean;
+	position: GridPosition | null;
+}
+
+export interface SelectStampDialog {
 	visible: boolean;
 	position: GridPosition | null;
 }

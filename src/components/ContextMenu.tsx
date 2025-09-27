@@ -8,6 +8,7 @@ type Props = {
 	showAppUrlDialog: (e: React.MouseEvent) => void;
 	showMemoNameDialog: (e: React.MouseEvent) => void;
 	showFolderNameDialog: (e: React.MouseEvent) => void;
+	showSelectStampDialog: (e: React.MouseEvent) => void;
 };
 
 export const ContextMenu = ({
@@ -17,6 +18,7 @@ export const ContextMenu = ({
 	showAppUrlDialog,
 	showMemoNameDialog,
 	showFolderNameDialog,
+	showSelectStampDialog,
 }: Props) => {
 	return (
 		<div
@@ -80,6 +82,14 @@ export const ContextMenu = ({
 					>
 						<StickyNote size={16} />
 						<span>Create Notes</span>
+					</button>
+					<button
+						onClick={showSelectStampDialog}
+						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
+						type="button"
+					>
+						<FolderIcon size={16} />
+						<span>Create Stamp</span>
 					</button>
 				</>
 			)}
