@@ -1,5 +1,4 @@
 import { getTranslation } from "@/src/i18n/server";
-import { Lilita_One } from "next/font/google";
 import Image from "next/image";
 import { Marquee } from "../../magicui/marquee";
 import Container from "../layout/Container";
@@ -30,8 +29,6 @@ const highlightTags = [
 		className: "right-0 top-1/2 -translate-y-1/2 -rotate-[10deg] sm:-right-4",
 	},
 ];
-
-const chewy = Lilita_One({ subsets: ["latin"], weight: "400" });
 
 type Props = {
 	lang: string;
