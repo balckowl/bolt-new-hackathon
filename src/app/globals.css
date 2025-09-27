@@ -10,7 +10,7 @@ video {
 }
 
 video::-webkit-media-controls-panel {
-  display: none !important;
+	display: none !important;
 }
 
 video::-moz-media-controls {
@@ -100,7 +100,13 @@ video::-moz-media-controls {
 	position: absolute;
 	display: block;
 	pointer-events: none;
-	background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(191, 219, 254, 0.4) 45%, rgba(125, 211, 252, 0.15) 65%, transparent 100%);
+	background: radial-gradient(
+		circle at center,
+		rgba(255, 255, 255, 0.95) 0%,
+		rgba(191, 219, 254, 0.4) 45%,
+		rgba(125, 211, 252, 0.15) 65%,
+		transparent 100%
+	);
 	border-radius: 9999px;
 	box-shadow: 0 0 12px rgba(125, 211, 252, 0.5);
 	opacity: 0;
@@ -116,7 +122,12 @@ video::-moz-media-controls {
 	top: 50%;
 	width: 180%;
 	height: 1.5px;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.9),
+		transparent
+	);
 	opacity: 0.9;
 	transform: translate(-50%, -50%) rotate(45deg);
 }
@@ -146,45 +157,45 @@ video::-moz-media-controls {
 }
 
 @theme inline {
-  --animate-marquee: marquee var(--duration) infinite linear;
-  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
- 
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(calc(-100% - var(--gap)));
-    }
-  }
-  @keyframes marquee-vertical {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(calc(-100% - var(--gap)));
-    }
-  }
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
 }
 
 /*sonner*/
 /* global.css */
 :where([data-sonner-toast]).custom-toast {
-  /* 最初の状態 */
-  opacity: 0;
-  transform: translateX(100%); 
-  transition: transform 0.3s ease, opacity 0.2s ease;
-  background-color: rgba(255, 255, 255, 0.8);        
-  backdrop-filter: blur(12px);   
-  border: 0; 
+	/* 最初の状態 */
+	opacity: 0;
+	transform: translateX(100%);
+	transition: transform 0.3s ease, opacity 0.2s ease;
+	background-color: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(12px);
+	border: 0;
 }
 
 :where([data-sonner-toast][data-mounted="true"]).custom-toast {
-  opacity: 1;
-  transform: translateX(0); 
+	opacity: 1;
+	transform: translateX(0);
 }
 
 :where([data-sonner-toast][data-removed="true"]).custom-toast {
-  opacity: 0;
-  transform: translateX(100%); 
+	opacity: 0;
+	transform: translateX(100%);
 }
