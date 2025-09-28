@@ -52,6 +52,7 @@
 		"@scalar/hono-api-reference": "^0.9.7",
 		"@t3-oss/env-nextjs": "^0.13.6",
 		"@tailwindcss/typography": "^0.5.16",
+		"@tiptap/extension-placeholder": "^2.14.0",
 		"@tiptap/pm": "^2.14.0",
 		"@tiptap/react": "^2.14.0",
 		"@tiptap/starter-kit": "^2.14.0",

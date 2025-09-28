@@ -1,3 +1,4 @@
+import { color } from "motion/react";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -118,9 +119,17 @@ const config: Config = {
 				DEFAULT: {
 					css: {
 						margin: "0",
+						"p.is-editor-empty:first-child::before": {
+							color: "var(--gray-4)",
+							content: "attr(data-placeholder)",
+							float: "left",
+							height: 0,
+							opacity: 0.3,
+						},
 					},
 				},
 			},
+			placeholderColor: {},
 		},
 	},
 	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

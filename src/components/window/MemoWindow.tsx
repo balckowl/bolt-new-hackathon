@@ -1,3 +1,4 @@
+import Placeholder from "@tiptap/extension-placeholder";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
@@ -34,7 +35,12 @@ export function MemoWindow({
 	});
 
 	const editor = useEditor({
-		extensions: [StarterKit],
+		extensions: [
+			StarterKit,
+			Placeholder.configure({
+				placeholder: "Write something ...",
+			}),
+		],
 		content: window.content,
 		editable: isEditable,
 		editorProps: {
