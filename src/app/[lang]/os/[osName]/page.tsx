@@ -50,7 +50,6 @@ export default async function Page({ params }: Props) {
 
 	const data = await res.json();
 	const backgroundImg = backgroundOptions.find((opt) => opt.name === data.background);
-
 	return (
 		<>
 			<div className="block lg:hidden">
