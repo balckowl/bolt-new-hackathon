@@ -1,50 +1,50 @@
+import type { AllowedStampNamesType } from "@/src/server/models/os.schema";
 import Image from "next/image";
-import { Button } from "./ui/button";
 
 type StampOption = {
-	id: string;
+	name: AllowedStampNamesType;
 	src: string;
 	alt: string;
 };
 
 export const stampOptions: StampOption[] = [
 	{
-		id: "astro-4",
+		name: "astro-4",
 		src: "/astro-4.png",
 		alt: "astro-4",
 	},
 	{
-		id: "astro-3",
+		name: "astro-3",
 		src: "/astro-3.png",
 		alt: "astro-3",
 	},
 	{
-		id: "astro-2",
+		name: "astro-2",
 		src: "/astro-2.png",
 		alt: "astro-2",
 	},
 	{
-		id: "astro",
+		name: "astro",
 		src: "/astro.png",
 		alt: "astro",
 	},
 	{
-		id: "browser",
+		name: "browser",
 		src: "/browser.png",
 		alt: "browser",
 	},
 	{
-		id: "rocket",
+		name: "rocket",
 		src: "/rocket.png",
 		alt: "rocket",
 	},
 	{
-		id: "lock",
+		name: "lock",
 		src: "/lock.png",
 		alt: "lock",
 	},
 	{
-		id: "star",
+		name: "star",
 		src: "/star.png",
 		alt: "star",
 	},
@@ -73,13 +73,13 @@ export default function StampDialog({ dialogZIndex, visible, onSelectStamp }: Pr
 				<div className="mb-4 grid grid-cols-4 gap-4">
 					{stampOptions.map((stamp) => (
 						<Image
-							key={stamp.id}
+							key={stamp.name}
 							src={stamp.src}
 							width={80}
 							height={80}
 							alt={stamp.alt}
 							className="h-20 w-20 cursor-pointer rounded-md border border-gray-200 object-cover transition-transform hover:scale-105"
-							onClick={() => handleStampSelect(stamp.id)}
+							onClick={() => handleStampSelect(stamp.name)}
 						/>
 					))}
 				</div>

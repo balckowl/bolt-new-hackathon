@@ -1,4 +1,8 @@
-import type { desktopStateSchema, fontSchema } from "@/src/server/models/os.schema";
+import type {
+	AllowedStampNamesType,
+	desktopStateSchema,
+	fontSchema,
+} from "@/src/server/models/os.schema";
 import type { LucideIcon } from "lucide-react";
 import type z from "zod";
 
@@ -12,6 +16,8 @@ export interface AppIcon {
 	content?: string;
 	url?: string;
 	favicon?: string;
+	stampName?: AllowedStampNamesType;
+	stampContent?: string;
 }
 
 export interface GridPosition {
@@ -95,6 +101,7 @@ export interface EditDialog {
 	app: AppIcon | null;
 	newName: string;
 	newUrl?: string;
+	newContent: string;
 }
 
 export type FontOptionType = z.infer<typeof fontSchema>["font"];

@@ -1,5 +1,5 @@
 import type { ContextMenuType } from "@/src/types/desktop";
-import { Edit3, FolderIcon, Plus, StickyNote, Trash2 } from "lucide-react";
+import { Edit3, FolderIcon, Plus, Stamp, StickyNote, Trash2 } from "lucide-react";
 
 type Props = {
 	contextMenu: ContextMenuType;
@@ -88,7 +88,7 @@ export const ContextMenu = ({
 						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
 						type="button"
 					>
-						<FolderIcon size={16} />
+						<Stamp size={16} />
 						<span>Create Stamp</span>
 					</button>
 				</>

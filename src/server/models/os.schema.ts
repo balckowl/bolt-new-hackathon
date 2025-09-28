@@ -6,6 +6,17 @@ const positionSchema = z.object({
 	col: z.number().min(0).max(5),
 });
 
+export const allowedStampNames = [
+	"astro-4",
+	"astro-3",
+	"astro-2",
+	"astro",
+	"browser",
+	"rocket",
+	"lock",
+	"star",
+] as const;
+
 export const appSchema = z.object({
 	id: z.string(),
 	name: z
@@ -21,7 +32,36 @@ export const appSchema = z.object({
 	content: z.string().optional(),
 	url: z.string().url({ message: "Invalid URL format." }).optional(),
 	favicon: z.string().url({ message: "Invalid URL format." }).optional(),
+	stampName: z
+		.enum(allowedStampNames, {
+			errorMap: () => ({
+				message: "Invalid stamp name. Must be one of the predefined stamp names.",
+			}),
+		})
+		.optional(),
+	stampContent: z
+		.string()
+		.max(20, { message: "Stamp content must be at most 20 characters long." })
+		.optional(),
 });
+// .superRefine((data,ctx) => {
+// 	if (data.type === "stamp" && !data.stampName) {
+// 		ctx.addIssue({
+// 			code: "custom",
+// 			path: ["stampName"],
+// 			message: "stampName is required when type is 'stamp'.",
+// 		})
+// 	}
+// 	if (data.type !== "stamp" && (data.stampName || data.stampContent)) {
+// 		ctx.addIssue({
+// 			code: "custom",
+// 			path: ["stampName"],
+// 			message: "stampName is not allowed when type is not 'stamp'.",
+// 		})
+// 	}
+// })
+
+export type AllowedStampNamesType = (typeof allowedStampNames)[number];
 
 export const stateSchema = z
 	.object({
