@@ -12,11 +12,19 @@
 	},
 	"iconLibrary": "lucide",
 	"aliases": {
-		"components": "@/components",
-		"utils": "@/lib/utils",
-		"ui": "@/components/ui",
-		"lib": "@/lib",
-		"hooks": "@/hooks"
+		"components": "@/src/components",
+		"contexts": "@/src/contexts",
+		"hooks": "@/src/hooks",
+		"tiptapIcons": "@/src/components/tiptap-icons",
+		"lib": "@/src/lib",
+		"tiptapExtensions": "@src/components/tiptap-extensions",
+		"tiptapNodes": "@/src/components/tiptap-node",
+		"tiptapUi": "@/src/components/tiptap-ui",
+		"tiptapUiPrimitives": "@/src/components/tiptap-ui-primitive",
+		"tiptapUtils": "@/src/components/tiptap-utils",
+		"styles": "@/src/components/tiptap-ui-primitive/styles",
+		"utils": "@/src/lib/utils",
+		"ui": "@/src/components/ui"
 	},
 	"registries": {
 		"@magicui": "https://magicui.design/r/{name}.json"
