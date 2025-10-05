@@ -54,6 +54,7 @@
 		"@t3-oss/env-nextjs": "^0.13.6",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tiptap/extension-list": "^3.6.5",
+		"@tiptap/extensions": "^3.6.5",
 		"@tiptap/pm": "^3.6.5",
 		"@tiptap/react": "^3.6.5",
 		"@tiptap/starter-kit": "^3.6.2",
