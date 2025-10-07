@@ -1,6 +1,7 @@
 "use client";
 
-import { MenuBar } from "@/src/components/MenuBar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DraggableMenu } from "@/src/components/DraggableMenu";
 import { UserIcon } from "@/src/components/UserIcon";
 import { Button } from "@/src/components/ui/button";
 import { HelpWindow } from "@/src/components/window/HelpWindow";
@@ -40,7 +41,6 @@ import CreateAppUrlDialog from "./CreateAppUrlDialog";
 import DefaultDialog from "./DefaultDialog";
 import EditStampDialog from "./EditStampDialog";
 import StampDialog, { stampOptions } from "./SelectStampDialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
@@ -58,6 +58,22 @@ const comfortea = Comfortaa({ subsets: ["latin"] });
 const GRID_COLS = 6;
 const GRID_ROWS = 8;
 
+const cloneApps = (appsToClone: AppIcon[]) => appsToClone.map((app) => ({ ...app }));
+
+const cloneAppPositions = (positions: Map<string, GridPosition>) =>
+	new Map<string, GridPosition>(
+		Array.from(positions.entries(), ([key, value]) => [key, { ...value }]),
+	);
+
+const createFolderContentsMap = (data: Record<string, string[]>) =>
+	new Map<string, string[]>(Object.entries(data).map(([key, value]) => [key, [...value]]));
+
+const cloneFolderContents = (contents: Map<string, string[]>) =>
+	new Map<string, string[]>(Array.from(contents.entries(), ([key, value]) => [key, [...value]]));
+
+const mapEntriesToJson = (contents: Map<string, string[]>) =>
+	JSON.stringify(Array.from(contents.entries(), ([key, value]) => [key, [...value]]));
+
 export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) {
 	const [apps, setApps] = useState<AppIcon[]>([]);
 	const [appPositions, setAppPositions] = useState<Map<string, GridPosition>>(new Map());
@@ -68,6 +84,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		x: 0,
 		y: 0,
 		position: null,
+		folderId: null,
 	});
 	const [memoWindows, setMemoWindows] = useState<MemoWindowType[]>([]);
 	const [browserWindows, setBrowserWindows] = useState<BrowserWindowType[]>([]);
@@ -124,16 +141,20 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	const [isLoadingApp, setIsLoadingApp] = useState(false);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [background, setBackground] = useState(backgroundImg?.value);
+	const [brightness, setBrightness] = useState(0.1);
 	const [font, setFont] = useState<FontOptionType>(desktop.font);
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
+	const [originalFolderContents, setOriginalFolderContents] = useState<Map<string, string[]>>(
+		new Map(),
+	);
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
 
 	// help window
 	const [helpWindow, setHelpWindow] = useState<HelpWindowType>({
 		visible: false,
 		content: "welcome",
-		position: { x: 50, y: 50 },
-		size: { width: 650, height: 600 },
+		position: { x: 150, y: 150 },
+		size: { width: 650, height: 450 },
 		isMinimized: false,
 		zIndex: nextzIndex + 1000,
 	});
@@ -152,6 +173,10 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 
 	// isEdit
 	const isEdit = desktop.isEdit ?? false;
+
+	const handleBrightnessChange = (value: number) => {
+		setBrightness(value);
+	};
 
 	const dragSourceRef = useRef<GridPosition | null>(null);
 
@@ -179,13 +204,14 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				type: app.type,
 			}));
 			setAppPositions(positionsMap);
-			setOriginalAppPositions(positionsMap);
+			setOriginalAppPositions(cloneAppPositions(positionsMap));
 			setApps(responseApps);
-			setOriginalApps(responseApps);
+			setOriginalApps(cloneApps(responseApps));
 
 			// folderContents の初期化
-			const fcMap = new Map<string, string[]>(Object.entries(desktop.state.folderContents));
+			const fcMap = createFolderContentsMap(desktop.state.folderContents);
 			setFolderContents(fcMap);
+			setOriginalFolderContents(cloneFolderContents(fcMap));
 
 			setPositionsInitialized(true);
 			setIsPublic(desktop.isPublic);
@@ -231,6 +257,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				x: 0,
 				y: 0,
 				position: null,
+				folderId: null,
 			});
 			setMemoNameDialog({
 				visible: false,
@@ -362,6 +389,22 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			y: e.clientY,
 			position: { row, col },
 			existingApp,
+			folderId: null,
+		});
+	};
+
+	const handleFolderAppContextMenu = (e: React.MouseEvent, app: AppIcon, folderId: string) => {
+		if (isEdit === false) return;
+		e.preventDefault();
+		e.stopPropagation();
+
+		setContextMenu({
+			visible: true,
+			x: e.clientX,
+			y: e.clientY,
+			position: null,
+			existingApp: app,
+			folderId,
 		});
 	};
 
@@ -379,6 +422,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
 		});
 	};
 
@@ -395,6 +439,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
 		});
 	};
 
@@ -412,6 +457,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
 		});
 	};
 
@@ -428,6 +474,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
 		});
 	};
 
@@ -449,6 +496,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
 		});
 	};
 
@@ -512,6 +560,24 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			folderId: null,
+		});
+	};
+
+	const removeAppFromFolderViaContext = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (!contextMenu.folderId || !contextMenu.existingApp) return;
+
+		removeFromFolder(contextMenu.folderId, contextMenu.existingApp.id);
+
+		setContextMenu({
+			visible: false,
+			x: 0,
+			y: 0,
+			position: null,
+			folderId: null,
 		});
 	};
 
@@ -884,6 +950,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			const newWindow: BrowserWindowType = {
 				id: app.id,
 				title: app.name,
+				favicon: app.favicon,
 				url: app.url,
 				position: {
 					x: 150 + browserWindows.length * 30,
@@ -938,14 +1005,25 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	// difference detection
 	const appsChanged = JSON.stringify(apps) !== JSON.stringify(originalApps);
 	const positionsChanged =
-		JSON.stringify(Array.from(appPositions.entries())) !==
-		JSON.stringify(Array.from(originalAppPositions.entries()));
-	const showDesktopSaveBtn = positionsInitialized ? appsChanged || positionsChanged : false;
+		JSON.stringify(Array.from(appPositions.entries(), ([key, value]) => [key, { ...value }])) !==
+		JSON.stringify(
+			Array.from(originalAppPositions.entries(), ([key, value]) => [key, { ...value }]),
+		);
+	const folderContentsChanged =
+		mapEntriesToJson(folderContents) !== mapEntriesToJson(originalFolderContents);
+	const showDesktopSaveBtn = positionsInitialized
+		? appsChanged || positionsChanged || folderContentsChanged
+		: false;
 
 	const handleSaveDesktop = async () => {
-		setOriginalApps(apps);
+		const prevOriginalApps = cloneApps(originalApps);
+		const prevOriginalAppPositions = cloneAppPositions(originalAppPositions);
+		const prevOriginalFolderContents = cloneFolderContents(originalFolderContents);
+
+		setOriginalApps(cloneApps(apps));
+		setOriginalAppPositions(cloneAppPositions(appPositions));
+		setOriginalFolderContents(cloneFolderContents(folderContents));
 		toast.dismiss();
-		setOriginalAppPositions(appPositions);
 		const apiApps = apps.map((app) => ({
 			id: app.id,
 			name: app.name,
@@ -960,11 +1038,13 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		}));
 		const state = {
 			apps: apiApps,
-			appPositions: Object.fromEntries(appPositions.entries()),
-			folderContents: Object.fromEntries(folderContents.entries()),
+			appPositions: Object.fromEntries(
+				Array.from(appPositions.entries(), ([key, value]) => [key, { ...value }]),
+			),
+			folderContents: Object.fromEntries(
+				Array.from(folderContents.entries(), ([key, value]) => [key, [...value]]),
+			),
 		};
-		const prevOriginalApps = originalApps;
-		const prevOriginalAppPositions = originalAppPositions;
 		try {
 			const res = await hono.api.desktop.state.$put({
 				json: { state },
@@ -972,30 +1052,35 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			if (!res.ok) {
 				toast("Desktop update failed", {
 					style: { color: "#dc2626" },
+					icon: <Icons.Megaphone size={19} />,
 				});
 				setOriginalApps(prevOriginalApps);
 				setOriginalAppPositions(prevOriginalAppPositions);
+				setOriginalFolderContents(prevOriginalFolderContents);
 				return;
 			}
-			toast("Desktop state saved");
-			// toastify('🦄 Wow so easy!', {
-			//   position: "top-right",
-			//   autoClose: 5000,
-			//   hideProgressBar: false,
-			//   closeOnClick: false,
-			//   pauseOnHover: true,
-			//   draggable: true,
-			//   progress: undefined,
-			//   theme: "light",
-			//   transition: Bounce,
-			// });
+			toast("Desktop state saved", {
+				icon: <Icons.Megaphone size={19} />,
+			});
 		} catch (e) {
 			toast("Desktop update failed", {
 				style: { color: "#dc2626" },
+				icon: <Icons.Megaphone size={19} />,
 			});
 			setOriginalApps(prevOriginalApps);
 			setOriginalAppPositions(prevOriginalAppPositions);
+			setOriginalFolderContents(prevOriginalFolderContents);
 		}
+	};
+
+	const handleRevertDesktopChanges = () => {
+		toast.dismiss();
+		setApps(cloneApps(originalApps));
+		setAppPositions(cloneAppPositions(originalAppPositions));
+		setFolderContents(cloneFolderContents(originalFolderContents));
+		toast("Changes discarded", {
+			icon: <Icons.Megaphone size={19} />,
+		});
 	};
 
 	const updateMemoContent = (windowId: string, content: string) => {
@@ -1149,13 +1234,13 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
 			return (
-				<div className="relative h-7 w-7 ">
+				<div className="relative">
 					<Image
 						src={app.favicon}
 						alt={app.name}
-						width={28}
-						height={28}
-						className="h-7 w-7 rounded-sm"
+						width={30}
+						height={30}
+						className="pointer-events-none rounded-sm"
 						onError={(e) => {
 							// Fallback to Globe icon if favicon fails to load
 							const target = e.target as HTMLImageElement;
@@ -1169,14 +1254,17 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 							}
 						}}
 					/>
-					<Globe
-						size={24}
-						className="fallback-icon absolute inset-0 hidden text-white drop-shadow-sm"
+					<Icons.Sparkle
+						size={30}
+						fill="black"
+						color="color"
+						strokeWidth={0.8}
+						className="fallback-icon relative z-10 hidden"
 					/>
 				</div>
 			);
 		}
-		return <app.icon size={28} className="text-white drop-shadow-sm" />;
+		return <app.icon size={30} className="text-black/90" />;
 	};
 
 	const getFolderAppCount = (folderId: string): number => {
@@ -1217,7 +1305,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 							<div>
 								{app.type === "stamp" ? (
 									app.stampContent ? (
-										<Tooltip>
+										<Tooltip delayDuration={0}>
 											<TooltipTrigger asChild>
 												<div
 													draggable={isEdit}
@@ -1227,13 +1315,13 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 													<Image
 														src={`/${app.stampName}.png`}
 														alt={app.name}
-														width={56}
-														height={56}
+														width={65}
+														height={65}
 													/>
 												</div>
 											</TooltipTrigger>
-											<TooltipContent>
-												<p>{app.stampContent}</p>
+											<TooltipContent className="rounded-2xl">
+												<p className="text-white">{app.stampContent}</p>
 											</TooltipContent>
 										</Tooltip>
 									) : (
@@ -1242,7 +1330,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 											onDragStart={(e) => handleDragStart(e, app.id)}
 											onDragEnd={handleDragEnd}
 										>
-											<Image src={`/${app.stampName}.png`} alt={app.name} width={56} height={56} />
+											<Image src={`/${app.stampName}.png`} alt={app.name} width={65} height={65} />
 										</div>
 									)
 								) : (
@@ -1260,21 +1348,21 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 										className="group flex transform cursor-grab flex-col items-center transition-all duration-200 ease-out active:cursor-grabbing"
 									>
 										<div
-											className={`relative h-14 w-14 rounded-2xl ${app.color} flex items-center justify-center border border-white/20 backdrop-blur-sm transition-all duration-200 group-hover:border-white/30`}
+											className={`relative mb-[6px] h-12 w-12 rounded-2xl shadow-2xl ${app.color} flex items-center justify-center backdrop-blur-sm transition-all duration-200 group-hover:border-white/30`}
 										>
 											{renderAppIcon(app)}
 											{app.type === "website" && app.favicon && (
-												<Globe size={28} className="hidden text-white drop-shadow-sm" />
+												<Globe size={28} className="hidden text-black drop-shadow-sm" />
 											)}
 											{app.type === "folder" && getFolderAppCount(app.id) > 0 && (
-												<div className="-top-1 -right-1 absolute flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-red-500 font-bold text-white text-xs">
+												<div className="-top-[6px] -right-[6px] absolute flex h-5 w-5 items-center justify-center rounded-full bg-red-500 font-bold text-white text-xs">
 													{getFolderAppCount(app.id)}
 												</div>
 											)}
-											<div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-white/10" />
+											<div className="-z-10 absolute inset-0 rounded-2xl bg-white/90 shadow-2xl backdrop-blur-lg" />
 										</div>
 										<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
-											{truncate(app.name, 6)}
+											{truncate(app.name, 20)}
 										</div>
 									</div>
 								)}
@@ -1293,14 +1381,19 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			className={`relative min-h-screen overflow-hidden ${getFontStyle(font)}`}
 			style={getBackgroundStyle()}
 		>
-			<TooltipProvider delayDuration={0}>
+			<TooltipProvider>
 				<Toaster
 					visibleToasts={1}
-					className={cn(getFontStyle(font), "top-[50px] right-4")}
+					className={cn("top-0 right-0")}
+					richColors={false}
 					position="top-right"
+					style={{
+						fontWeight: "700",
+					}}
 					toastOptions={{
 						classNames: {
-							toast: "custom-toast",
+							toast: "macos-toast",
+							title: "macos-title",
 						},
 					}}
 				/>
@@ -1311,28 +1404,33 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 					getFontStyle={getFontStyle}
 					currentFont={font}
 				/>
-				{/* Background overlay for better contrast */}
-				<div className="absolute inset-0 bg-black/20" />
+				{/* Background overlay for brightness control */}
+				<div
+					className="pointer-events-none absolute inset-0"
+					style={{ backgroundColor: `rgba(0, 0, 0, ${brightness})` }}
+					aria-hidden="true"
+				/>
 
-				{/* Menu bar */}
-				<MenuBar
+				<DraggableMenu
 					onBackgroundChange={handleBackgroundChange}
 					getFontStyle={getFontStyle}
 					onFontChange={handleFontChange}
 					background={background ?? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"}
 					font={font}
 					setBackground={setBackground}
+					brightness={brightness}
+					onBrightnessChange={handleBrightnessChange}
 					currentTime={currentTime}
 					isPublic={isPublic}
 					setIsPublic={setIsPublic}
 					osName={osName}
 					isEditable={isEdit}
-					helpWindow={helpWindow}
 					setHelpWindow={setHelpWindow}
+					helpWindow={helpWindow}
 				/>
 
 				{/* Desktop grid */}
-				<div className="relative z-10 h-[calc(100vh-36px)] p-8">
+				<div className="relative z-10 h-[calc(100vh)] p-8">
 					<div
 						className="mx-auto grid h-full max-w-6xl gap-0"
 						style={{
@@ -1354,6 +1452,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 						showMemoNameDialog={showMemoNameDialog}
 						showFolderNameDialog={showFolderNameDialog}
 						showSelectStampDialog={showSelectStampDialog}
+						removeFromFolder={removeAppFromFolderViaContext}
 					/>
 				)}
 
@@ -1382,7 +1481,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								onSave={saveEdit}
 								visible={editDialog.visible}
 								onCancel={cancelEdit}
-								formLabel="Stamp Name"
+								formLabel="Stamp Text"
 							/>
 						) : (
 							<DefaultDialog
@@ -1570,12 +1669,16 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								key={window.id}
 								window={window}
 								folderContents={folderContents.get(window.id) || []}
+								allFolderContents={folderContents}
 								apps={apps}
+								desktopBackground={background}
+								brightness={brightness}
 								onClose={() => closeFolderWindow(window.id)}
 								onMinimize={() => minimizeFolderWindow(window.id)}
 								onBringToFront={() => bringFolderToFront(window.id)}
 								onRemoveApp={(appId) => removeFromFolder(window.id, appId)}
 								onAppClick={handleAppClick}
+								onAppContextMenu={handleFolderAppContextMenu}
 								onPositionChange={(position) => {
 									setFolderWindows((prev) =>
 										prev.map((w) =>
@@ -1605,11 +1708,26 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				)}
 
 				{showDesktopSaveBtn && isEdit && (
-					<div className="fixed right-6 bottom-6 z-50 rounded-md bg-white p-4 text-black text-sm shadow-lg transition">
-						<p>Do you want to save changes?</p>
-						<Button size="sm" className="mt-2" onClick={handleSaveDesktop}>
-							Save
-						</Button>
+					<div className="fixed right-6 bottom-6 z-50 text-black text-sm shadow-lg transition">
+						<div className="flex items-center gap-3 rounded-t-2xl border-b bg-white/90 px-3 py-3">
+							<Icons.CircleAlert size={17} />
+							<p className="font-bold text-sm">Unsaved changes</p>
+						</div>
+						<div className="rounded-b-2xl bg-white/[0.85] px-3 py-3">
+							<div className="flex items-center gap-2">
+								<Button
+									size="sm"
+									variant="outline"
+									className="w-[120px] rounded-xl"
+									onClick={handleRevertDesktopChanges}
+								>
+									Revert
+								</Button>
+								<Button size="sm" className="w-[120px] rounded-xl" onClick={handleSaveDesktop}>
+									Save
+								</Button>
+							</div>
+						</div>
 					</div>
 				)}
 			</TooltipProvider>

@@ -7,7 +7,7 @@ const positionSchema = z.object({
 });
 
 export const allowedStampNames = [
-	"astro-4",
+	"astro-5",
 	"astro-3",
 	"astro-2",
 	"astro",
@@ -15,6 +15,20 @@ export const allowedStampNames = [
 	"rocket",
 	"lock",
 	"star",
+	"stamp-1",
+	"astro-6",
+	"wakusei",
+	"stamp-2",
+	"astro-7",
+	"astro-8",
+	"stamp-3",
+	"wakusei-2",
+	"wakusei-3",
+	"wakusei-4",
+	"astro-9",
+	"astro-10",
+	"astro-11",
+	"astro-12",
 ] as const;
 
 export const appSchema = z.object({

@@ -52,6 +52,7 @@ export interface MemoWindowType {
 export interface BrowserWindowType {
 	id: string;
 	title: string;
+	favicon: string | undefined;
 	url: string;
 	position: { x: number; y: number };
 	size: { width: number; height: number };
@@ -74,6 +75,7 @@ export interface ContextMenuType {
 	y: number;
 	position: GridPosition | null;
 	existingApp?: AppIcon | null;
+	folderId?: string | null;
 }
 
 export interface MemoNameDialog {

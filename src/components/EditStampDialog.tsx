@@ -50,7 +50,7 @@ export default function EditStampDialog({
 			style={{ zIndex: dialogZIndex }}
 		>
 			<div className="edit-stamp-dialog min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-				<h3 className="mb-4 font-semibold text-gray-800 text-lg">Edit stamp content</h3>
+				<h3 className="mb-4 font-semibold text-gray-800 text-lg">Edit stamp text</h3>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<FormField
@@ -61,13 +61,13 @@ export default function EditStampDialog({
 									<FormLabel>{formLabel}</FormLabel>
 									<FormControl>
 										<Input
-											placeholder="Enter content..."
+											placeholder="Hello!..."
 											{...field}
 											onChange={(e) => {
 												field.onChange(e);
 												changeContentInput(e.target.value);
 											}}
-											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500"
+											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-black"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -85,7 +85,7 @@ export default function EditStampDialog({
 							<Button
 								type="submit"
 								disabled={!currentContent?.trim()}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+								className="rounded-lg px-4 py-2 font-medium text-sm text-white transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
 							>
 								Save
 							</Button>

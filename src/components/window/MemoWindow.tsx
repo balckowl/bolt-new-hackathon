@@ -1,9 +1,11 @@
 import { Placeholder } from "@tiptap/extensions";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { MemoWindowType } from "../../types/desktop";
 import TiptapEditor from "../TiptapEditor";
+import WindowHeader from "./WindowHeader";
 
 export function MemoWindow({
 	window,
@@ -121,7 +123,7 @@ export function MemoWindow({
 	};
 	return (
 		<div
-			className="fixed flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
+			className="fixed flex min-w-[550px] flex-col overflow-hidden rounded-2xl shadow-2xl"
 			style={{
 				left: window.position.x,
 				top: window.position.y,
@@ -133,39 +135,33 @@ export function MemoWindow({
 			onMouseDown={handleMouseDown}
 		>
 			{/* Window Header */}
-			<div className="window-header flex flex-shrink-0 cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
-				<div className="flex items-center space-x-2">
-					<div className="flex space-x-2">
-						<button
-							onClick={onClose}
-							className="h-3 w-3 rounded-full bg-red-500 transition-colors hover:bg-red-600"
-							type="button"
-						/>
-						<button
-							onClick={onMinimize}
-							className="h-3 w-3 rounded-full bg-yellow-500 transition-colors hover:bg-yellow-600"
-							type="button"
-						/>
-						<button
-							className="h-3 w-3 rounded-full bg-green-500 transition-colors hover:bg-green-600"
-							type="button"
-						/>
-					</div>
-					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
-				</div>
-			</div>
+			<WindowHeader title={window.title}>
+				{/* クローズ */}
+				<button
+					onMouseDown={(e) => e.stopPropagation()}
+					onClick={onClose}
+					className="relative flex h-6 w-8 items-center justify-center rounded-lg font-bold text-black transition-all duration-200 hover:bg-gray-300/60"
+					type="button"
+					title="Close"
+					aria-label="Close"
+				>
+					<X size={17} strokeWidth={2.5} />
+				</button>
+			</WindowHeader>
 
 			{/* Window Content */}
-			<div className="min-h-0 flex-1 overflow-y-auto ">
-				<TiptapEditor editor={editor} />
+			<div className="h-[calc(100%-40px)] flex-1 overflow-y-auto bg-white/90 px-[6px] pb-[6px]">
+				<div className="h-full flex-1 overflow-y-auto rounded-xl bg-white">
+					<TiptapEditor editor={editor} />
+				</div>
 			</div>
 
 			{/* Resize Handle */}
 			<div
-				className="absolute right-0 bottom-0 h-4 w-4 cursor-se-resize"
+				className="absolute right-1 bottom-1 h-4 w-4 cursor-se-resize"
 				onMouseDown={handleResizeMouseDown}
 			>
-				<div className="absolute right-1 bottom-1 h-2 w-2 border-gray-400 border-r-2 border-b-2" />
+				<div className="absolute right-2 bottom-2 h-2 w-2 rounded-br-sm border-black border-r-2 border-b-2" />
 			</div>
 		</div>
 	);

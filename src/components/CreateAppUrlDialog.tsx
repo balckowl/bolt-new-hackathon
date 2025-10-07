@@ -62,7 +62,7 @@ export default function CreateAppUrlDialog({
 			style={{ zIndex: dialogZIndex }}
 		>
 			<div
-				className={`min-w-[400px] rounded-xl border border-gray-200 bg-white p-6 shadow-2xl ${dialogClassName}`}
+				className={`min-w-[400px] rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl ${dialogClassName}`}
 			>
 				<h3 className="mb-4 font-semibold text-gray-800 text-lg">{title}</h3>
 				<Form {...form}>
@@ -72,7 +72,7 @@ export default function CreateAppUrlDialog({
 							name="url"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>App URL</FormLabel>
+									<FormLabel>Site URL</FormLabel>
 									<FormControl>
 										<Input
 											placeholder={placeholder}
@@ -81,7 +81,7 @@ export default function CreateAppUrlDialog({
 												field.onChange(e);
 												changeNameInput(e.target.value);
 											}}
-											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500"
+											className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-black"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -91,7 +91,7 @@ export default function CreateAppUrlDialog({
 						<div className="mt-6 flex justify-end space-x-3">
 							<Button
 								onClick={onCancel}
-								className="rounded-lg bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
+								className="w-[120px] rounded-xl bg-gray-100 px-4 py-2 font-medium text-gray-700 text-sm transition-colors hover:bg-gray-200"
 								type="button"
 							>
 								{cancelLabel}
@@ -99,7 +99,7 @@ export default function CreateAppUrlDialog({
 							<Button
 								type="submit"
 								disabled={!currentName.trim() || isLoadingApp}
-								className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+								className="w-[120px] rounded-xl px-4 py-2 font-medium text-sm text-white transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
 							>
 								{saveLabel}
 							</Button>

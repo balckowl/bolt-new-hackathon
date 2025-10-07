@@ -30,7 +30,7 @@ export default function TiptapEditor({ editor }: TiptapEditorProps) {
 	}
 
 	return (
-		<div className="mx-1">
+		<div className="pb-[6px]">
 			<div className="sticky top-0 z-[1000000]">
 				<Toolbar variant="fixed">
 					<ToolbarGroup>
@@ -87,7 +87,7 @@ export default function TiptapEditor({ editor }: TiptapEditorProps) {
 					</ToolbarGroup>
 				</Toolbar>
 			</div>
-			<EditorContent editor={editor} />
+			<EditorContent editor={editor} className="mb-[6px] pb-[6px]" />
 		</div>
 	);
 }

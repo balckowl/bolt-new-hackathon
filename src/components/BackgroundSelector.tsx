@@ -34,18 +34,25 @@ export function BackgroundSelector({
 			if (!res.ok) {
 				toast("Background change failed", {
 					style: { color: "#dc2626" },
+					icon: <Paintbrush size={19} />,
+					className: "text-sm",
 				});
 				return;
 			}
-			toast("background changed", {
-				icon: <Paintbrush />,
+			toast("Background changed", {
+				icon: <Paintbrush size={19} />,
+				className: "text-sm font-bold",
+				style: {
+					fontWeight: "700",
+				},
 			});
 			setBackground(value);
 			setOpen(false);
 		} catch (e) {
 			toast("Background change failed", {
 				style: { color: "#dc2626" },
-				icon: <Paintbrush />,
+				icon: <Paintbrush size={19} />,
+				className: "text-sm",
 			});
 			console.error("Failed to update visibility:", e);
 		}
@@ -54,14 +61,16 @@ export function BackgroundSelector({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<button type="button" className="h-6 rounded-sm px-3 text-sm text-white hover:bg-white/20">
+				<button
+					type="button"
+					className="flex h-9 w-9 items-center justify-center rounded-full text-sm text-white hover:bg-white/20"
+				>
 					<Paintbrush size={17} />
 				</button>
 			</PopoverTrigger>
 			<PopoverContent
-				className="w-[480px] rounded-2xl border-0 bg-white/70 p-[14px] shadow-xl backdrop-blur-md"
-				align="start"
-				side="bottom"
+				className="hadow-xl w-[480px] rounded-2xl border-0 bg-white/90 p-[14px]"
+				align="center"
 				sideOffset={15}
 			>
 				<div className="space-y-3">
