@@ -1,8 +1,8 @@
 "use client";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { DraggableMenu } from "@/src/components/DraggableMenu";
 import { UserIcon } from "@/src/components/UserIcon";
+import { DraggableMenu } from "@/src/components/draggableMenu";
 import { Button } from "@/src/components/ui/button";
 import { HelpWindow } from "@/src/components/window/HelpWindow";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
