@@ -1,6 +1,7 @@
 import { Diamond, DiamondIcon, FolderIcon, Globe, Sparkle, Square, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { DragEvent } from "react";
 import type { AppIcon, FolderWindowType } from "../../types/desktop";
 import WindowHeader from "./WindowHeader";
 
@@ -14,12 +15,17 @@ export function FolderWindow({
 	allFolderContents,
 	desktopBackground,
 	brightness,
+	isEditable,
+	canDropExternal,
+	onExternalDrop,
 	onClose,
 	onMinimize,
 	onBringToFront,
 	onRemoveApp,
 	onAppClick,
 	onAppContextMenu,
+	onAppDragStart,
+	onAppDragEnd,
 	onPositionChange,
 	onSizeChange,
 }: {
@@ -29,12 +35,17 @@ export function FolderWindow({
 	allFolderContents: Map<string, string[]>;
 	desktopBackground?: string;
 	brightness: number;
+	isEditable: boolean;
+	canDropExternal: boolean;
+	onExternalDrop: () => void;
 	onClose: () => void;
 	onMinimize: () => void;
 	onBringToFront: () => void;
 	onRemoveApp: (appId: string) => void;
 	onAppClick: (app: AppIcon) => void;
 	onAppContextMenu: (e: React.MouseEvent, app: AppIcon, folderId: string) => void;
+	onAppDragStart: (e: React.DragEvent, appId: string, folderId: string) => void;
+	onAppDragEnd: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
 }) {
@@ -47,6 +58,7 @@ export function FolderWindow({
 		width: 0,
 		height: 0,
 	});
+	const [isExternalDragOver, setIsExternalDragOver] = useState(false);
 
 	const handleMouseDown = (e: React.MouseEvent) => {
 		if (
@@ -169,6 +181,31 @@ export function FolderWindow({
 		} as const;
 	};
 
+	const handleExternalDragEnter = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+		setIsExternalDragOver(true);
+	};
+
+	const handleExternalDragOver = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+	};
+
+	const handleExternalDragLeave = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		const related = e.relatedTarget as Node | null;
+		if (related && (e.currentTarget as Node).contains(related)) return;
+		setIsExternalDragOver(false);
+	};
+
+	const handleExternalDropInternal = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+		setIsExternalDragOver(false);
+		onExternalDrop();
+	};
+
 	return (
 		<div
 			className="fixed min-w-[550px] overflow-hidden rounded-2xl shadow-2xl"
@@ -198,7 +235,16 @@ export function FolderWindow({
 
 			{/* Folder Content */}
 			<div className="h-[calc(100%-40px)] flex-1 overflow-auto bg-white/90 px-[6px] pb-[6px] backdrop-blur-lg">
-				<div className="relative h-full rounded-xl py-4" style={resolveBackgroundStyle()}>
+				<div
+					className={`relative h-full rounded-xl py-4 transition ${
+						isExternalDragOver ? "ring-2 ring-white/70" : ""
+					}`}
+					style={resolveBackgroundStyle()}
+					onDragEnter={handleExternalDragEnter}
+					onDragOver={handleExternalDragOver}
+					onDragLeave={handleExternalDragLeave}
+					onDrop={handleExternalDropInternal}
+				>
 					<div
 						className="pointer-events-none absolute inset-0 rounded-xl"
 						style={{ backgroundColor: `rgba(0, 0, 0, ${brightness})` }}
@@ -232,18 +278,21 @@ export function FolderWindow({
 										onContextMenu={app ? (e) => onAppContextMenu(e, app, window.id) : undefined}
 									>
 										{app && (
-											<>
+											<div
+												className="group flex cursor-pointer flex-col items-center"
+												draggable={isEditable}
+												onDragStart={(e) => onAppDragStart(e, app.id, window.id)}
+												onDragEnd={onAppDragEnd}
+												onClick={() => onAppClick(app)}
+												onKeyDown={(e) => {
+													if (e.key === "Enter" || e.key === " ") {
+														e.preventDefault();
+														onAppClick(app);
+													}
+												}}
+											>
 												<div className="relative mb-[6px]">
-													<div
-														onClick={() => onAppClick(app)}
-														onKeyDown={(e) => {
-															if (e.key === "Enter" || e.key === " ") {
-																e.preventDefault();
-																onAppClick(app);
-															}
-														}}
-														className="relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-2xl shadow-lg"
-													>
+													<div className="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg">
 														{renderAppIcon(app)}
 														{app.type === "website" && app.favicon && (
 															<Globe size={30} className="hidden text-black drop-shadow-sm" />
@@ -256,10 +305,10 @@ export function FolderWindow({
 														<div className="absolute inset-0 rounded-2xl bg-white" />
 													</div>
 												</div>
-												<div className="mt-1 max-w-[90%] truncate text-center font-medium text-white text-xs">
+												<div className="mt-1 w-full px-2 text-center font-medium text-white text-xs">
 													{app.name}
 												</div>
-											</>
+											</div>
 										)}
 									</div>
 								);
