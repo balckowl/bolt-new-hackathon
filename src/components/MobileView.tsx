@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { z } from "zod";
 
@@ -13,17 +13,40 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
+import { getBackgroundStyle } from "../utils/background";
+import type { BackgroundOption } from "./BackgroundImage";
+
+import MobileMemoContent from "./MobileMemoContent";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
+
 type Props = {
 	desktop: z.infer<typeof desktopStateSchema>;
+	backgroundImg?: BackgroundOption;
 };
 
 type DesktopApp = Props["desktop"]["state"]["apps"][number];
 type MemoApp = Extract<DesktopApp, { type: "memo" }>;
 
-export default function MobileView({ desktop }: Props) {
+export default function MobileView({ desktop, backgroundImg }: Props) {
 	const { apps, folderContents } = desktop.state;
 	const nestedAppIds = new Set(Object.values(folderContents).flat());
 	const [activeMemo, setActiveMemo] = useState<MemoApp | null>(null);
+	const [background, setBackground] = useState(backgroundImg?.value);
+
+	useEffect(() => {
+		if (!backgroundImg) return;
+		setBackground(backgroundImg.value);
+	}, [backgroundImg]);
 
 	const rootMemos = apps.filter(
 		(app): app is MemoApp => app.type === "memo" && !nestedAppIds.has(app.id),
@@ -44,22 +67,35 @@ export default function MobileView({ desktop }: Props) {
 
 		return (
 			<Accordion type="multiple" className="rounded-lg border bg-white">
-				{memos.map((memo) => {
-					const hasContent = Boolean(memo.content && memo.content.trim().length > 0);
-					const displayText = hasContent ? memo.content : "メモの内容はありません。";
-
-					return (
-						<AccordionItem key={`${groupKey}-${memo.id}`} value={`${groupKey}-${memo.id}`}>
-							<AccordionTrigger>
-								<div className="flex items-center gap-2 px-2">
-									<StickyNote width={18} height={18} />
-									<span className="text-left font-medium">{memo.name}</span>
-								</div>
-							</AccordionTrigger>
-							<AccordionContent>{displayText}</AccordionContent>
-						</AccordionItem>
-					);
-				})}
+				{memos.map((memo) => (
+					<AccordionItem key={`${groupKey}-${memo.id}`} value={`${groupKey}-${memo.id}`}>
+						<Dialog>
+							<DialogTrigger asChild>
+								<AccordionTrigger>
+									<div className="flex items-center gap-2 px-2">
+										<StickyNote width={18} height={18} />
+										<span>{memo.name}</span>
+									</div>
+								</AccordionTrigger>
+							</DialogTrigger>
+							<DialogContent className="flex max-h-[min(600px,80vh)] flex-col gap-0 p-0 sm:max-w-md">
+								<DialogHeader className="contents space-y-0 text-left">
+									<ScrollArea className="flex max-h-full flex-col overflow-hidden">
+										<DialogTitle className="px-6 pt-6">{memo.name}</DialogTitle>
+										<DialogDescription asChild>
+											{memo.type === "memo" && <MobileMemoContent memo={memo} />}
+										</DialogDescription>
+									</ScrollArea>
+								</DialogHeader>
+								<DialogFooter className="flex-row items-center justify-end border-t px-6 py-4">
+									<DialogClose asChild>
+										<Button variant="outline">Back</Button>
+									</DialogClose>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
+					</AccordionItem>
+				))}
 			</Accordion>
 		);
 	};
@@ -120,23 +156,14 @@ export default function MobileView({ desktop }: Props) {
 					<div className="space-y-5">
 						{childMemos.length > 0 && (
 							<div className="space-y-2">
-								<p className="font-semibold text-gray-500 text-xs uppercase tracking-wide">Memo</p>
 								{renderMemoAccordion(childMemos, `folder-memo-${folder.id}`)}
 							</div>
 						)}
 						{childWebsites.length > 0 && (
-							<div className="space-y-2">
-								<p className="font-semibold text-gray-500 text-xs uppercase tracking-wide">
-									Website
-								</p>
-								{renderWebsiteLinks(childWebsites)}
-							</div>
+							<div className="space-y-2">{renderWebsiteLinks(childWebsites)}</div>
 						)}
 						{childFolders.length > 0 && (
 							<div className="space-y-2">
-								<p className="font-semibold text-gray-500 text-xs uppercase tracking-wide">
-									Folder
-								</p>
 								<Accordion type="multiple" className="rounded-lg border bg-gray-50">
 									{childFolders.map((childFolder) => renderFolderItem(childFolder, nextVisited))}
 								</Accordion>
@@ -198,13 +225,7 @@ export default function MobileView({ desktop }: Props) {
 
 	return (
 		<div className="bg-white">
-			<Image
-				src="/background/sky.png"
-				width={100}
-				height={30}
-				alt="hero"
-				className="h-[120px] w-full object-cover"
-			/>
+			<div style={getBackgroundStyle(background)} className="h-[120px] w-full object-cover" />
 
 			<div className="min-h-screen w-full px-4 py-6 text-gray-900">
 				<Tabs defaultValue="all" className="space-y-6">

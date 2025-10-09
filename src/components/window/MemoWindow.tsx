@@ -35,7 +35,6 @@ export function MemoWindow({
 	});
 
 	const editor = useEditor({
-		immediatelyRender: true,
 		extensions: [
 			StarterKit,
 			Placeholder.configure({
@@ -54,6 +53,7 @@ export function MemoWindow({
 			const markdown = editor.getHTML();
 			onContentChange(markdown);
 		},
+		immediatelyRender: false,
 	});
 
 	const handleMouseDown = (e: React.MouseEvent) => {

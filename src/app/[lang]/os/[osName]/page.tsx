@@ -53,7 +53,7 @@ export default async function Page({ params }: Props) {
 	return (
 		<>
 			<div className="block lg:hidden">
-				<MobileView desktop={data} />
+				<MobileView desktop={data} backgroundImg={backgroundImg} />
 			</div>
 			<div className="hidden lg:block">
 				<MacosDesktop desktop={data} osName={params.osName} backgroundImg={backgroundImg} />

@@ -34,6 +34,7 @@ import type {
 	MemoWindowType,
 	SelectStampDialog,
 } from "../types/desktop";
+import { getBackgroundStyle } from "../utils/background";
 import { type BackgroundOption, backgroundOptions } from "./BackgroundImage";
 import { ContextMenu } from "./ContextMenu";
 import CreateAppUrlDialog from "./CreateAppUrlDialog";
@@ -1102,20 +1103,6 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		setBackground(newBackground);
 	};
 
-	const getBackgroundStyle = () => {
-		if (background?.startsWith("http")) {
-			return {
-				backgroundImage: `url(${background})`,
-				backgroundSize: "cover",
-				backgroundPosition: "center",
-				backgroundRepeat: "no-repeat",
-			};
-		}
-		return {
-			background: background,
-		};
-	};
-
 	const handleFontChange = (newFont: FontOptionType) => {
 		setFont(newFont);
 	};
@@ -1291,7 +1278,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	return (
 		<div
 			className={`relative min-h-screen overflow-hidden ${getFontStyle(font)}`}
-			style={getBackgroundStyle()}
+			style={getBackgroundStyle(background)}
 		>
 			<TooltipProvider delayDuration={0}>
 				<Toaster
