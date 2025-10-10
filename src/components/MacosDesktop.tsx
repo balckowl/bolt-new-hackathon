@@ -242,6 +242,26 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		return isFolderDescendant(folderMap, sourceFolderId, targetFolderId);
 	};
 
+	const collectFolderDescendantIds = (folderId: string, folderMap: Map<string, string[]>) => {
+		const descendants = new Set<string>();
+		const queue = [...(folderMap.get(folderId) ?? [])];
+
+		while (queue.length > 0) {
+			const currentId = queue.shift();
+			if (!currentId || descendants.has(currentId)) continue;
+			descendants.add(currentId);
+			const app = appsById.get(currentId);
+			if (app?.type === "folder") {
+				const children = folderMap.get(currentId);
+				if (children) {
+					queue.push(...children);
+				}
+			}
+		}
+
+		return descendants;
+	};
+
 	// Update time every second
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -751,52 +771,42 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 
 		const appToDelete = contextMenu.existingApp;
 
-		// Remove from apps array
-		setApps((prev) => prev.filter((app) => app.id !== appToDelete.id));
+		const idsToRemove = new Set<string>([appToDelete.id]);
 
-		// Remove from positions
+		if (appToDelete.type === "folder") {
+			const descendants = collectFolderDescendantIds(appToDelete.id, folderContents);
+			for (const id of descendants) {
+				idsToRemove.add(id);
+			}
+		}
+
+		setApps((prev) => prev.filter((app) => !idsToRemove.has(app.id)));
+
 		setAppPositions((prev) => {
 			const newPositions = new Map(prev);
-			newPositions.delete(appToDelete.id);
+			for (const id of idsToRemove) {
+				newPositions.delete(id);
+			}
 			return newPositions;
 		});
 
-		// Remove from folder contents if it's in any folder
 		setFolderContents((prev) => {
 			const newContents = new Map(prev);
-			for (const [folderId, contents] of newContents.entries()) {
-				const filteredContents = contents.filter((id) => id !== appToDelete.id);
-				newContents.set(folderId, filteredContents);
+			for (const id of idsToRemove) {
+				newContents.delete(id);
+			}
+			for (const [folderId, contents] of Array.from(newContents.entries())) {
+				const filteredContents = contents.filter((id) => !idsToRemove.has(id));
+				if (filteredContents.length !== contents.length) {
+					newContents.set(folderId, filteredContents);
+				}
 			}
 			return newContents;
 		});
 
-		// Close any open windows for this app
-		if (appToDelete.type === "memo") {
-			setMemoWindows((prev) => prev.filter((w) => w.id !== appToDelete.id));
-		} else if (appToDelete.type === "website") {
-			setBrowserWindows((prev) => prev.filter((w) => w.id !== appToDelete.id));
-		} else if (appToDelete.type === "folder") {
-			setFolderWindows((prev) => prev.filter((w) => w.id !== appToDelete.id));
-			// Move folder contents back to desktop
-			const contents = folderContents.get(appToDelete.id) || [];
-			if (contents.length > 0) {
-				const newPositions = new Map(appPositions);
-				for (const appId of contents) {
-					const emptyPosition = findNextEmptyPosition();
-					if (emptyPosition) {
-						newPositions.set(appId, emptyPosition);
-					}
-				}
-				setAppPositions(newPositions);
-			}
-			// Remove folder from folderContents
-			setFolderContents((prev) => {
-				const newContents = new Map(prev);
-				newContents.delete(appToDelete.id);
-				return newContents;
-			});
-		}
+		setMemoWindows((prev) => prev.filter((w) => !idsToRemove.has(w.id)));
+		setBrowserWindows((prev) => prev.filter((w) => !idsToRemove.has(w.id)));
+		setFolderWindows((prev) => prev.filter((w) => !idsToRemove.has(w.id)));
 
 		setContextMenu({
 			visible: false,

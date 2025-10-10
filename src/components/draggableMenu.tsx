@@ -191,7 +191,7 @@ export const DraggableMenu = ({
 			)}
 			style={style}
 		>
-			<div className="flex flex-wrap items-center justify-center rounded-full bg-black py-2 pr-2 pl-[18px] text-white shadow-xl`">
+			<div className="flex flex-wrap items-center justify-center rounded-full bg-black/90 py-2 pr-2 pl-[18px] text-white shadow-xl`">
 				<div className="absolute top-[-60px]">
 					<Image
 						width={70}
