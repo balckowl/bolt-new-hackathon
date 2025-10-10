@@ -4,8 +4,8 @@ import { PublicSelector } from "@/src/components/PublicSelector";
 import { WeatherIcon } from "@/src/components/WeatherIcon";
 import type { HelpWindowType } from "@/src/types/desktop";
 import { Clock } from "lucide-react";
-import AboutSelector from "./AboutSelector";
 import FontSelector from "./FontSelector";
+import HelpSelector from "./HelpSelector";
 
 type Props = {
 	onBackgroundChange: (newBackground: string) => void;
@@ -82,7 +82,7 @@ export const MenuBar = ({
 								getFontStyle={getFontStyle}
 								currentFont={font}
 							/>
-							<AboutSelector getHelpWindow={getHelpWindow} />
+							<HelpSelector getHelpWindow={getHelpWindow} />
 						</>
 					)}
 				</div>

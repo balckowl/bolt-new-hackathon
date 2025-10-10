@@ -37,7 +37,7 @@ export const UserIcon = ({ isPublic, currentUserInfo, getFontStyle, currentFont 
 		return str.length > max ? `${str.slice(0, max)}…` : str;
 	}
 	return (
-		<div className="fixed bottom-7 left-7 z-50">
+		<div className="fixed bottom-[60px] left-[60px] z-50">
 			<DropdownMenu>
 				<DropdownMenuTrigger>
 					<Avatar>
@@ -48,8 +48,9 @@ export const UserIcon = ({ isPublic, currentUserInfo, getFontStyle, currentFont 
 					</Avatar>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent
-					className={`m-0 w-[150px] gap-2 p-0 text-sm ${getFontStyle(currentFont)}`}
+					className={`m-0 w-[150px] gap-2 rounded-xl bg-white/90 p-0 text-sm ${getFontStyle(currentFont)}`}
 					align="start"
+					sideOffset={15}
 				>
 					<div className="m-0 w-[150px]">
 						{currentUserInfo?.currentUserOsName && currentUserInfo?.currentUsername ? (

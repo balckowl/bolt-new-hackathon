@@ -31,11 +31,16 @@ export default function FontSelector({ onFontChange, currentFont, getFontStyle }
 					font: newFont,
 				},
 			});
-			toast("font changed");
+			toast("font changed", {
+				icon: <LineSquiggle size={19} />,
+				className: "text-sm",
+			});
 			setOpen(false);
 		} catch (e) {
 			toast("Font change failed", {
 				style: { color: "#dc2626" },
+				icon: <LineSquiggle size={19} />,
+				className: "text-sm",
 			});
 			console.error("Failed to update visibility:", e);
 		}
@@ -46,24 +51,24 @@ export default function FontSelector({ onFontChange, currentFont, getFontStyle }
 			<PopoverTrigger asChild>
 				<button
 					type="button"
-					className="flex h-6 items-center rounded-sm px-3 text-sm text-white hover:bg-white/20"
+					className="flex h-9 w-9 items-center justify-center rounded-full text-sm text-white hover:bg-white/20"
 				>
 					<LineSquiggle size={17} />
 				</button>
 			</PopoverTrigger>
 			<PopoverContent
-				className={`w-[200px] border-0 bg-white/70 px-1 py-1 shadow-xl backdrop-blur-md ${getFontStyle(currentFont)}`}
-				align="start"
-				side="bottom"
-				sideOffset={12}
+				className={`w-[185px] rounded-xl border-0 bg-white/90 px-1 py-1 shadow-xl ${getFontStyle(currentFont)}`}
+				align="center"
+				sideOffset={15}
 			>
 				<ul>
 					{fontOptions.map((font) => (
 						<li key={font}>
 							<button
 								type="button"
-								className={`flex w-full items-center justify-between rounded-sm px-3 py-[2px] text-sm hover:bg-black hover:text-white ${getFontStyle(font)}`}
+								className={`flex w-full items-center justify-between rounded-lg px-[10px] py-[6px] text-sm hover:bg-gray-800/10 ${getFontStyle(font)}`}
 								onClick={() => handleFontChange(font)}
+								disabled={font === currentFont}
 							>
 								{font}
 								{currentFont === font && <Check width={15} height={15} />}

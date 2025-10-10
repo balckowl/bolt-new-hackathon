@@ -1,12 +1,10 @@
-import { Button } from "@/src/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/src/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/src/components/ui/radio-group";
 import { hono } from "@/src/lib/hono-client";
-import { ChevronDown, Lock, LockOpen } from "lucide-react";
+import { Lock, LockOpen } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { FontOptionType } from "../types/desktop";
-import SwitchButton from "./SwitchButton";
 
 type Props = {
 	isPublic: boolean;
@@ -29,14 +27,18 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 			if (!res.ok) {
 				toast("Failed to change public information", {
 					style: { color: "#dc2626" },
+					icon: select === true ? <LockOpen size={19} /> : <Lock size={19} />,
 				});
 			}
-			toast("Public information has been changed");
+			toast("Public information has been changed", {
+				icon: select === true ? <LockOpen size={19} /> : <Lock size={19} />,
+			});
 			setIsPublic(select);
 			setOpen(false);
 		} catch (e) {
 			toast("Failed to change public information", {
 				style: { color: "#dc2626" },
+				icon: select === true ? <LockOpen size={19} /> : <Lock size={19} />,
 			});
 			console.error("Failed to update visibility:", e);
 		}
@@ -53,15 +55,17 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 			}}
 		>
 			<PopoverTrigger asChild>
-				<button type="button" className="h-6 px-2 text-sm text-white hover:bg-white/10">
+				<button
+					type="button"
+					className="flex h-9 w-9 items-center justify-center rounded-full text-sm text-white hover:bg-white/20"
+				>
 					{isPublic ? <LockOpen width={17} height={17} /> : <Lock width={17} height={17} />}
 				</button>
 			</PopoverTrigger>
 			<PopoverContent
-				className={`w-[200px] border-white/10 border-b bg-white/40 px-4 py-2 shadow-xl backdrop-blur-md ${getFontStyle(currentFont)}`}
-				align="start"
-				side="bottom"
-				sideOffset={12}
+				className={`w-[150px] rounded-xl bg-white/90 px-[14px] py-2 shadow-xl ${getFontStyle(currentFont)}`}
+				align="center"
+				sideOffset={16}
 			>
 				<div className="text-sm">
 					<div className="grid grid-cols-3 gap-3">
@@ -70,15 +74,18 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 							onValueChange={(value) => handleChange(value === "Public")}
 						>
 							<div>
-								<label htmlFor="public" className="flex cursor-pointer items-center gap-2">
-									<RadioGroupItem value="Public" id="public" />
-									<span>Public</span>
+								<label htmlFor="public" className="flex cursor-pointer items-center gap-2 py-[2px]">
+									<RadioGroupItem value="Public" id="public" color="#3b250a" />
+									<span className="text-sm">Public</span>
 								</label>
 							</div>
 							<div>
-								<label htmlFor="private" className="flex cursor-pointer items-center gap-2">
+								<label
+									htmlFor="private"
+									className="flex cursor-pointer items-center gap-2 py-[2px]"
+								>
 									<RadioGroupItem value="Private" id="private" />
-									<span>Private</span>
+									<span className="text-sm">Private</span>
 								</label>
 							</div>
 						</RadioGroup>
