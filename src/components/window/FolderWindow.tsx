@@ -27,6 +27,8 @@ export function FolderWindow({
 	onEmptyAreaContextMenu,
 	onAppDragStart,
 	onAppDragEnd,
+	onAppDrop,
+	onDropIntoFolder,
 	onPositionChange,
 	onSizeChange,
 	failedFavicons,
@@ -50,6 +52,8 @@ export function FolderWindow({
 	onEmptyAreaContextMenu: (e: React.MouseEvent, folderId: string) => void;
 	onAppDragStart: (e: React.DragEvent, appId: string, folderId: string) => void;
 	onAppDragEnd: () => void;
+	onAppDrop: (folderId: string, dropIndex: number) => void;
+	onDropIntoFolder: (targetFolderId: string, parentFolderId: string) => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
 	failedFavicons: Record<string, string | null>;
@@ -284,6 +288,17 @@ export function FolderWindow({
 										key={cellKey}
 										// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
 										className={`group relative flex flex-col items-center justify-center`}
+										onDragOver={(e) => {
+											if (!isEditable || !canDropExternal) return;
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										onDrop={(e) => {
+											if (!isEditable || !canDropExternal) return;
+											e.preventDefault();
+											e.stopPropagation();
+											onAppDrop(window.id, index);
+										}}
 										onContextMenu={(e) => {
 											if (app) {
 												onAppContextMenu(e, app, window.id);
@@ -307,7 +322,20 @@ export function FolderWindow({
 												}}
 											>
 												<div className="relative mb-[6px]">
-													<div className="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg">
+													<div
+														className="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg"
+														onDragOver={(e) => {
+															if (!isEditable || !canDropExternal || app.type !== "folder") return;
+															e.preventDefault();
+															e.stopPropagation();
+														}}
+														onDrop={(e) => {
+															if (!isEditable || !canDropExternal || app.type !== "folder") return;
+															e.preventDefault();
+															e.stopPropagation();
+															onDropIntoFolder(app.id, window.id);
+														}}
+													>
 														{renderAppIcon(app)}
 														{app.type === "website" && app.favicon && (
 															<Globe size={30} className="hidden text-black drop-shadow-sm" />

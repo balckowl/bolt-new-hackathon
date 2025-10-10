@@ -457,6 +457,14 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		dragSourceFolderRef.current = null;
 	};
 
+	const resetDragTracking = () => {
+		setDraggedOver(null);
+		setDraggedOverFolder(null);
+		dragSourceRef.current = null;
+		draggedFromFolderRef.current = false;
+		dragSourceFolderRef.current = null;
+	};
+
 	const handleDragOver = (e: React.DragEvent, row: number, col: number) => {
 		e.preventDefault();
 		setDraggedOver({ row, col });
@@ -588,17 +596,25 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 
 	const handleDropIntoFolderWindow = (targetFolderId: string) => {
 		if (!isEdit) return;
-		if (!draggedApp) return;
+		if (!draggedApp) {
+			resetDragTracking();
+			return;
+		}
 
 		const draggedAppData = apps.find((app) => app.id === draggedApp);
-		if (!draggedAppData || draggedAppData.type === "stamp") return;
-		if (draggedApp === targetFolderId) return;
+		if (!draggedAppData || draggedAppData.type === "stamp") {
+			resetDragTracking();
+			return;
+		}
+		if (draggedApp === targetFolderId) {
+			resetDragTracking();
+			return;
+		}
 		if (
 			draggedAppData.type === "folder" &&
 			wouldCreateFolderCycle(folderContents, draggedApp, targetFolderId)
 		) {
-			setDraggedOver(null);
-			setDraggedOverFolder(null);
+			resetDragTracking();
 			return;
 		}
 
@@ -642,10 +658,152 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			setFolderWindows((prev) => prev.filter((w) => w.id !== draggedApp));
 		}
 
-		setDraggedOver(null);
-		setDraggedOverFolder(null);
-		dragSourceFolderRef.current = null;
-		draggedFromFolderRef.current = false;
+		resetDragTracking();
+	};
+
+	const handleFolderItemReorderDrop = (folderId: string, dropIndex: number) => {
+		if (!isEdit) return;
+		if (!draggedApp) {
+			resetDragTracking();
+			return;
+		}
+
+		const draggedAppData = appsById.get(draggedApp);
+		if (!draggedAppData || draggedAppData.type === "stamp") {
+			resetDragTracking();
+			return;
+		}
+		if (draggedApp === folderId) {
+			resetDragTracking();
+			return;
+		}
+		if (
+			draggedAppData.type === "folder" &&
+			wouldCreateFolderCycle(folderContents, draggedApp, folderId)
+		) {
+			resetDragTracking();
+			return;
+		}
+
+		const sourceFolderId = dragSourceFolderRef.current;
+
+		setFolderContents((prev) => {
+			const next = new Map(prev);
+			if (sourceFolderId) {
+				const sourceContents = [...(next.get(sourceFolderId) ?? [])];
+				const idx = sourceContents.indexOf(draggedApp);
+				if (idx !== -1) {
+					sourceContents.splice(idx, 1);
+					next.set(sourceFolderId, sourceContents);
+				}
+			} else {
+				for (const [fid, contents] of Array.from(next.entries())) {
+					if (fid === folderId) continue;
+					if (contents.includes(draggedApp)) {
+						next.set(
+							fid,
+							contents.filter((id) => id !== draggedApp),
+						);
+					}
+				}
+			}
+
+			const targetContents = [...(next.get(folderId) ?? [])];
+			const existingIndex = targetContents.indexOf(draggedApp);
+			if (existingIndex !== -1) {
+				targetContents.splice(existingIndex, 1);
+			}
+
+			const insertIndex = Math.max(0, Math.min(dropIndex, targetContents.length));
+
+			targetContents.splice(insertIndex, 0, draggedApp);
+			next.set(folderId, targetContents);
+
+			return next;
+		});
+
+		setAppPositions((prev) => {
+			if (!prev.has(draggedApp)) return prev;
+			const newPositions = new Map(prev);
+			newPositions.delete(draggedApp);
+			return newPositions;
+		});
+
+		if (draggedAppData.type === "folder") {
+			setFolderWindows((prev) => prev.filter((w) => w.id !== draggedApp));
+		}
+
+		resetDragTracking();
+	};
+
+	const handleDropIntoNestedFolder = (targetFolderId: string, _parentFolderId: string) => {
+		if (!isEdit) return;
+		if (!draggedApp) {
+			resetDragTracking();
+			return;
+		}
+
+		const draggedAppData = appsById.get(draggedApp);
+		if (!draggedAppData || draggedAppData.type === "stamp") {
+			resetDragTracking();
+			return;
+		}
+		if (draggedApp === targetFolderId) {
+			resetDragTracking();
+			return;
+		}
+		if (
+			draggedAppData.type === "folder" &&
+			wouldCreateFolderCycle(folderContents, draggedApp, targetFolderId)
+		) {
+			resetDragTracking();
+			return;
+		}
+
+		const sourceFolderId = dragSourceFolderRef.current;
+
+		setFolderContents((prev) => {
+			const next = new Map(prev);
+
+			if (sourceFolderId) {
+				const sourceContents = [...(next.get(sourceFolderId) ?? [])];
+				const idx = sourceContents.indexOf(draggedApp);
+				if (idx !== -1) {
+					sourceContents.splice(idx, 1);
+					next.set(sourceFolderId, sourceContents);
+				}
+			} else {
+				for (const [fid, contents] of Array.from(next.entries())) {
+					if (contents.includes(draggedApp)) {
+						next.set(
+							fid,
+							contents.filter((id) => id !== draggedApp),
+						);
+					}
+				}
+			}
+
+			const targetContents = [...(next.get(targetFolderId) ?? [])];
+			if (!targetContents.includes(draggedApp)) {
+				targetContents.push(draggedApp);
+				next.set(targetFolderId, targetContents);
+			}
+
+			return next;
+		});
+
+		setAppPositions((prev) => {
+			if (!prev.has(draggedApp)) return prev;
+			const newPositions = new Map(prev);
+			newPositions.delete(draggedApp);
+			return newPositions;
+		});
+
+		if (draggedAppData.type === "folder") {
+			setFolderWindows((prev) => prev.filter((w) => w.id !== draggedApp));
+		}
+
+		resetDragTracking();
 	};
 
 	const handleRightClick = (e: React.MouseEvent, row: number, col: number) => {
@@ -1987,6 +2145,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								onEmptyAreaContextMenu={handleFolderEmptyAreaContextMenu}
 								onAppDragStart={(e, appId) => handleFolderItemDragStart(e, appId, window.id)}
 								onAppDragEnd={handleDragEnd}
+								onAppDrop={handleFolderItemReorderDrop}
+								onDropIntoFolder={handleDropIntoNestedFolder}
 								onPositionChange={(position) => {
 									setFolderWindows((prev) =>
 										prev.map((w) =>
