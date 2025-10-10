@@ -191,9 +191,7 @@ export const DraggableMenu = ({
 			)}
 			style={style}
 		>
-			<div
-				className={`flex flex-wrap items-center justify-center rounded-full bg-black py-2 ${isEditable ? "pr-2 pl-[18px]" : "px-4"} text-white shadow-xl`}
-			>
+			<div className="flex flex-wrap items-center justify-center rounded-full bg-black py-2 pr-2 pl-[18px] text-white shadow-xl`">
 				<div className="absolute top-[-60px]">
 					<Image
 						width={70}
@@ -204,77 +202,80 @@ export const DraggableMenu = ({
 					/>
 				</div>
 				<div
-					className="flex items-center font-semibold text-sm text-white/70 uppercase tracking-wide"
+					className="flex items-center font-semibold text-md text-white/70 uppercase tracking-wide"
 					style={{
 						fontFamily: "system-ui",
 					}}
 				>
 					{osName}
 				</div>
-				{isEditable && (
-					<div className="ml-3 flex items-center gap-2">
-						<BackgroundSelector
-							onBackgroundChange={onBackgroundChange}
-							currentBackground={background}
-							setBackground={setBackground}
-						/>
-						<FontSelector
-							onFontChange={onFontChange}
-							getFontStyle={getFontStyle}
-							currentFont={font}
-						/>
-						<HelpSelector getHelpWindow={toggleHelpWindow} />
-						<PublicSelector
-							isPublic={isPublic}
-							setIsPublic={setIsPublic}
-							getFontStyle={getFontStyle}
-							currentFont={font}
-						/>
-						<Popover open={isBrightnessOpen} onOpenChange={setIsBrightnessOpen}>
-							<PopoverTrigger asChild>
-								<button
-									type="button"
-									onPointerDown={(event) => event.stopPropagation()}
-									className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-									aria-label="Open brightness controls"
-								>
-									<Sun className="h-4 w-4" aria-hidden="true" />
-								</button>
-							</PopoverTrigger>
-							<PopoverContent
-								sideOffset={16}
-								side="bottom"
-								align="center"
-								className="w-[260px] rounded-2xl border-0 bg-white/90 px-4 py-4 shadow-xl"
+
+				<div className="ml-3 flex items-center gap-2">
+					{isEditable && (
+						<>
+							<BackgroundSelector
+								onBackgroundChange={onBackgroundChange}
+								currentBackground={background}
+								setBackground={setBackground}
+							/>
+							<FontSelector
+								onFontChange={onFontChange}
+								getFontStyle={getFontStyle}
+								currentFont={font}
+							/>
+							<HelpSelector getHelpWindow={toggleHelpWindow} />
+							<PublicSelector
+								isPublic={isPublic}
+								setIsPublic={setIsPublic}
+								getFontStyle={getFontStyle}
+								currentFont={font}
+							/>
+						</>
+					)}
+					<Popover open={isBrightnessOpen} onOpenChange={setIsBrightnessOpen}>
+						<PopoverTrigger asChild>
+							<button
+								type="button"
 								onPointerDown={(event) => event.stopPropagation()}
-								onOpenAutoFocus={(event) => event.preventDefault()}
+								className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+								aria-label="Open brightness controls"
 							>
-								<div className="space-y-3 text-black text-sm">
-									{/* <div className="flex items-center justify-between">
+								<Sun className="h-4 w-4" aria-hidden="true" />
+							</button>
+						</PopoverTrigger>
+						<PopoverContent
+							sideOffset={16}
+							side="bottom"
+							align="center"
+							className="w-[260px] rounded-2xl border-0 bg-white/90 px-4 py-4 shadow-xl"
+							onPointerDown={(event) => event.stopPropagation()}
+							onOpenAutoFocus={(event) => event.preventDefault()}
+						>
+							<div className="space-y-3 text-black text-sm">
+								{/* <div className="flex items-center justify-between">
                   <p className="font-bold">Display</p>
                   <span className="text-black/50 text-xs">{sliderValue}%</span>
                 </div> */}
-									<div className="flex items-center gap-3 rounded-lg bg-black/5 px-3 py-3">
-										<Sun className="h-4 w-4 text-black/60" aria-hidden="true" />
-										<Slider
-											className="flex-1"
-											min={0}
-											max={60}
-											step={1}
-											value={[sliderValue]}
-											onValueChange={(value) => onBrightnessChange((value[0] ?? 0) / 100)}
-											aria-label="Brightness"
-											trackClassName="h-1.5 bg-black/10"
-											rangeClassName="bg-black"
-											thumbClassName="h-5 w-5 border-0 bg-white shadow-md"
-											onPointerDown={(event) => event.stopPropagation()}
-										/>
-									</div>
+								<div className="flex items-center gap-3 rounded-lg bg-black/5 px-3 py-3">
+									<Sun className="h-4 w-4 text-black/60" aria-hidden="true" />
+									<Slider
+										className="flex-1"
+										min={0}
+										max={60}
+										step={1}
+										value={[sliderValue]}
+										onValueChange={(value) => onBrightnessChange((value[0] ?? 0) / 100)}
+										aria-label="Brightness"
+										trackClassName="h-1.5 bg-black/10"
+										rangeClassName="bg-black"
+										thumbClassName="h-5 w-5 border-0 bg-white shadow-md"
+										onPointerDown={(event) => event.stopPropagation()}
+									/>
 								</div>
-							</PopoverContent>
-						</Popover>
-					</div>
-				)}
+							</div>
+						</PopoverContent>
+					</Popover>
+				</div>
 			</div>
 		</div>
 	);

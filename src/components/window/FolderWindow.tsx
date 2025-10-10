@@ -128,7 +128,7 @@ export function FolderWindow({
 						alt={app.name}
 						width={30}
 						height={30}
-						className="pointer-events-none relative z-10 h-6 w-6 rounded-sm"
+						className="pointer-events-none relative z-10 rounded-sm"
 						onError={(e) => {
 							const target = e.target as HTMLImageElement;
 							target.style.display = "none";
@@ -254,6 +254,10 @@ export function FolderWindow({
 						<div className="flex h-full items-center justify-center text-center">
 							<div>
 								<FolderIcon size={48} className="mx-auto mb-4 text-white" />
+								<p className="text-white">This folder is empty.</p>
+								{isEditable && (
+									<p className="text-sm text-white">Drag apps here to organize them.</p>
+								)}
 							</div>
 						</div>
 					) : (

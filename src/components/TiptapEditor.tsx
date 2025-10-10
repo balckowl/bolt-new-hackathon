@@ -20,8 +20,8 @@ interface TiptapEditorProps {
 
 export default function TiptapEditor({ editor }: TiptapEditorProps) {
 	useEffect(() => {
-		if (editor) {
-			editor.commands.focus();
+		if (editor?.isEditable) {
+			editor.commands.focus("end");
 		}
 	}, [editor]);
 
@@ -30,9 +30,9 @@ export default function TiptapEditor({ editor }: TiptapEditorProps) {
 	}
 
 	return (
-		<div className="pb-[6px]">
+		<div className="flex h-full flex-col">
 			<div className="sticky top-0 z-[1000000]">
-				<Toolbar variant="fixed">
+				{/* <Toolbar variant="fixed">
 					<ToolbarGroup>
 						<HeadingDropdownMenu
 							editor={editor}
@@ -85,9 +85,9 @@ export default function TiptapEditor({ editor }: TiptapEditorProps) {
 							<UnderlineIcon className="tiptap-button-icon" />
 						</Button>
 					</ToolbarGroup>
-				</Toolbar>
+				</Toolbar> */}
 			</div>
-			<EditorContent editor={editor} className="mb-[6px] pb-[6px]" />
+			<EditorContent editor={editor} className="mb-[6px] h-full flex-1 pb-[6px]" />
 		</div>
 	);
 }

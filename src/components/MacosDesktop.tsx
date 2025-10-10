@@ -148,6 +148,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		new Map(),
 	);
 	const [draggedOverFolder, setDraggedOverFolder] = useState<string | null>(null);
+	const [failedFavicons, setFailedFavicons] = useState<Record<string, string | null>>({});
 
 	// help window
 	const [helpWindow, setHelpWindow] = useState<HelpWindowType>({
@@ -182,6 +183,30 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	const draggedFromFolderRef = useRef(false);
 	const dragSourceFolderRef = useRef<string | null>(null);
 	const appsById = useMemo(() => new Map(apps.map((app) => [app.id, app])), [apps]);
+
+	useEffect(() => {
+		setFailedFavicons((prev) => {
+			let updated = false;
+			const next = { ...prev };
+
+			for (const appId of Object.keys(next)) {
+				const currentApp = apps.find((app) => app.id === appId);
+				if (!currentApp) {
+					delete next[appId];
+					updated = true;
+					continue;
+				}
+
+				const currentFavicon = currentApp.favicon ?? null;
+				if (currentFavicon !== next[appId]) {
+					delete next[appId];
+					updated = true;
+				}
+			}
+
+			return updated ? next : prev;
+		});
+	}, [apps]);
 
 	const isFolderDescendant = (
 		folderMap: Map<string, string[]>,
@@ -332,6 +357,20 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			}
 		}
 		return null;
+	};
+
+	const markFaviconAsFailed = (appId: string, favicon: string | undefined) => {
+		setFailedFavicons((prev) => {
+			const failedSrc = favicon ?? null;
+			if (prev[appId] === failedSrc) {
+				return prev;
+			}
+
+			return {
+				...prev,
+				[appId]: failedSrc,
+			};
+		});
 	};
 
 	const setDragPreview = (event: React.DragEvent, sourceElement: HTMLElement | null) => {
@@ -1437,35 +1476,33 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
+			const failedSrc = failedFavicons[app.id] ?? null;
+			const currentSrc = app.favicon ?? null;
+
+			if (failedSrc !== currentSrc) {
+				return (
+					<div className="relative flex items-center justify-center">
+						<Image
+							key={`${app.id}-${app.favicon}`}
+							src={app.favicon}
+							alt={app.name}
+							width={30}
+							height={30}
+							className="pointer-events-none rounded-sm"
+							onError={() => markFaviconAsFailed(app.id, app.favicon)}
+						/>
+					</div>
+				);
+			}
+
 			return (
-				<div className="relative">
-					<Image
-						src={app.favicon}
-						alt={app.name}
-						width={30}
-						height={30}
-						className="pointer-events-none rounded-sm"
-						onError={(e) => {
-							// Fallback to Globe icon if favicon fails to load
-							const target = e.target as HTMLImageElement;
-							target.style.display = "none";
-							const parent = target.parentElement;
-							if (parent) {
-								const fallbackIcon = parent.querySelector(".fallback-icon");
-								if (fallbackIcon) {
-									fallbackIcon.classList.remove("hidden");
-								}
-							}
-						}}
-					/>
-					<Icons.Sparkle
-						size={30}
-						fill="black"
-						color="color"
-						strokeWidth={0.8}
-						className="fallback-icon relative z-10 hidden"
-					/>
-				</div>
+				<Icons.Sparkle
+					size={30}
+					fill="black"
+					color="color"
+					strokeWidth={0.8}
+					className="relative z-10"
+				/>
 			);
 		}
 		return <app.icon size={30} className="text-black/90" />;
@@ -1488,10 +1525,11 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				const app = getAppAtPosition(row, col);
 				const isDropTarget = draggedOver?.row === row && draggedOver?.col === col;
 				const isFolderDropTarget = app?.type === "folder" && draggedOverFolder === app.id;
+				const cellKey = app ? `${row}-${col}-${app.id}` : `empty-${row}-${col}`;
 
 				grid.push(
 					<div
-						key={`${row}-${col}`}
+						key={cellKey}
 						className={`relative flex items-center justify-center border border-white/5 transition-all duration-200 ease-in-out ${
 							isDropTarget ? "scale-105 rounded-2xl bg-white/10" : ""
 						}
@@ -1521,10 +1559,11 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 														alt={app.name}
 														width={65}
 														height={65}
+														className="pointer-events-none"
 													/>
 												</div>
 											</TooltipTrigger>
-											<TooltipContent className="rounded-2xl">
+											<TooltipContent className="relative top-[8px] rounded-2xl">
 												<p className="text-white">{app.stampContent}</p>
 											</TooltipContent>
 										</Tooltip>

@@ -49,8 +49,13 @@ export function MemoWindow({
 		editorProps: {
 			attributes: {
 				class:
-					"prose prose-sm prose-li:marker:text-black prose-p:m-0 prose-headings:m-0 prose-ul:m-0 prose-ol:m-0 prose-blockquote:m-0 prose-hr:m-0 prose-pre:m-0 m-5 focus:outline-none text-left",
+					"prose prose-sm prose-li:marker:text-black prose-p:m-0 prose-headings:m-0 prose-ul:m-0 prose-ol:m-0 prose-blockquote:m-0 prose-hr:m-0 prose-pre:m-0 min-h-full p-5 focus:outline-none text-left cursor-text",
 			},
+		},
+		onCreate: ({ editor }) => {
+			if (isEditable) {
+				editor.commands.focus("end");
+			}
 		},
 		onUpdate: ({ editor }) => {
 			const markdown = editor.getHTML();
@@ -70,6 +75,18 @@ export function MemoWindow({
 			});
 			onBringToFront();
 		}
+	};
+
+	const handleContentAreaMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (e.target !== e.currentTarget) {
+			return;
+		}
+		e.stopPropagation();
+		onBringToFront();
+		if (!isEditable) {
+			return;
+		}
+		editor?.chain().focus("end").run();
 	};
 
 	const handleResizeMouseDown = (e: React.MouseEvent) => {
@@ -150,8 +167,11 @@ export function MemoWindow({
 			</WindowHeader>
 
 			{/* Window Content */}
-			<div className="h-[calc(100%-40px)] flex-1 overflow-y-auto bg-white/90 px-[6px] pb-[6px]">
-				<div className="h-full flex-1 overflow-y-auto rounded-xl bg-white">
+			<div className="flex h-[calc(100%-40px)] flex-1 flex-col overflow-y-auto bg-white/90 px-[6px] pb-[6px]">
+				<div
+					className="flex h-full flex-1 flex-col overflow-y-auto rounded-xl bg-white"
+					onMouseDown={handleContentAreaMouseDown}
+				>
 					<TiptapEditor editor={editor} />
 				</div>
 			</div>
