@@ -81,16 +81,19 @@ export interface ContextMenuType {
 export interface MemoNameDialog {
 	visible: boolean;
 	position: GridPosition | null;
+	folderId: string | null;
 }
 
 export interface AppUrlDialog {
 	visible: boolean;
 	position: GridPosition | null;
+	folderId: string | null;
 }
 
 export interface FolderNameDialog {
 	visible: boolean;
 	position: GridPosition | null;
+	folderId: string | null;
 }
 
 export interface SelectStampDialog {

@@ -107,16 +107,18 @@ export const ContextMenu = ({
 							<FolderIcon size={14} />
 						</div>
 					</button>
-					<button
-						onClick={showSelectStampDialog}
-						className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-orange-600 text-sm transition-colors hover:bg-orange-600/10"
-						type="button"
-					>
-						<p>Stamp</p>
-						<div className="flex h-5 w-5 items-center justify-center rounded-sm bg-orange-600 text-white">
-							<Smile size={14} />
-						</div>
-					</button>
+					{!contextMenu.folderId && (
+						<button
+							onClick={showSelectStampDialog}
+							className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-orange-600 text-sm transition-colors hover:bg-orange-600/10"
+							type="button"
+						>
+							<p>Stamp</p>
+							<div className="flex h-5 w-5 items-center justify-center rounded-sm bg-orange-600 text-white">
+								<Smile size={14} />
+							</div>
+						</button>
+					)}
 				</>
 			)}
 		</div>

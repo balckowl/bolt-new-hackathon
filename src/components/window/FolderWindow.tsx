@@ -24,10 +24,13 @@ export function FolderWindow({
 	onRemoveApp,
 	onAppClick,
 	onAppContextMenu,
+	onEmptyAreaContextMenu,
 	onAppDragStart,
 	onAppDragEnd,
 	onPositionChange,
 	onSizeChange,
+	failedFavicons,
+	onFaviconError,
 }: {
 	window: FolderWindowType;
 	folderContents: string[];
@@ -44,10 +47,13 @@ export function FolderWindow({
 	onRemoveApp: (appId: string) => void;
 	onAppClick: (app: AppIcon) => void;
 	onAppContextMenu: (e: React.MouseEvent, app: AppIcon, folderId: string) => void;
+	onEmptyAreaContextMenu: (e: React.MouseEvent, folderId: string) => void;
 	onAppDragStart: (e: React.DragEvent, appId: string, folderId: string) => void;
 	onAppDragEnd: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
+	failedFavicons: Record<string, string | null>;
+	onFaviconError: (appId: string, favicon?: string) => void;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -121,34 +127,27 @@ export function FolderWindow({
 
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
+			const failedSrc = failedFavicons[app.id] ?? null;
+			const currentSrc = app.favicon ?? null;
+
+			if (failedSrc !== currentSrc) {
+				return (
+					<div className="relative flex items-center justify-center">
+						<Image
+							key={`${app.id}-${app.favicon}`}
+							src={app.favicon}
+							alt={app.name}
+							width={30}
+							height={30}
+							className="pointer-events-none relative z-10 rounded-sm"
+							onError={() => onFaviconError(app.id, app.favicon)}
+						/>
+					</div>
+				);
+			}
+
 			return (
-				<div className="relative">
-					<Image
-						src={app.favicon}
-						alt={app.name}
-						width={30}
-						height={30}
-						className="pointer-events-none relative z-10 rounded-sm"
-						onError={(e) => {
-							const target = e.target as HTMLImageElement;
-							target.style.display = "none";
-							const parent = target.parentElement;
-							if (parent) {
-								const fallbackIcon = parent.querySelector(".fallback-icon");
-								if (fallbackIcon) {
-									fallbackIcon.classList.remove("hidden");
-								}
-							}
-						}}
-					/>
-					<Sparkle
-						size={30}
-						fill="black"
-						color="color"
-						strokeWidth={0.8}
-						className="fallback-icon relative z-10 hidden"
-					/>
-				</div>
+				<Sparkle size={30} fill="black" color="color" strokeWidth={0.8} className="relative z-10" />
 			);
 		}
 		return <app.icon size={30} className="relative z-10 text-black drop-shadow-sm" />;
@@ -251,7 +250,10 @@ export function FolderWindow({
 						aria-hidden="true"
 					/>
 					{folderApps.length === 0 ? (
-						<div className="flex h-full items-center justify-center text-center">
+						<div
+							className="flex h-full items-center justify-center text-center"
+							onContextMenu={(e) => onEmptyAreaContextMenu(e, window.id)}
+						>
 							<div>
 								<FolderIcon size={48} className="mx-auto mb-4 text-white" />
 								<p className="text-white">This folder is empty.</p>
@@ -263,6 +265,11 @@ export function FolderWindow({
 					) : (
 						<div
 							className="grid gap-0"
+							onContextMenu={(e) => {
+								if (e.target === e.currentTarget) {
+									onEmptyAreaContextMenu(e, window.id);
+								}
+							}}
 							style={{
 								gridTemplateColumns: `repeat(${FOLDER_GRID_COLS}, minmax(0, 1fr))`,
 								gridAutoRows: "minmax(110px, 1fr)",
@@ -270,16 +277,20 @@ export function FolderWindow({
 						>
 							{Array.from({ length: totalRows * FOLDER_GRID_COLS }).map((_, index) => {
 								const app = folderApps[index];
+								const cellKey = app ? `folder-cell-${app.id}` : `folder-cell-empty-${index}`;
 
 								return (
 									<div
-										key={`folder-cell-${
-											// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-											index
-										}`}
+										key={cellKey}
 										// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
 										className={`group relative flex flex-col items-center justify-center`}
-										onContextMenu={app ? (e) => onAppContextMenu(e, app, window.id) : undefined}
+										onContextMenu={(e) => {
+											if (app) {
+												onAppContextMenu(e, app, window.id);
+											} else {
+												onEmptyAreaContextMenu(e, window.id);
+											}
+										}}
 									>
 										{app && (
 											<div

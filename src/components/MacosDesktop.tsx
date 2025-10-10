@@ -84,6 +84,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		x: 0,
 		y: 0,
 		position: null,
+		existingApp: null,
 		folderId: null,
 	});
 	const [memoWindows, setMemoWindows] = useState<MemoWindowType[]>([]);
@@ -96,14 +97,17 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	const [memoNameDialog, setMemoNameDialog] = useState<MemoNameDialog>({
 		visible: false,
 		position: null,
+		folderId: null,
 	});
 	const [appUrlDialog, setAppUrlDialog] = useState<AppUrlDialog>({
 		visible: false,
 		position: null,
+		folderId: null,
 	});
 	const [folderNameDialog, setFolderNameDialog] = useState<FolderNameDialog>({
 		visible: false,
 		position: null,
+		folderId: null,
 	});
 	const [selectStampDialog, setSelectStampDialog] = useState<SelectStampDialog>({
 		visible: false,
@@ -339,19 +343,23 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				x: 0,
 				y: 0,
 				position: null,
+				existingApp: null,
 				folderId: null,
 			});
 			setMemoNameDialog({
 				visible: false,
 				position: null,
+				folderId: null,
 			});
 			setAppUrlDialog({
 				visible: false,
 				position: null,
+				folderId: null,
 			});
 			setFolderNameDialog({
 				visible: false,
 				position: null,
+				folderId: null,
 			});
 			setSelectStampDialog({
 				visible: false,
@@ -671,6 +679,21 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		});
 	};
 
+	const handleFolderEmptyAreaContextMenu = (e: React.MouseEvent, folderId: string) => {
+		if (isEdit === false) return;
+		e.preventDefault();
+		e.stopPropagation();
+
+		setContextMenu({
+			visible: true,
+			x: e.clientX,
+			y: e.clientY,
+			position: null,
+			existingApp: null,
+			folderId,
+		});
+	};
+
 	const showMemoNameDialog = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -678,6 +701,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		setMemoNameDialog({
 			visible: true,
 			position: contextMenu.position,
+			folderId: contextMenu.folderId ?? null,
 		});
 		setMemoNameInput(`Memo ${memoCounter}`);
 		setContextMenu({
@@ -686,6 +710,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			y: 0,
 			position: null,
 			folderId: null,
+			existingApp: null,
 		});
 	};
 
@@ -696,6 +721,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		setAppUrlDialog({
 			visible: true,
 			position: contextMenu.position,
+			folderId: contextMenu.folderId ?? null,
 		});
 		setContextMenu({
 			visible: false,
@@ -703,6 +729,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			y: 0,
 			position: null,
 			folderId: null,
+			existingApp: null,
 		});
 	};
 
@@ -713,6 +740,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 		setFolderNameDialog({
 			visible: true,
 			position: contextMenu.position,
+			folderId: contextMenu.folderId ?? null,
 		});
 		setFolderNameInput(`Folder ${folderCounter}`);
 		setContextMenu({
@@ -721,10 +749,12 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			y: 0,
 			position: null,
 			folderId: null,
+			existingApp: null,
 		});
 	};
 
 	const showSelectStampDialog = (e: React.MouseEvent) => {
+		if (contextMenu.folderId) return;
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -738,6 +768,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			y: 0,
 			position: null,
 			folderId: null,
+			existingApp: null,
 		});
 	};
 
@@ -759,6 +790,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			existingApp: null,
 			folderId: null,
 		});
 	};
@@ -813,6 +845,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			existingApp: null,
 			folderId: null,
 		});
 	};
@@ -830,6 +863,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			x: 0,
 			y: 0,
 			position: null,
+			existingApp: null,
 			folderId: null,
 		});
 	};
@@ -931,7 +965,9 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	};
 
 	const createMemoWithName = () => {
-		if (!memoNameDialog.position || !memoNameInput.trim()) return;
+		if (!memoNameInput.trim()) return;
+		const targetFolderId = memoNameDialog.folderId;
+		if (!targetFolderId && !memoNameDialog.position) return;
 
 		const memoId = `memo-${Date.now()}`;
 		const memoApp: AppIcon = {
@@ -944,25 +980,54 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			content: "",
 		};
 
-		// Add the new app to the apps array
 		setApps((prev) => [...prev, memoApp]);
 
-		// Set the position for the new memo in the clicked cell
-		setAppPositions((prev) => {
-			const newPositions = new Map(prev);
-			if (memoNameDialog.position) {
-				newPositions.set(memoId, memoNameDialog.position);
-			}
-			return newPositions;
-		});
+		if (targetFolderId) {
+			setFolderContents((prev) => {
+				const newContents = new Map(prev);
+				const current = newContents.get(targetFolderId) ?? [];
+				newContents.set(targetFolderId, [...current, memoId]);
+				return newContents;
+			});
+		} else {
+			setAppPositions((prev) => {
+				const newPositions = new Map(prev);
+				if (memoNameDialog.position) {
+					newPositions.set(memoId, memoNameDialog.position);
+				}
+				return newPositions;
+			});
+		}
 
 		setMemoCounter((prev) => prev + 1);
-		setMemoNameDialog({ visible: false, position: null });
+		setMemoNameDialog({ visible: false, position: null, folderId: null });
 		setMemoNameInput("");
 	};
 
 	const createAppWithUrl = async () => {
-		if (!appUrlDialog.position || !appUrlInput.trim()) return;
+		if (!appUrlInput.trim()) return;
+		const targetFolderId = appUrlDialog.folderId;
+		const targetPosition = appUrlDialog.position;
+		if (!targetFolderId && !targetPosition) return;
+
+		const placeApp = (appId: string) => {
+			if (targetFolderId) {
+				setFolderContents((prev) => {
+					const newContents = new Map(prev);
+					const current = newContents.get(targetFolderId) ?? [];
+					newContents.set(targetFolderId, [...current, appId]);
+					return newContents;
+				});
+			} else {
+				setAppPositions((prev) => {
+					const newPositions = new Map(prev);
+					if (targetPosition) {
+						newPositions.set(appId, targetPosition);
+					}
+					return newPositions;
+				});
+			}
+		};
 
 		setIsLoadingApp(true);
 
@@ -972,7 +1037,6 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				url = `https://${url}`;
 			}
 
-			// Try to fetch site metadata
 			let siteName = "";
 			let favicon = "";
 
@@ -985,12 +1049,10 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				}
 			} catch (error) {
 				console.error("Error fetching site metadata:", error);
-				// Fallback to domain name
 				favicon = "";
 				siteName = new URL(url).hostname.replace("www.", "");
 			}
 
-			// If no site name found, use domain
 			if (!siteName) {
 				siteName = new URL(url).hostname;
 			}
@@ -1004,29 +1066,13 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				color: "#FFEB3B",
 				type: "website",
 				url: url,
-				favicon: favicon,
+				favicon,
 			};
 
-			// Add the new app to the apps array
 			setApps((prev) => [...prev, newApp]);
-
-			// Set the position for the new app in the clicked cell
-			setAppPositions((prev) => {
-				const newPositions = new Map(prev);
-				if (appUrlDialog.position) {
-					newPositions.set(appId, appUrlDialog.position);
-				}
-				return newPositions;
-			});
-
-			setAppUrlDialog({
-				visible: false,
-				position: null,
-			});
-			setAppUrlInput("");
+			placeApp(appId);
 		} catch (error) {
 			console.error("Error creating app:", error);
-			// Still create the app with basic info
 			const appId = `app-${Date.now()}`;
 			const newApp: AppIcon = {
 				id: appId,
@@ -1039,26 +1085,19 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			};
 
 			setApps((prev) => [...prev, newApp]);
-			setAppPositions((prev) => {
-				const newPositions = new Map(prev);
-				if (appUrlDialog.position) {
-					newPositions.set(appId, appUrlDialog.position);
-				}
-				return newPositions;
-			});
-
-			setAppUrlDialog({
-				visible: false,
-				position: null,
-			});
-			setAppUrlInput("");
+			placeApp(appId);
 		} finally {
+			setAppUrlDialog({ visible: false, position: null, folderId: null });
+			setAppUrlInput("");
 			setIsLoadingApp(false);
 		}
 	};
 
 	const createFolderWithName = () => {
-		if (!folderNameDialog.position || !folderNameInput.trim()) return;
+		if (!folderNameInput.trim()) return;
+		const targetFolderId = folderNameDialog.folderId;
+		const targetPosition = folderNameDialog.position;
+		if (!targetFolderId && !targetPosition) return;
 
 		const folderId = `folder-${Date.now()}`;
 		const folderApp: AppIcon = {
@@ -1070,28 +1109,33 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			type: "folder",
 		};
 
-		// Add the new folder to the apps array
 		setApps((prev) => [...prev, folderApp]);
 
-		// Set the position for the new folder in the clicked cell
-		setAppPositions((prev) => {
-			const newPositions = new Map(prev);
-			if (folderNameDialog.position) {
-				newPositions.set(folderId, folderNameDialog.position);
-			}
-
-			return newPositions;
-		});
-
-		// Initialize empty folder contents
-		setFolderContents((prev) => {
-			const newContents = new Map(prev);
-			newContents.set(folderId, []);
-			return newContents;
-		});
+		if (targetFolderId) {
+			setFolderContents((prev) => {
+				const newContents = new Map(prev);
+				const parentContents = newContents.get(targetFolderId) ?? [];
+				newContents.set(targetFolderId, [...parentContents, folderId]);
+				newContents.set(folderId, []);
+				return newContents;
+			});
+		} else {
+			setAppPositions((prev) => {
+				const newPositions = new Map(prev);
+				if (targetPosition) {
+					newPositions.set(folderId, targetPosition);
+				}
+				return newPositions;
+			});
+			setFolderContents((prev) => {
+				const newContents = new Map(prev);
+				newContents.set(folderId, []);
+				return newContents;
+			});
+		}
 
 		setFolderCounter((prev) => prev + 1);
-		setFolderNameDialog({ visible: false, position: null });
+		setFolderNameDialog({ visible: false, position: null, folderId: null });
 		setFolderNameInput("");
 	};
 
@@ -1128,17 +1172,17 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	};
 
 	const cancelMemoCreation = () => {
-		setMemoNameDialog({ visible: false, position: null });
+		setMemoNameDialog({ visible: false, position: null, folderId: null });
 		setMemoNameInput("");
 	};
 
 	const cancelAppCreation = () => {
-		setAppUrlDialog({ visible: false, position: null });
+		setAppUrlDialog({ visible: false, position: null, folderId: null });
 		setAppUrlInput("");
 	};
 
 	const cancelFolderCreation = () => {
-		setFolderNameDialog({ visible: false, position: null });
+		setFolderNameDialog({ visible: false, position: null, folderId: null });
 		setFolderNameInput("");
 	};
 
@@ -1940,6 +1984,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								onRemoveApp={(appId) => removeFromFolder(window.id, appId)}
 								onAppClick={handleAppClick}
 								onAppContextMenu={handleFolderAppContextMenu}
+								onEmptyAreaContextMenu={handleFolderEmptyAreaContextMenu}
 								onAppDragStart={(e, appId) => handleFolderItemDragStart(e, appId, window.id)}
 								onAppDragEnd={handleDragEnd}
 								onPositionChange={(position) => {
@@ -1966,6 +2011,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 										),
 									);
 								}}
+								failedFavicons={failedFavicons}
+								onFaviconError={markFaviconAsFailed}
 							/>
 						),
 				)}
