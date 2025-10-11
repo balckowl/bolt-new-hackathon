@@ -1,4 +1,5 @@
-import { X } from "lucide-react";
+import type { FontOptionType } from "@/prisma/prisma/zod";
+import { Currency, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { HelpWindowType } from "../../types/desktop";
 import WindowHeader from "./WindowHeader";
@@ -10,6 +11,8 @@ export function HelpWindow({
 	onBringToFront,
 	onPositionChange,
 	onSizeChange,
+	getFontStyle,
+	currentFont,
 }: {
 	window: HelpWindowType;
 	onClose: () => void;
@@ -17,6 +20,8 @@ export function HelpWindow({
 	onBringToFront: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
+	currentFont: FontOptionType;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -101,7 +106,7 @@ export function HelpWindow({
 			onMouseDown={handleMouseDown}
 		>
 			{/* Window Header */}
-			<WindowHeader title="Introductions">
+			<WindowHeader title="Introductions" getFontStyle={getFontStyle} currentFont={currentFont}>
 				{/* クローズ */}
 				<button
 					onMouseDown={(e) => e.stopPropagation()}

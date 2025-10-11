@@ -5,6 +5,7 @@ import { UserIcon } from "@/src/components/UserIcon";
 import { DraggableMenu } from "@/src/components/draggableMenu";
 import { Button } from "@/src/components/ui/button";
 import { HelpWindow } from "@/src/components/window/HelpWindow";
+import { lightDegreeLocalStore } from "@/src/functions/lightDegreeLocalStore";
 import { checkUrlExists } from "@/src/lib/favicon-utils";
 import { hono } from "@/src/lib/hono-client";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
@@ -145,7 +146,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	const [isLoadingApp, setIsLoadingApp] = useState(false);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [background, setBackground] = useState(backgroundImg?.value);
-	const [brightness, setBrightness] = useState(0.1);
+	const [brightness, setBrightness] = useState(lightDegreeLocalStore.defaultValue);
 	const [font, setFont] = useState<FontOptionType>(desktop.font);
 	const [folderContents, setFolderContents] = useState<Map<string, string[]>>(new Map());
 	const [originalFolderContents, setOriginalFolderContents] = useState<Map<string, string[]>>(
@@ -181,7 +182,13 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 
 	const handleBrightnessChange = (value: number) => {
 		setBrightness(value);
+		lightDegreeLocalStore.set(value);
 	};
+
+	useEffect(() => {
+		const storedBrightness = lightDegreeLocalStore.get();
+		setBrightness(storedBrightness);
+	}, []);
 
 	const dragSourceRef = useRef<GridPosition | null>(null);
 	const draggedFromFolderRef = useRef(false);
@@ -1816,7 +1823,9 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 											)}
 											<div className="-z-10 absolute inset-0 rounded-2xl bg-white/90 shadow-2xl backdrop-blur-lg" />
 										</div>
-										<div className="mt-1 text-center font-medium text-white text-xs drop-shadow-sm">
+										<div
+											className={`mt-1 text-center font-medium text-white text-xs drop-shadow-sm ${getFontStyle(font)}`}
+										>
 											{truncate(app.name, 20)}
 										</div>
 									</div>
@@ -1837,10 +1846,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 	);
 
 	return (
-		<div
-			className={`relative min-h-screen overflow-hidden ${getFontStyle(font)}`}
-			style={getBackgroundStyle()}
-		>
+		<div className="relative min-h-screen overflow-hidden" style={getBackgroundStyle()}>
 			<TooltipProvider>
 				<Toaster
 					visibleToasts={1}
@@ -2017,6 +2023,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				{/* Help Window */}
 				{helpWindow.visible && (
 					<HelpWindow
+						currentFont={font}
+						getFontStyle={getFontStyle}
 						window={helpWindow}
 						onClose={() =>
 							setHelpWindow((prev) => ({
@@ -2051,6 +2059,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								key={window.id}
 								window={window}
 								isEditable={isEdit}
+								currentFont={font}
+								getFontStyle={getFontStyle}
 								onClose={() => closeMemoWindow(window.id)}
 								onMinimize={() => minimizeMemoWindow(window.id)}
 								onContentChange={(content) => updateMemoContent(window.id, content)}
@@ -2090,6 +2100,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 							<BrowserWindow
 								key={window.id}
 								window={window}
+								currentFont={font}
+								getFontStyle={getFontStyle}
 								onClose={() => closeBrowserWindow(window.id)}
 								onMinimize={() => minimizeBrowserWindow(window.id)}
 								onBringToFront={() => bringBrowserToFront(window.id)}
@@ -2128,6 +2140,8 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 							<FolderWindow
 								key={window.id}
 								window={window}
+								currentFont={font}
+								getFontStyle={getFontStyle}
 								folderContents={folderContents.get(window.id) || []}
 								allFolderContents={folderContents}
 								apps={apps}

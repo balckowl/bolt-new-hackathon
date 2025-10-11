@@ -48,7 +48,7 @@ export const UserIcon = ({ isPublic, currentUserInfo, getFontStyle, currentFont 
 					</Avatar>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent
-					className={`m-0 w-[150px] gap-2 rounded-xl bg-white/90 p-0 text-sm ${getFontStyle(currentFont)}`}
+					className="m-0 w-[150px] gap-2 rounded-xl bg-white/90 p-0 text-sm"
 					align="start"
 					sideOffset={15}
 				>

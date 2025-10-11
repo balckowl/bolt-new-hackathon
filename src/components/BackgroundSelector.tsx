@@ -7,6 +7,7 @@ import { Check, Paintbrush } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { backgroundOptions } from "./BackgroundImage";
+import { litteOne } from "./lp/hero/Hero";
 
 interface BackgroundSelectorProps {
 	onBackgroundChange: (background: string) => void;
@@ -52,7 +53,7 @@ export function BackgroundSelector({
 			toast("Background change failed", {
 				style: { color: "#dc2626" },
 				icon: <Paintbrush size={19} />,
-				className: "text-sm",
+				className: `text-sm ${litteOne.className}`,
 			});
 			console.error("Failed to update visibility:", e);
 		}

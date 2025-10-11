@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../lib/utils";
 import FontSelector from "./FontSelector";
 import HelpSelector from "./HelpSelector";
+import { litteOne } from "./lp/hero/Hero";
 
 const DRAG_MARGIN = 100;
 
@@ -105,7 +106,7 @@ export const DraggableMenu = ({
 
 		const rect = menuRef.current.getBoundingClientRect();
 		const initialX = window.innerWidth / 2 - rect.width / 2;
-		const initialY = window.innerHeight / 2 - rect.height / 2;
+		const initialY = window.innerHeight - rect.height - DRAG_MARGIN;
 		setPosition({
 			x: clamp(
 				initialX,
@@ -176,8 +177,8 @@ export const DraggableMenu = ({
 		: {
 				position: "fixed",
 				left: "50%",
-				top: "50%",
-				transform: "translate(-50%, -50%)",
+				bottom: `${DRAG_MARGIN}px`,
+				transform: "translateX(-50%)",
 				zIndex: 20,
 			};
 
@@ -202,10 +203,7 @@ export const DraggableMenu = ({
 					/>
 				</div>
 				<div
-					className="flex items-center font-semibold text-md text-white/70 uppercase tracking-wide"
-					style={{
-						fontFamily: "system-ui",
-					}}
+					className={`${litteOne.className} flex items-center font-semibold text-md text-white/70 uppercase tracking-wide`}
 				>
 					{osName}
 				</div>
@@ -240,7 +238,7 @@ export const DraggableMenu = ({
 								className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
 								aria-label="Open brightness controls"
 							>
-								<Sun className="h-4 w-4" aria-hidden="true" />
+								<Sun size={17} aria-hidden="true" />
 							</button>
 						</PopoverTrigger>
 						<PopoverContent
@@ -257,7 +255,7 @@ export const DraggableMenu = ({
                   <span className="text-black/50 text-xs">{sliderValue}%</span>
                 </div> */}
 								<div className="flex items-center gap-3 rounded-lg bg-black/5 px-3 py-3">
-									<Sun className="h-4 w-4 text-black/60" aria-hidden="true" />
+									<Sun size={17} aria-hidden="true" />
 									<Slider
 										className="flex-1"
 										min={0}

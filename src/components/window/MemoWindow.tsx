@@ -1,3 +1,4 @@
+import type { FontOptionType } from "@/prisma/prisma/zod";
 import { Placeholder } from "@tiptap/extensions";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -16,6 +17,8 @@ export function MemoWindow({
 	onPositionChange,
 	onSizeChange,
 	isEditable = false,
+	getFontStyle,
+	currentFont,
 }: {
 	window: MemoWindowType;
 	onClose: () => void;
@@ -25,6 +28,8 @@ export function MemoWindow({
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
 	isEditable: boolean;
+	getFontStyle: (newFont: FontOptionType) => void;
+	currentFont: FontOptionType;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -152,7 +157,7 @@ export function MemoWindow({
 			onMouseDown={handleMouseDown}
 		>
 			{/* Window Header */}
-			<WindowHeader title={window.title}>
+			<WindowHeader getFontStyle={getFontStyle} currentFont={currentFont} title={window.title}>
 				{/* クローズ */}
 				<button
 					onMouseDown={(e) => e.stopPropagation()}
