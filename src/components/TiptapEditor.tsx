@@ -1,7 +1,7 @@
 "use client";
 
 import { type Editor, EditorContent } from "@tiptap/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BoldIcon } from "./tiptap-icons/bold-icon";
 import { Code2Icon } from "./tiptap-icons/code-block2-icon";
 import { ItalicIcon } from "./tiptap-icons/italic-icon";
@@ -9,6 +9,9 @@ import { UnderlineIcon } from "./tiptap-icons/underline-icon";
 import { Button } from "./tiptap-ui-primitive/button";
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from "./tiptap-ui-primitive/toolbar";
 
+import { BubbleMenu, FloatingMenu } from "@tiptap/react/menus";
+import { Link2 } from "lucide-react";
+import { BubbleLink } from "./BubbleLink";
 import { BlockquoteButton } from "./tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "./tiptap-ui/code-block-button";
 import { HeadingDropdownMenu } from "./tiptap-ui/heading-dropdown-menu";
@@ -19,6 +22,8 @@ interface TiptapEditorProps {
 }
 
 export default function TiptapEditor({ editor }: TiptapEditorProps) {
+	const [showMenu, setShowMenu] = useState(false);
+
 	useEffect(() => {
 		if (editor?.isEditable) {
 			editor.commands.focus("end");
@@ -87,7 +92,11 @@ export default function TiptapEditor({ editor }: TiptapEditorProps) {
 					</ToolbarGroup>
 				</Toolbar> */}
 			</div>
+
 			<EditorContent editor={editor} className="mb-[6px] h-full flex-1 pb-[6px]" />
+			<BubbleMenu editor={editor}>
+				<BubbleLink editor={editor} />
+			</BubbleMenu>
 		</div>
 	);
 }
