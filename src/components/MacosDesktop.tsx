@@ -868,7 +868,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			position: contextMenu.position,
 			folderId: contextMenu.folderId ?? null,
 		});
-		setMemoNameInput(`Memo ${memoCounter}`);
+		setMemoNameInput("Notes");
 		setContextMenu({
 			visible: false,
 			x: 0,
@@ -907,7 +907,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 			position: contextMenu.position,
 			folderId: contextMenu.folderId ?? null,
 		});
-		setFolderNameInput(`Folder ${folderCounter}`);
+		setFolderNameInput("Folder");
 		setContextMenu({
 			visible: false,
 			x: 0,
@@ -1869,6 +1869,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 					currentUserInfo={currentUserInfo}
 					getFontStyle={getFontStyle}
 					currentFont={font}
+					osName={osName}
 				/>
 				{/* Background overlay for brightness control */}
 				<div
@@ -1947,7 +1948,7 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 								onSave={saveEdit}
 								visible={editDialog.visible}
 								onCancel={cancelEdit}
-								formLabel="Stamp Text"
+								formLabel="Hello!!"
 							/>
 						) : (
 							<DefaultDialog
@@ -2192,7 +2193,10 @@ export default function MacosDesktop({ desktop, osName, backgroundImg }: Props) 
 				)}
 
 				{showDesktopSaveBtn && isEdit && (
-					<div className="fixed right-6 bottom-6 z-50 text-black text-sm shadow-lg transition">
+					<div
+						className="fixed right-6 bottom-6 text-black text-sm shadow-lg transition"
+						style={{ zIndex: 2147483647 }}
+					>
 						<div className="flex items-center gap-3 rounded-t-2xl border-b bg-white/90 px-3 py-3">
 							<Icons.CircleAlert size={17} />
 							<p className="font-bold text-sm">Unsaved changes</p>

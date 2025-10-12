@@ -50,7 +50,7 @@ export default function EditStampDialog({
 		>
 			<div className="edit-stamp-dialog min-w-[400px] rounded-2xl bg-white p-0 shadow-2xl">
 				<h3 className="mb-4 flex items-center gap-2 px-5 pt-5 font-semibold text-gray-800 text-lg">
-					Edit stamp text
+					Edit Stamp Text
 				</h3>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
