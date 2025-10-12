@@ -14,7 +14,7 @@ export const APPLIST: AppListItem[] = [
 	{
 		type: "icon",
 		name: "notes",
-		icon: <StickyNote width={35} height={35} />,
+		icon: <StickyNote size={40} />,
 	},
 	{
 		type: "image",
@@ -29,6 +29,6 @@ export const APPLIST: AppListItem[] = [
 	{
 		type: "icon",
 		name: "folder",
-		icon: <Folder width={35} height={35} />,
+		icon: <Folder size={40} />,
 	},
 ];

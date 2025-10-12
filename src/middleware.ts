@@ -16,7 +16,7 @@ function getLangFromPath(pathname: string): string | undefined {
 
 export const config = {
 	// api や _next/static、_next/image、さらに png, jpg, svg, dmg, avif をスキップ
-	matcher: ["/((?!api|_next/static|_next/image|.*\\.(?:png|jpg|svg|dmg|avif)$).*)"],
+	matcher: ["/((?!api|_next/static|_next/image|.*\\.(?:png|jpg|svg|dmg|avif|mp4|PNG)$).*)"],
 };
 
 export function middleware(request: NextRequest) {

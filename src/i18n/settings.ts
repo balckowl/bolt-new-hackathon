@@ -1,5 +1,5 @@
-export const defaultLanguage = "ja";
-export const availableLanguages = [defaultLanguage, "en"];
+export const defaultLanguage = "en";
+export const availableLanguages = [defaultLanguage, "ja"];
 
 export const namespaces = ["translation"];
 

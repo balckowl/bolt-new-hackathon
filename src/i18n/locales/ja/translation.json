@@ -45,7 +45,7 @@
 		"btn": "決定"
 	},
 	"createSuccess": {
-		"title": "あなたの惑星 {{osName}} が誕生",
+		"title": "あなたの惑星 \"{{osName}}\" が誕生",
 		"desc": "さあ旅を始めよう。",
 		"btn": "今すぐ探検する"
 	}

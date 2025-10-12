@@ -36,7 +36,7 @@ export default async function Exprience({ lang }: Props) {
 				</div>
 				<Image
 					src="/astro-4.png"
-					width={200}
+					width={175}
 					height={100}
 					alt="astro"
 					className="hidden xl:block"

@@ -20,7 +20,7 @@ export default function LoginWrapper({ lang }: Props) {
 	const title = t("login.title");
 	const desc = t("login.desc");
 	const btn = t("login.btn");
-	const agreement = t("login.agreement");
+	// const agreement = t("login.agreement");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -60,9 +60,23 @@ export default function LoginWrapper({ lang }: Props) {
 						{btn}
 					</Button>
 
-					<p className="mx-auto max-w-[380px] text-balance px-10 text-center text-white text-white/50 text-xs leading-1 leading-[1.5] tracking-wide">
-						{agreement}
-					</p>
+					{lang === "en" && (
+						<p className="mx-auto max-w-[380px] text-balance px-10 text-center text-white text-white/50 text-xs leading-1 leading-[1.5] tracking-wide">
+							By continuing, you agree to{" "}
+							<Link href="/legal" className="underline underline-offset-1">
+								terms of service and privacy policy.
+							</Link>
+						</p>
+					)}
+					{lang === "ja" && (
+						<p className="mx-auto max-w-[380px] text-balance px-10 text-center text-white text-white/50 text-xs leading-1 leading-[1.5] tracking-wide">
+							続行すると、{" "}
+							<Link href="/legal" className="underline underline-offset-1">
+								利用規約とプライバシーポリシー
+							</Link>
+							に同意したことになります。
+						</p>
+					)}
 				</div>
 			</div>
 		</div>
