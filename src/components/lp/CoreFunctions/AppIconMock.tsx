@@ -15,11 +15,11 @@ const AppIconMock = forwardRef<HTMLDivElement, Props>(function AppIconMock(
 ) {
 	return (
 		<div className="relative" ref={ref}>
-			<div className="mb-1 flex h-[70px] w-[70px] items-center justify-center rounded-2xl border border-white/20 bg-white shadow-lg backdrop-blur-sm">
+			<div className="mb-1 flex h-[70px] w-[70px] items-center justify-center rounded-3xl border border-white/20 bg-white/90 shadow-lg backdrop-blur-sm">
 				{children}
 			</div>
 			{notifyIcon && (
-				<div className="-top-2 -right-2 absolute flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-500 font-bold text-white text-xs">
+				<div className="-top-[8px] -right-[8px] absolute flex h-[28px] w-[28px] items-center justify-center rounded-full bg-red-500 font-bold text-sm text-white">
 					{getRandom1to5()}
 				</div>
 			)}

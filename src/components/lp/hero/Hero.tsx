@@ -43,25 +43,25 @@ export default async function Hero({ lang }: Props) {
 						</Button>
 						<Safari
 							url={`${env.NEXT_PUBLIC_APP_URL}/os/ospace`}
-							className="mx-auto hidden h-[350px] max-w-[800px] lg:block"
-							height={450}
-							imageSrc="/hero.avif"
+							className="mx-auto hidden h-[360px] max-w-[830px] lg:block"
+							height={520}
+							videoSrc="/heromv.mp4"
 						/>
 					</div>
 				</Container>
 				<Image
 					src="/astro.png"
-					width={200}
+					width={205}
 					height={100}
 					alt="astro"
-					className="-bottom-[15px] absolute right-[100px] z-20 hidden xl:block"
+					className="-bottom-[15px] absolute right-[100px] z-10 hidden xl:block"
 				/>
 				<Image
 					src="/rocket.png"
-					width={300}
+					width={305}
 					height={100}
 					alt="rocket"
-					className="absolute bottom-0 left-0 z-20 hidden xl:block"
+					className="absolute bottom-0 left-0 z-10 hidden xl:block"
 				/>
 				<SeparatedWave color="#111827" />
 			</div>

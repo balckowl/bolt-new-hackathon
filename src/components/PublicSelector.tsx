@@ -63,7 +63,7 @@ export const PublicSelector = ({ isPublic, setIsPublic, getFontStyle, currentFon
 				</button>
 			</PopoverTrigger>
 			<PopoverContent
-				className={`w-[150px] rounded-xl bg-white/90 px-[14px] py-2 shadow-xl ${getFontStyle(currentFont)}`}
+				className="w-[150px] rounded-xl bg-white/90 px-[14px] py-2 shadow-xl"
 				align="center"
 				sideOffset={16}
 			>

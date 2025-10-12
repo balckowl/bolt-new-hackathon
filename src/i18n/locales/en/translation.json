@@ -1,14 +1,14 @@
 {
 	"get_started": "Get Started",
 	"hero": {
-		"title": "Launch your very own planet into<br/> the universe of ospace."
+		"title": "Launch your very own planet into<br/> the universe of OSPACE."
 	},
 	"core_functions": {
 		"title": "Core Functions",
 		"desc": "A desktop-like experience on the web.",
 		"openWithinOspace": {
-			"title": "Open website within ospace",
-			"body": "Once converted into an app, you can open the site within ospace."
+			"title": "Open website within OSPACE",
+			"body": "Once converted into an app, you can open the site within OSPACE."
 		},
 		"chooseBackground": {
 			"title": "Choose the background",
@@ -25,7 +25,7 @@
 	},
 	"try_the_demo": {
 		"title": "Try The Demo",
-		"desc": "Experience your first step into ospace.",
+		"desc": "Experience your first step into OSPACE.",
 		"click_here": "Click Here"
 	},
 	"recommend": {
@@ -34,9 +34,9 @@
 	},
 	"login": {
 		"title": "Welcome",
-		"desc": "Let's open the door to ospace",
+		"desc": "Let's open the door to OSPACE",
 		"btn": "Continue with Google",
-		"agreement": "By continuing, you agree to ospace’s terms of service and privacy policy."
+		"agreement": "By continuing, you agree to OSPACE’s terms of service and privacy policy."
 	},
 	"inputName": {
 		"title": "Name your planet",
@@ -45,7 +45,7 @@
 		"btn": "Confirm"
 	},
 	"createSuccess": {
-		"title": "Your planet {{osName}} is born",
+		"title": "Your planet \"{{osName}}\" is born",
 		"desc": "Begin your journey.",
 		"btn": "Explore Now"
 	}

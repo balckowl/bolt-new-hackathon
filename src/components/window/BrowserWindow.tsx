@@ -1,3 +1,4 @@
+import type { FontOptionType } from "@/prisma/prisma/zod";
 import { ArrowDownRight, Check, Link, RefreshCcw, SquareArrowOutUpRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWindowType } from "../../types/desktop";
@@ -14,6 +15,8 @@ type BrowserWindowProps = {
 	onBringToFront: () => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
+	currentFont: FontOptionType;
 };
 
 export function BrowserWindow({
@@ -23,6 +26,8 @@ export function BrowserWindow({
 	onBringToFront,
 	onPositionChange,
 	onSizeChange,
+	getFontStyle,
+	currentFont,
 }: BrowserWindowProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -271,7 +276,7 @@ export function BrowserWindow({
 				onMouseDown={handleMouseDown}
 			>
 				{/* Window Header */}
-				<WindowHeader title={window.title}>
+				<WindowHeader title={window.title} currentFont={currentFont} getFontStyle={getFontStyle}>
 					<div className="flex items-center gap-1">
 						<button
 							onMouseDown={(e) => e.stopPropagation()}

@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { litteOne } from "../lp/hero/Hero";
 import Footer from "../lp/layout/Footer";
 
 export default function LegalWrapper() {
@@ -18,13 +19,14 @@ export default function LegalWrapper() {
 				<div className="mx-auto max-w-4xl px-4 py-6">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center space-x-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-xl">
-								<Image src="/logo.png" width={80} height={80} alt="logo" className="rounded-2xl" />
-							</div>
-							<h1 className="font-bold text-gray-800 text-xl">OSpace</h1>
+							<h1 className={`font-bold text-gray-800 text-xl ${litteOne.className}`}>OSPACE</h1>
 						</div>
 						<Link href="/login">
-							<Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-800">
+							<Button
+								variant="ghost"
+								size="sm"
+								className="rounded-xl text-gray-600 hover:text-gray-800"
+							>
 								<ArrowLeft className="mr-2 h-4 w-4" />
 								Back to Login
 							</Button>

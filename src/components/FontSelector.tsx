@@ -1,4 +1,4 @@
-import { Check, LineSquiggle } from "lucide-react";
+import { Check, LineSquiggle, Type } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { hono } from "../lib/hono-client";
@@ -32,14 +32,14 @@ export default function FontSelector({ onFontChange, currentFont, getFontStyle }
 				},
 			});
 			toast("font changed", {
-				icon: <LineSquiggle size={19} />,
+				icon: <Type size={17} />,
 				className: "text-sm",
 			});
 			setOpen(false);
 		} catch (e) {
 			toast("Font change failed", {
 				style: { color: "#dc2626" },
-				icon: <LineSquiggle size={19} />,
+				icon: <Type size={17} />,
 				className: "text-sm",
 			});
 			console.error("Failed to update visibility:", e);
@@ -53,7 +53,7 @@ export default function FontSelector({ onFontChange, currentFont, getFontStyle }
 					type="button"
 					className="flex h-9 w-9 items-center justify-center rounded-full text-sm text-white hover:bg-white/20"
 				>
-					<LineSquiggle size={17} />
+					<Type size={17} />
 				</button>
 			</PopoverTrigger>
 			<PopoverContent

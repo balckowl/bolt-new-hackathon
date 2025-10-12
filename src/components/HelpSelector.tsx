@@ -1,4 +1,5 @@
 import { AppWindow, Info, SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -26,14 +27,13 @@ export default function HelpSelector({ getHelpWindow }: Props) {
 			>
 				<ul>
 					<li>
-						<button
-							type="button"
-							// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-							className={`flex w-full items-center justify-between rounded-lg px-[10px] py-[6px] text-sm hover:bg-gray-800/10`}
+						<Link
+							href="/os/ospace"
+							className="flex w-full items-center justify-between rounded-lg px-[10px] py-[6px] text-sm hover:bg-gray-800/10"
 						>
 							Changelog
 							<SquareArrowOutUpRight size={14} />
-						</button>
+						</Link>
 					</li>
 
 					<li>
@@ -43,8 +43,7 @@ export default function HelpSelector({ getHelpWindow }: Props) {
 								getHelpWindow();
 								setOpen(false);
 							}}
-							// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-							className={`flex w-full items-center justify-between rounded-lg px-[10px] py-[6px] text-sm hover:bg-gray-800/10`}
+							className="flex w-full items-center justify-between rounded-lg px-[10px] py-[6px] text-sm hover:bg-gray-800/10"
 						>
 							Instructions
 							<AppWindow size={14} />

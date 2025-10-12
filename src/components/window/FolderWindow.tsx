@@ -1,3 +1,5 @@
+import type { FontOptionType } from "@/prisma/prisma/zod";
+import type { FontOption } from "@/src/generated/prisma";
 import { Diamond, DiamondIcon, FolderIcon, Globe, Sparkle, Square, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -17,6 +19,7 @@ export function FolderWindow({
 	brightness,
 	isEditable,
 	canDropExternal,
+	currentFont,
 	onExternalDrop,
 	onClose,
 	onMinimize,
@@ -33,11 +36,13 @@ export function FolderWindow({
 	onSizeChange,
 	failedFavicons,
 	onFaviconError,
+	getFontStyle,
 }: {
 	window: FolderWindowType;
 	folderContents: string[];
 	apps: AppIcon[];
 	allFolderContents: Map<string, string[]>;
+	currentFont: FontOption;
 	desktopBackground?: string;
 	brightness: number;
 	isEditable: boolean;
@@ -58,6 +63,7 @@ export function FolderWindow({
 	onSizeChange: (size: { width: number; height: number }) => void;
 	failedFavicons: Record<string, string | null>;
 	onFaviconError: (appId: string, favicon?: string) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -222,7 +228,7 @@ export function FolderWindow({
 			}}
 			onMouseDown={handleMouseDown}
 		>
-			<WindowHeader title={window.title}>
+			<WindowHeader currentFont={currentFont} title={window.title} getFontStyle={getFontStyle}>
 				{/* クローズ */}
 				<button
 					onMouseDown={(e) => e.stopPropagation()}
@@ -348,7 +354,9 @@ export function FolderWindow({
 														<div className="absolute inset-0 rounded-2xl bg-white" />
 													</div>
 												</div>
-												<div className="mt-1 w-full px-2 text-center font-medium text-white text-xs">
+												<div
+													className={`${getFontStyle(currentFont)} mt-1 w-full px-2 text-center font-medium text-white text-xs`}
+												>
 													{app.name}
 												</div>
 											</div>

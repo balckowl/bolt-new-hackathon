@@ -9,7 +9,7 @@ export function ArcadeEmbed() {
 			}}
 		>
 			<iframe
-				src="https://demo.arcade.software/JmNKJQX4paDYnnOTPwDS?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+				src="https://demo.arcade.software/aX7D2k3TcGvVE4rrSjPR?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
 				title="https://ospace.netlify.app/os/demo"
 				frameBorder="0"
 				loading="lazy"

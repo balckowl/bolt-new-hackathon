@@ -201,3 +201,26 @@ video::-moz-media-controls {
 :where([data-sonner-toast]) .macos-title {
   font-weight: 700 !important;
 }
+
+
+/* Remove browser autofill highlight inside dialogs */
+.dialog input:-webkit-autofill,
+.dialog input:-webkit-autofill:hover,
+.dialog input:-webkit-autofill:focus,
+.dialog input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0px 1000px transparent inset;
+	box-shadow: 0 0 0px 1000px transparent inset;
+	background-color: transparent !important;
+	-webkit-text-fill-color: inherit;
+	transition: background-color 9999s ease-in-out 0s;
+}
+
+.dialog input:-moz-autofill,
+.dialog input:-moz-autofill:hover,
+.dialog input:-moz-autofill:focus,
+.dialog input:-moz-autofill:active {
+	box-shadow: 0 0 0px 1000px transparent inset;
+	background-color: transparent !important;
+	color: inherit;
+	transition: background-color 9999s ease-in-out 0s;
+}

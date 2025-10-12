@@ -58,14 +58,14 @@ export default async function CoreFunctions({ lang }: Props) {
 						</h3>
 						<p className="mb-2 text-[#5f5f5f] text-xs sm:mb-0 sm:text-sm">{card1Desc}</p>
 						<Image
-							src="/browser.png"
+							src="/browser-2.png"
 							width={480}
 							height={300}
 							alt="hono"
 							className="sm:-bottom-[180px] sm:-left-[70px] absolute rounded-xl"
 						/>
 						<Image
-							src="/browser.png"
+							src="/browser-2.png"
 							width={480}
 							height={300}
 							alt="hono"
@@ -81,10 +81,10 @@ export default async function CoreFunctions({ lang }: Props) {
 							{highlightTags.map((tag) => (
 								<div
 									key={`${tag.label}-${tag.className}`}
-									className={`absolute z-10 flex items-center gap-1 rounded-full bg-white px-2 py-[2px] shadow-sm transition sm:px-3 ${tag.className}`}
+									className={`absolute z-10 flex items-center justify-between gap-1 rounded-2xl bg-white/90 px-1 py-1 pr-2 shadow-sm transition ${tag.className}`}
 								>
 									<div className={`h-4 w-4 rounded-full ${tag.color}`} />
-									<p className="text-xs sm:text-base">{tag.label}</p>
+									<p className="font-semibold text-xs uppercase sm:text-sm">{tag.label}</p>
 								</div>
 							))}
 							<Image
@@ -116,7 +116,7 @@ export default async function CoreFunctions({ lang }: Props) {
 									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									<AppIconMock key={index} notifyIcon={app.name === "folder"}>
 										{app.type === "image" ? (
-											<Image src={app.icon} width={35} height={35} alt="icon" />
+											<Image src={app.icon} width={40} height={40} alt="icon" />
 										) : (
 											app.icon
 										)}

@@ -8,7 +8,6 @@ import { hono } from "@/src/lib/hono-client";
 import { osNameBaseSchema } from "@/src/server/models/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FlagTriangleRight, Loader2 } from "lucide-react";
-import { Lilita_One } from "next/font/google";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../lp/layout/Header";
@@ -84,7 +83,7 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange, la
 													<Input
 														placeholder={placeholder}
 														{...field}
-														className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500"
+														className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-black"
 													/>
 												</FormControl>
 												<FormMessage />
@@ -93,7 +92,7 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange, la
 									/>
 									<Button
 										type="submit"
-										className="mx-auto flex items-center gap-2 rounded-lg font-medium text-lg text-white transition-all duration-200"
+										className="mx-auto flex items-center gap-2 rounded-xl font-medium text-lg text-white transition-all duration-200"
 										disabled={form.formState.isSubmitting}
 									>
 										{form.formState.isSubmitting ? (
