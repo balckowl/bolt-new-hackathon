@@ -1,7 +1,8 @@
+"use client";
+
 import { signOut } from "@/src/lib/auth-client";
 import type { desktopStateSchema } from "@/src/server/models/os.schema";
-import { TriangleAlert } from "lucide-react";
-import Link from "next/link";
+import { LogOut, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import type z from "zod";
 import Container from "./lp/layout/Container";
@@ -35,10 +36,9 @@ export default function LockMobileView({ desktop }: Props) {
 					<div className="text-center">
 						<TriangleAlert width={35} height={35} className="mx-auto mb-3" />
 						<p className="mb-3">This screen size is not supported.</p>
-						<Button className="rounded-xl" asChild onClick={() => handleSignOut()}>
-							<Link href="/" className="flex items-center gap-2">
-								Back to Top
-							</Link>
+						<Button className="rounded-xl" onClick={() => handleSignOut()}>
+							<LogOut size={15} className="mr-1" />
+							Sign Out
 						</Button>
 					</div>
 				</div>
