@@ -1,7 +1,7 @@
 import { backgroundOptions } from "@/src/components/BackgroundImage";
 import LockView from "@/src/components/LockView";
 import MacosDesktop from "@/src/components/MacosDesktop";
-import MobileView from "@/src/components/MobileView";
+import MobileLockView from "@/src/components/MobileLockView";
 import { hono } from "@/src/lib/hono-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -53,7 +53,7 @@ export default async function Page({ params }: Props) {
 	return (
 		<>
 			<div className="block lg:hidden">
-				<MobileView desktop={data} />
+				<MobileLockView />
 			</div>
 			<div className="hidden lg:block">
 				<MacosDesktop desktop={data} osName={params.osName} backgroundImg={backgroundImg} />
