@@ -9,18 +9,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
 	metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
 	title: {
-		default: "OSpace",
+		default: "OSPACE",
 		// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-		template: `%s | OSpace`,
+		template: `%s | OSPACE`,
 	},
-	description: "Create your very own OS on the web.",
+	description: "Launch your very own planet into the universe of OSPACE.",
 	openGraph: {
 		title: {
-			default: "OSpace",
+			default: "OSPACE",
 			// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-			template: `%s | OSpace`,
+			template: `%s | OSPACE`,
 		},
-		description: "Create your very own OS on the web.",
+		description: "Launch your very own planet into the universe of OSPACE.",
 	},
 };
 

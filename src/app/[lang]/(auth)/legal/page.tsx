@@ -2,7 +2,7 @@ import LegalWrapper from "@/src/components/onboarding/LegalWrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Logal",
+	title: "Legal",
 };
 
 export default function Page() {
