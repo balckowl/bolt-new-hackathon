@@ -1,8 +1,8 @@
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
+import "./globals.scss";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { env } from "../env.mjs";
+import { cn } from "../lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,10 +31,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
-				{children}
-				<Toaster />
-			</body>
+			<body className={cn(inter.className, "bg-black")}>{children}</body>
 		</html>
 	);
 }

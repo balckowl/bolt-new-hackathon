@@ -7,6 +7,7 @@ import { stateSchema } from "../models/os.schema";
 import type {
 	getDesktopStateRoute,
 	updateBackgroundRoute,
+	updateDesktopFontRoute,
 	updateDesktopStateRoute,
 	updateVisibilityRoute,
 } from "../routes/os.route";
@@ -26,6 +27,7 @@ export const getDesktopStateHandler: RouteHandler<
 					state: true,
 					isPublic: true,
 					background: true,
+					font: true,
 				},
 			},
 		},
@@ -52,6 +54,7 @@ export const getDesktopStateHandler: RouteHandler<
 		state: parsedState,
 		isPublic: userWithDesktop.desktop.isPublic,
 		background: userWithDesktop.desktop.background,
+		font: userWithDesktop.desktop.font,
 		isEdit,
 		currentUsername: session?.user.name ?? null,
 		currentUserOsName: session?.user.osName ?? null,
@@ -133,6 +136,23 @@ export const updateDesktopBackgroundHandler: RouteHandler<
 	});
 
 	if (result.count === 0) return c.json(null, 404);
+
+	//cacheを更新
+	revalidateTag("desktop");
+
+	return c.json(null, 200);
+};
+
+export const updateDesktopFontHandler: RouteHandler<
+	typeof updateDesktopFontRoute,
+	WithAuthenticatedRequest
+> = async (c) => {
+	const { font } = c.req.valid("json");
+
+	await prisma.desktop.update({
+		where: { userId: c.var.userId },
+		data: { font },
+	});
 
 	//cacheを更新
 	revalidateTag("desktop");

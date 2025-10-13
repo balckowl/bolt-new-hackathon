@@ -6,6 +6,31 @@ const positionSchema = z.object({
 	col: z.number().min(0).max(5),
 });
 
+export const allowedStampNames = [
+	"astro-5",
+	"astro-3",
+	"astro-2",
+	"astro",
+	"browser",
+	"rocket",
+	"lock",
+	"star",
+	"stamp-1",
+	"astro-6",
+	"wakusei",
+	"stamp-2",
+	"astro-7",
+	"astro-8",
+	"stamp-3",
+	"wakusei-2",
+	"wakusei-3",
+	"wakusei-4",
+	"astro-9",
+	"astro-10",
+	"astro-11",
+	"astro-12",
+] as const;
+
 export const appSchema = z.object({
 	id: z.string(),
 	name: z
@@ -17,11 +42,40 @@ export const appSchema = z.object({
 	color: z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
 		message: "Color must be a valid hex code (e.g. #FFF or #FFFFFF).",
 	}),
-	type: z.enum(["app", "memo", "website", "folder"]).optional(),
+	type: z.enum(["app", "memo", "website", "folder", "stamp"]).optional(),
 	content: z.string().optional(),
 	url: z.string().url({ message: "Invalid URL format." }).optional(),
 	favicon: z.string().url({ message: "Invalid URL format." }).optional(),
+	stampName: z
+		.enum(allowedStampNames, {
+			errorMap: () => ({
+				message: "Invalid stamp name. Must be one of the predefined stamp names.",
+			}),
+		})
+		.optional(),
+	stampContent: z
+		.string()
+		.max(20, { message: "Stamp content must be at most 20 characters long." })
+		.optional(),
 });
+// .superRefine((data,ctx) => {
+// 	if (data.type === "stamp" && !data.stampName) {
+// 		ctx.addIssue({
+// 			code: "custom",
+// 			path: ["stampName"],
+// 			message: "stampName is required when type is 'stamp'.",
+// 		})
+// 	}
+// 	if (data.type !== "stamp" && (data.stampName || data.stampContent)) {
+// 		ctx.addIssue({
+// 			code: "custom",
+// 			path: ["stampName"],
+// 			message: "stampName is not allowed when type is not 'stamp'.",
+// 		})
+// 	}
+// })
+
+export type AllowedStampNamesType = (typeof allowedStampNames)[number];
 
 export const stateSchema = z
 	.object({
@@ -149,6 +203,7 @@ export const stateSchema = z
 
 export const isPublicSchema = DesktopSchema.pick({ isPublic: true });
 export const backgroundSchema = DesktopSchema.pick({ background: true });
+export const fontSchema = DesktopSchema.pick({ font: true });
 
 export const desktopStateSchema = z
 	.object({
@@ -160,4 +215,5 @@ export const desktopStateSchema = z
 		currentUserIcon: z.string().url().nullable(),
 	})
 	.extend(isPublicSchema.shape)
-	.extend(backgroundSchema.shape);
+	.extend(backgroundSchema.shape)
+	.extend(fontSchema.shape);

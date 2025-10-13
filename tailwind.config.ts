@@ -1,3 +1,4 @@
+import { color } from "motion/react";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -77,19 +78,58 @@ const config: Config = {
 						height: "0",
 					},
 				},
+				marquee: {
+					from: {
+						transform: "translateX(0)",
+					},
+					to: {
+						transform: "translateX(calc(-100% - var(--gap)))",
+					},
+				},
+				"marquee-vertical": {
+					from: {
+						transform: "translateY(0)",
+					},
+					to: {
+						transform: "translateY(calc(-100% - var(--gap)))",
+					},
+				},
+				meteor: {
+					"0%": {
+						transform: "rotate(var(--angle)) translateX(0)",
+						opacity: "1",
+					},
+					"70%": {
+						opacity: "1",
+					},
+					"100%": {
+						transform: "rotate(var(--angle)) translateX(-500px)",
+						opacity: "0",
+					},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+				marquee: "marquee var(--duration) infinite linear",
+				"marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+				meteor: "meteor 5s linear infinite",
 			},
-
 			typography: {
 				DEFAULT: {
 					css: {
 						margin: "0",
+						"p.is-editor-empty:first-child::before": {
+							color: "var(--gray-4)",
+							content: "attr(data-placeholder)",
+							float: "left",
+							height: 0,
+							opacity: 0.3,
+						},
 					},
 				},
 			},
+			placeholderColor: {},
 		},
 	},
 	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

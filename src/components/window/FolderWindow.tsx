@@ -1,30 +1,69 @@
-import { FolderIcon, Globe, X } from "lucide-react";
+import type { FontOptionType } from "@/prisma/prisma/zod";
+import type { FontOption } from "@/src/generated/prisma";
+import { Diamond, DiamondIcon, FolderIcon, Globe, Sparkle, Square, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { DragEvent } from "react";
 import type { AppIcon, FolderWindowType } from "../../types/desktop";
+import WindowHeader from "./WindowHeader";
+
+const FOLDER_GRID_COLS = 4;
+const MIN_VISIBLE_ROWS = 3;
 
 export function FolderWindow({
 	window,
 	folderContents,
 	apps,
+	allFolderContents,
+	desktopBackground,
+	brightness,
+	isEditable,
+	canDropExternal,
+	currentFont,
+	onExternalDrop,
 	onClose,
 	onMinimize,
 	onBringToFront,
 	onRemoveApp,
 	onAppClick,
+	onAppContextMenu,
+	onEmptyAreaContextMenu,
+	onAppDragStart,
+	onAppDragEnd,
+	onAppDrop,
+	onDropIntoFolder,
 	onPositionChange,
 	onSizeChange,
+	failedFavicons,
+	onFaviconError,
+	getFontStyle,
 }: {
 	window: FolderWindowType;
 	folderContents: string[];
 	apps: AppIcon[];
+	allFolderContents: Map<string, string[]>;
+	currentFont: FontOption;
+	desktopBackground?: string;
+	brightness: number;
+	isEditable: boolean;
+	canDropExternal: boolean;
+	onExternalDrop: () => void;
 	onClose: () => void;
 	onMinimize: () => void;
 	onBringToFront: () => void;
 	onRemoveApp: (appId: string) => void;
 	onAppClick: (app: AppIcon) => void;
+	onAppContextMenu: (e: React.MouseEvent, app: AppIcon, folderId: string) => void;
+	onEmptyAreaContextMenu: (e: React.MouseEvent, folderId: string) => void;
+	onAppDragStart: (e: React.DragEvent, appId: string, folderId: string) => void;
+	onAppDragEnd: () => void;
+	onAppDrop: (folderId: string, dropIndex: number) => void;
+	onDropIntoFolder: (targetFolderId: string, parentFolderId: string) => void;
 	onPositionChange: (position: { x: number; y: number }) => void;
 	onSizeChange: (size: { width: number; height: number }) => void;
+	failedFavicons: Record<string, string | null>;
+	onFaviconError: (appId: string, favicon?: string) => void;
+	getFontStyle: (newFont: FontOptionType) => void;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState(false);
@@ -35,6 +74,7 @@ export function FolderWindow({
 		width: 0,
 		height: 0,
 	});
+	const [isExternalDragOver, setIsExternalDragOver] = useState(false);
 
 	const handleMouseDown = (e: React.MouseEvent) => {
 		if (
@@ -97,43 +137,87 @@ export function FolderWindow({
 
 	const renderAppIcon = (app: AppIcon) => {
 		if (app.type === "website" && app.favicon) {
+			const failedSrc = failedFavicons[app.id] ?? null;
+			const currentSrc = app.favicon ?? null;
+
+			if (failedSrc !== currentSrc) {
+				return (
+					<div className="relative flex items-center justify-center">
+						<Image
+							key={`${app.id}-${app.favicon}`}
+							src={app.favicon}
+							alt={app.name}
+							width={30}
+							height={30}
+							className="pointer-events-none relative z-10 rounded-sm"
+							onError={() => onFaviconError(app.id, app.favicon)}
+						/>
+					</div>
+				);
+			}
+
 			return (
-				<div className="relative h-6 w-6">
-					<Image
-						src={app.favicon}
-						alt={app.name}
-						width={28}
-						height={28}
-						className="h-6 w-6 rounded-sm"
-						onError={(e) => {
-							const target = e.target as HTMLImageElement;
-							target.style.display = "none";
-							const parent = target.parentElement;
-							if (parent) {
-								const fallbackIcon = parent.querySelector(".fallback-icon");
-								if (fallbackIcon) {
-									fallbackIcon.classList.remove("hidden");
-								}
-							}
-						}}
-					/>
-					<Globe
-						size={28}
-						className="fallback-icon absolute inset-0 hidden text-white drop-shadow-sm"
-					/>
-				</div>
+				<Sparkle size={30} fill="black" color="color" strokeWidth={0.8} className="relative z-10" />
 			);
 		}
-		return <app.icon size={24} className="text-white drop-shadow-sm" />;
+		return <app.icon size={30} className="relative z-10 text-black drop-shadow-sm" />;
 	};
 
 	const folderApps = folderContents
 		.map((appId) => apps.find((app) => app.id === appId))
 		.filter(Boolean) as AppIcon[];
 
+	const getFolderAppCount = (folderId: string) => allFolderContents.get(folderId)?.length ?? 0;
+
+	const totalCells = Math.max(folderApps.length, FOLDER_GRID_COLS * MIN_VISIBLE_ROWS);
+	const totalRows = Math.ceil(totalCells / FOLDER_GRID_COLS);
+
+	const resolveBackgroundStyle = () => {
+		const backgroundValue =
+			desktopBackground ?? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+
+		if (backgroundValue.startsWith("http")) {
+			return {
+				backgroundImage: `url(${backgroundValue})`,
+				backgroundSize: "cover",
+				backgroundPosition: "center",
+				backgroundRepeat: "no-repeat",
+			} as const;
+		}
+
+		return {
+			background: backgroundValue,
+		} as const;
+	};
+
+	const handleExternalDragEnter = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+		setIsExternalDragOver(true);
+	};
+
+	const handleExternalDragOver = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+	};
+
+	const handleExternalDragLeave = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		const related = e.relatedTarget as Node | null;
+		if (related && (e.currentTarget as Node).contains(related)) return;
+		setIsExternalDragOver(false);
+	};
+
+	const handleExternalDropInternal = (e: DragEvent<HTMLDivElement>) => {
+		if (!isEditable || !canDropExternal) return;
+		e.preventDefault();
+		setIsExternalDragOver(false);
+		onExternalDrop();
+	};
+
 	return (
 		<div
-			className="fixed overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
+			className="fixed min-w-[550px] overflow-hidden rounded-2xl shadow-2xl"
 			style={{
 				left: window.position.x,
 				top: window.position.y,
@@ -144,90 +228,153 @@ export function FolderWindow({
 			}}
 			onMouseDown={handleMouseDown}
 		>
-			{/* Window Header */}
-			<div className="window-header flex cursor-grab items-center justify-between border-gray-200 border-b bg-gray-50 px-4 py-2 active:cursor-grabbing">
-				<div className="flex items-center space-x-2">
-					<div className="flex space-x-2">
-						<button
-							onClick={onClose}
-							className="h-3 w-3 rounded-full bg-red-500 transition-colors hover:bg-red-600"
-							type="button"
-						/>
-						<button
-							onClick={onMinimize}
-							className="h-3 w-3 rounded-full bg-yellow-500 transition-colors hover:bg-yellow-600"
-							type="button"
-						/>
-						<button
-							className="h-3 w-3 rounded-full bg-green-500 transition-colors hover:bg-green-600"
-							type="button"
-						/>
-					</div>
-					<span className="ml-4 font-medium text-gray-700 text-sm">{window.title}</span>
-				</div>
-				<div className="text-gray-500 text-xs">
-					{folderApps.length} item
-					{folderApps.length !== 1 ? "s" : ""}
-				</div>
-			</div>
+			<WindowHeader currentFont={currentFont} title={window.title} getFontStyle={getFontStyle}>
+				{/* クローズ */}
+				<button
+					onMouseDown={(e) => e.stopPropagation()}
+					onClick={onClose}
+					className="relative flex h-6 w-8 items-center justify-center rounded-lg font-bold text-black transition-all duration-200 hover:bg-gray-300/60"
+					type="button"
+					title="Close"
+					aria-label="Close"
+				>
+					<X size={17} strokeWidth={2.5} />
+				</button>
+			</WindowHeader>
 
 			{/* Folder Content */}
-			<div className="h-full flex-1 overflow-auto p-4" style={{ height: "calc(100% - 50px)" }}>
-				{folderApps.length === 0 ? (
-					<div className="flex h-full items-center justify-center text-center text-gray-500">
-						<div>
-							<FolderIcon size={48} className="mx-auto mb-4 text-gray-300" />
-							<p className="text-sm">This folder is empty</p>
-							<p className="mt-1 text-xs">Drag apps here to organize them</p>
+			<div className="h-[calc(100%-40px)] flex-1 overflow-auto bg-white/90 px-[6px] pb-[6px] backdrop-blur-lg">
+				<div
+					className={`relative h-full rounded-xl py-4 transition ${
+						isExternalDragOver ? "ring-2 ring-white/70" : ""
+					}`}
+					style={resolveBackgroundStyle()}
+					onDragEnter={handleExternalDragEnter}
+					onDragOver={handleExternalDragOver}
+					onDragLeave={handleExternalDragLeave}
+					onDrop={handleExternalDropInternal}
+				>
+					<div
+						className="pointer-events-none absolute inset-0 rounded-xl"
+						style={{ backgroundColor: `rgba(0, 0, 0, ${brightness})` }}
+						aria-hidden="true"
+					/>
+					{folderApps.length === 0 ? (
+						<div
+							className="flex h-full items-center justify-center text-center"
+							onContextMenu={(e) => onEmptyAreaContextMenu(e, window.id)}
+						>
+							<div>
+								<FolderIcon size={48} className="mx-auto mb-4 text-white" />
+								<p className="text-white">This folder is empty.</p>
+								{isEditable && (
+									<p className="text-sm text-white">Drag apps here to organize them.</p>
+								)}
+							</div>
 						</div>
-					</div>
-				) : (
-					<div className="grid grid-cols-6 gap-4">
-						{folderApps.map((app) => (
-							<div key={app.id} className="group flex flex-col items-center">
-								<div className="relative">
+					) : (
+						<div
+							className="grid gap-0"
+							onContextMenu={(e) => {
+								if (e.target === e.currentTarget) {
+									onEmptyAreaContextMenu(e, window.id);
+								}
+							}}
+							style={{
+								gridTemplateColumns: `repeat(${FOLDER_GRID_COLS}, minmax(0, 1fr))`,
+								gridAutoRows: "minmax(110px, 1fr)",
+							}}
+						>
+							{Array.from({ length: totalRows * FOLDER_GRID_COLS }).map((_, index) => {
+								const app = folderApps[index];
+								const cellKey = app ? `folder-cell-${app.id}` : `folder-cell-empty-${index}`;
+
+								return (
 									<div
-										onClick={() => onAppClick(app)}
-										onKeyDown={(e) => {
-											if (e.key === "Enter" || e.key === " ") {
-												e.preventDefault();
-												onAppClick(app);
+										key={cellKey}
+										// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
+										className={`group relative flex flex-col items-center justify-center`}
+										onDragOver={(e) => {
+											if (!isEditable || !canDropExternal) return;
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										onDrop={(e) => {
+											if (!isEditable || !canDropExternal) return;
+											e.preventDefault();
+											e.stopPropagation();
+											onAppDrop(window.id, index);
+										}}
+										onContextMenu={(e) => {
+											if (app) {
+												onAppContextMenu(e, app, window.id);
+											} else {
+												onEmptyAreaContextMenu(e, window.id);
 											}
 										}}
-										className="relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-gray-300 shadow-md transition-all duration-200 hover:shadow-lg group-hover:scale-110 "
 									>
-										{renderAppIcon(app)}
-										{app.type === "website" && app.favicon && (
-											<Globe size={24} className="hidden text-white drop-shadow-sm" />
+										{app && (
+											<div
+												className="group flex cursor-pointer flex-col items-center"
+												draggable={isEditable}
+												onDragStart={(e) => onAppDragStart(e, app.id, window.id)}
+												onDragEnd={onAppDragEnd}
+												onClick={() => onAppClick(app)}
+												onKeyDown={(e) => {
+													if (e.key === "Enter" || e.key === " ") {
+														e.preventDefault();
+														onAppClick(app);
+													}
+												}}
+											>
+												<div className="relative mb-[6px]">
+													<div
+														className="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg"
+														onDragOver={(e) => {
+															if (!isEditable || !canDropExternal || app.type !== "folder") return;
+															e.preventDefault();
+															e.stopPropagation();
+														}}
+														onDrop={(e) => {
+															if (!isEditable || !canDropExternal || app.type !== "folder") return;
+															e.preventDefault();
+															e.stopPropagation();
+															onDropIntoFolder(app.id, window.id);
+														}}
+													>
+														{renderAppIcon(app)}
+														{app.type === "website" && app.favicon && (
+															<Globe size={30} className="hidden text-black drop-shadow-sm" />
+														)}
+														{app.type === "folder" && getFolderAppCount(app.id) > 0 && (
+															<div className="-top-[6px] -right-[6px] absolute z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 font-bold text-white text-xs">
+																{getFolderAppCount(app.id)}
+															</div>
+														)}
+														<div className="absolute inset-0 rounded-2xl bg-white" />
+													</div>
+												</div>
+												<div
+													className={`${getFontStyle(currentFont)} mt-1 w-full px-2 text-center font-medium text-white text-xs`}
+												>
+													{app.name}
+												</div>
+											</div>
 										)}
-										<div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-white/10" />
 									</div>
-									<button
-										onClick={(e) => {
-											e.stopPropagation();
-											onRemoveApp(app.id);
-										}}
-										type="button"
-										className="-top-1 -right-1 absolute flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs opacity-0 transition-colors hover:bg-red-600 group-hover:opacity-100"
-									>
-										<X size={12} />
-									</button>
-								</div>
-								<div className="mt-1 max-w-full truncate text-center font-medium text-gray-700 text-xs">
-									{app.name}
-								</div>
-							</div>
-						))}
-					</div>
-				)}
+								);
+							})}
+						</div>
+					)}
+				</div>
 			</div>
 
 			{/* Resize Handle */}
 			<div
-				className="absolute right-0 bottom-0 h-4 w-4 cursor-se-resize"
+				className="absolute right-1 bottom-1 h-4 w-4 cursor-se-resize"
 				onMouseDown={handleResizeMouseDown}
 			>
-				<div className="absolute right-1 bottom-1 h-2 w-2 border-gray-400 border-r-2 border-b-2" />
+				<div className="absolute right-2 bottom-2 h-2 w-2 rounded-br-sm border-white border-r-2 border-b-2" />
 			</div>
 		</div>
 	);

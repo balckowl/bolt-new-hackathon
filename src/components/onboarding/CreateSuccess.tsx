@@ -1,52 +1,41 @@
 "use client";
 
 import { Button } from "@/src/components/ui/button";
-import { env } from "@/src/env.mjs";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { useTranslation } from "@/src/i18n/client";
+import { Rocket } from "lucide-react";
 import Link from "next/link";
+import Header from "../lp/layout/Header";
+import { StarryBackdrop } from "../lp/shared/StarryBackdrop";
+import SectionTitle from "./shared/SectionTitle";
 
 type Props = {
 	osName: string;
+	lang: string;
 };
-export default function CreateSuccess({ osName }: Props) {
-	const osUrl = `${env.NEXT_PUBLIC_APP_URL}/os/${osName}`;
+
+export default function CreateSuccess({ osName, lang }: Props) {
+	const { t } = useTranslation(lang);
+	const title = t("createSuccess.title", { osName });
+	const desc = t("createSuccess.desc");
+	const btn = t("createSuccess.btn");
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-purple-800 px-4">
-			<div className="w-full max-w-md">
-				{/* Welcome Card with Icon Extending Beyond */}
-				<div className="relative">
-					{/* Extended Icon Holder */}
-					<div className="-top-8 -translate-x-1/2 absolute left-1/2 z-10 transform">
-						<div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-gray-100 bg-white text-4xl">
-							🎉
-						</div>
-					</div>
-
-					{/* Welcome Card */}
-					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
-						{/* Success State */}
-						<div className="text-center">
-							{/* Success Message */}
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">Your OS is ready!</h1>
-							<p className="mb-8 text-gray-600">OS created successfully.</p>
-
-							{/* OS URL Display */}
-							<div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4">
-								<div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3">
-									<span className="mr-2 truncate font-mono text-blue-600 text-sm">{osUrl}</span>
-									<ExternalLink className="h-4 w-4 flex-shrink-0 text-gray-400" />
-								</div>
-							</div>
+		<div>
+			<Header />
+			<StarryBackdrop />
+			<div className="flex min-h-[calc(100dvh-70px)] items-center justify-center bg-black px-4">
+				<div className="w-full max-w-md">
+					{/* Welcome Card with Icon Extending Beyond */}
+					<div className="relative">
+						{/* Welcome Card */}
+						<div className="rounded-2xl p-8">
+							<SectionTitle title={title} desc={desc} />
 
 							{/* Go to OS Button */}
-							<Button
-								size="lg"
-								className="flex w-full items-center justify-center space-x-3 rounded-lg bg-blue-600 py-3 font-medium text-lg text-white transition-all duration-200 hover:bg-blue-700"
-							>
-								<Link href={osUrl} className="flex items-center gap-2">
-									<span>Go to My OS</span>
-									<ArrowRight className="h-5 w-5" />
+							<Button className="mx-auto flex items-center gap-2 rounded-xl font-medium text-lg text-white transition-all duration-200">
+								<Link href={`/os/${osName}`} className="flex items-center gap-2">
+									<Rocket width={15} height={15} />
+									{btn}
 								</Link>
 							</Button>
 						</div>

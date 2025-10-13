@@ -1,20 +1,32 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "app/globals.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  }
+	"$schema": "https://ui.shadcn.com/schema.json",
+	"style": "default",
+	"rsc": true,
+	"tsx": true,
+	"tailwind": {
+		"config": "tailwind.config.ts",
+		"css": "app/globals.css",
+		"baseColor": "neutral",
+		"cssVariables": true,
+		"prefix": ""
+	},
+	"iconLibrary": "lucide",
+	"aliases": {
+		"components": "@/src/components",
+		"contexts": "@/src/contexts",
+		"hooks": "@/src/hooks",
+		"tiptapIcons": "@/src/components/tiptap-icons",
+		"lib": "@/src/lib",
+		"tiptapExtensions": "@src/components/tiptap-extensions",
+		"tiptapNodes": "@/src/components/tiptap-node",
+		"tiptapUi": "@/src/components/tiptap-ui",
+		"tiptapUiPrimitives": "@/src/components/tiptap-ui-primitive",
+		"tiptapUtils": "@/src/components/tiptap-utils",
+		"styles": "@/src/components/tiptap-ui-primitive/styles",
+		"utils": "@/src/lib/utils",
+		"ui": "@/src/components/ui"
+	},
+	"registries": {
+		"@magicui": "https://magicui.design/r/{name}.json"
+	}
 }

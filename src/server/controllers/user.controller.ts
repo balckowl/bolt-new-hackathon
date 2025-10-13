@@ -71,8 +71,7 @@ export const setOsNameHandler: RouteHandler<
 								iconKey: "StickyNote",
 								color: "#FFEB3B",
 								type: "memo",
-								content:
-									"<p>Thank you for using this site! 🎉✨<br>You can find instructions on how to use it under <strong>Instructions</strong> in the menu bar.</p>",
+								content: `<p>Your planet \"${osName}\" is born! 🌍✨<br>You can find instructions on how to use it under <strong>Instructions</strong> in the menu bar.</p>`,
 							},
 						],
 						appPositions: {

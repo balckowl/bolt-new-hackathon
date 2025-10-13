@@ -1,4 +1,8 @@
-import type { desktopStateSchema } from "@/src/server/models/os.schema";
+import type {
+	AllowedStampNamesType,
+	desktopStateSchema,
+	fontSchema,
+} from "@/src/server/models/os.schema";
 import type { LucideIcon } from "lucide-react";
 import type z from "zod";
 
@@ -8,10 +12,12 @@ export interface AppIcon {
 	icon: LucideIcon;
 	iconKey: "StickyNote" | "Globe" | "FolderIcon";
 	color: string;
-	type?: "app" | "memo" | "website" | "folder";
+	type?: "app" | "memo" | "website" | "folder" | "stamp";
 	content?: string;
 	url?: string;
 	favicon?: string;
+	stampName?: AllowedStampNamesType;
+	stampContent?: string;
 }
 
 export interface GridPosition {
@@ -46,6 +52,7 @@ export interface MemoWindowType {
 export interface BrowserWindowType {
 	id: string;
 	title: string;
+	favicon: string | undefined;
 	url: string;
 	position: { x: number; y: number };
 	size: { width: number; height: number };
@@ -68,19 +75,28 @@ export interface ContextMenuType {
 	y: number;
 	position: GridPosition | null;
 	existingApp?: AppIcon | null;
+	folderId?: string | null;
 }
 
 export interface MemoNameDialog {
 	visible: boolean;
 	position: GridPosition | null;
+	folderId: string | null;
 }
 
 export interface AppUrlDialog {
 	visible: boolean;
 	position: GridPosition | null;
+	folderId: string | null;
 }
 
 export interface FolderNameDialog {
+	visible: boolean;
+	position: GridPosition | null;
+	folderId: string | null;
+}
+
+export interface SelectStampDialog {
 	visible: boolean;
 	position: GridPosition | null;
 }
@@ -90,4 +106,7 @@ export interface EditDialog {
 	app: AppIcon | null;
 	newName: string;
 	newUrl?: string;
+	newContent: string;
 }
+
+export type FontOptionType = z.infer<typeof fontSchema>["font"];

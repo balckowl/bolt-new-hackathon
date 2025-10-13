@@ -1,29 +1,31 @@
 "use client";
 
 import { Button } from "@/src/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/src/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
+import { useTranslation } from "@/src/i18n/client";
 import { hono } from "@/src/lib/hono-client";
 import { osNameBaseSchema } from "@/src/server/models/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { FlagTriangleRight, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import Header from "../lp/layout/Header";
+import { StarryBackdrop } from "../lp/shared/StarryBackdrop";
+import SectionTitle from "./shared/SectionTitle";
 
 type Props = {
 	handleNextStep: () => void;
 	handleOsNameChange: (osName: string) => void;
+	lang: string;
 };
 
-export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: Props) {
+export default function InputOsNameForm({ handleNextStep, handleOsNameChange, lang }: Props) {
+	const { t } = useTranslation(lang);
+	const title = t("inputName.title");
+	const desc = t("inputName.desc");
+	const placeholder = t("inputName.placeholder");
+	const btn = t("inputName.btn");
 	const formSchema = osNameBaseSchema.refine(
 		async (data) => {
 			const { osName } = data;
@@ -61,51 +63,48 @@ export default function InputOsNameForm({ handleNextStep, handleOsNameChange }: 
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-purple-800 px-4">
-			<div className="w-full max-w-md">
-				<div className="relative">
-					<div className="-top-8 -translate-x-1/2 absolute left-1/2 z-10 transform">
-						<div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-gray-100 bg-white text-4xl">
-							✋
-						</div>
-					</div>
+		<div>
+			<StarryBackdrop />
+			<Header />
+			<div className="flex min-h-[calc(100dvh-70px)] items-center justify-center bg-black px-4">
+				<div className="w-full max-w-md">
+					<div className="relative">
+						<div className="relative rounded-2xl">
+							<SectionTitle title={title} desc={desc} />
 
-					<div className="rounded-2xl border border-gray-100 bg-white p-8 pt-16 shadow-2xl">
-						<div className="mb-8 text-center">
-							<h1 className="mb-2 font-bold text-2xl text-gray-800">Welcome!</h1>
-							<p className="text-gray-600">Let&#39;s pick a name for your OS.</p>
+							<Form {...form}>
+								<form onSubmit={form.handleSubmit(onSubmit)}>
+									<FormField
+										control={form.control}
+										name="osName"
+										render={({ field }) => (
+											<FormItem className="mb-4 w-full">
+												<FormControl>
+													<Input
+														placeholder={placeholder}
+														{...field}
+														className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-black"
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<Button
+										type="submit"
+										className="mx-auto flex items-center gap-2 rounded-xl font-medium text-lg text-white transition-all duration-200"
+										disabled={form.formState.isSubmitting}
+									>
+										{form.formState.isSubmitting ? (
+											<Loader2 className="h-4 w-4 animate-spin" />
+										) : (
+											<FlagTriangleRight width={15} height={15} />
+										)}
+										{btn}
+									</Button>
+								</form>
+							</Form>
 						</div>
-
-						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-								<FormField
-									control={form.control}
-									name="osName"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>OS Name</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="Enter your OS name..."
-													{...field}
-													className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500"
-												/>
-											</FormControl>
-											<FormDescription>This can’t be changed later.</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<Button
-									type="submit"
-									className="flex w-full items-center justify-center space-x-3 rounded-lg bg-blue-600 py-3 font-medium text-lg text-white transition-all duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-									disabled={form.formState.isSubmitting}
-								>
-									{form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-									Create My OS
-								</Button>
-							</form>
-						</Form>
 					</div>
 				</div>
 			</div>

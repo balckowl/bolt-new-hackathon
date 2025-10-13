@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// @import '../components/tiptap-ui-primitive/styles/variables.scss';
+// @import '../components/tiptap-ui-primitive/styles/keyframe-animations.scss';
+
+
+video {
+	display: block;
+	width: 100%;
+	border: none;
+	outline: none;
+}
+
+video::-webkit-media-controls-panel {
+	display: none !important;
+}
+
+video::-moz-media-controls {
+	display: none !important;
+}
+
+:root {
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 0, 0, 0;
+		--background-end-rgb: 0, 0, 0;
+	}
+}
+
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 0 0% 3.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 3.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 3.9%;
+		--primary: 0 0% 9%;
+		--primary-foreground: 0 0% 98%;
+		--secondary: 0 0% 96.1%;
+		--secondary-foreground: 0 0% 9%;
+		--muted: 0 0% 96.1%;
+		--muted-foreground: 0 0% 45.1%;
+		--accent: 0 0% 96.1%;
+		--accent-foreground: 0 0% 9%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 0 0% 89.8%;
+		--input: 0 0% 89.8%;
+		--ring: 0 0% 3.9%;
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+		--radius: 0.5rem;
+	}
+	.dark {
+		--background: 0 0% 3.9%;
+		--foreground: 0 0% 98%;
+		--card: 0 0% 3.9%;
+		--card-foreground: 0 0% 98%;
+		--popover: 0 0% 3.9%;
+		--popover-foreground: 0 0% 98%;
+		--primary: 0 0% 98%;
+		--primary-foreground: 0 0% 9%;
+		--secondary: 0 0% 14.9%;
+		--secondary-foreground: 0 0% 98%;
+		--muted: 0 0% 14.9%;
+		--muted-foreground: 0 0% 63.9%;
+		--accent: 0 0% 14.9%;
+		--accent-foreground: 0 0% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 0 0% 14.9%;
+		--input: 0 0% 14.9%;
+		--ring: 0 0% 83.1%;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
+
+.sparkle {
+	position: absolute;
+	display: block;
+	pointer-events: none;
+	background: radial-gradient(
+		circle at center,
+		rgba(255, 255, 255, 0.95) 0%,
+		rgba(191, 219, 254, 0.4) 45%,
+		rgba(125, 211, 252, 0.15) 65%,
+		transparent 100%
+	);
+	border-radius: 9999px;
+	box-shadow: 0 0 12px rgba(125, 211, 252, 0.5);
+	opacity: 0;
+	animation: sparkleTwinkle 3s ease-in-out infinite;
+	filter: drop-shadow(0 0 6px rgba(125, 211, 252, 0.3));
+}
+
+.sparkle::before,
+.sparkle::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 180%;
+	height: 1.5px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.9),
+		transparent
+	);
+	opacity: 0.9;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.sparkle::after {
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+@keyframes sparkleTwinkle {
+	0%,
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(0.35);
+	}
+	35% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+	55% {
+		opacity: 0.6;
+		transform: translate(-50%, -50%) scale(0.75);
+	}
+	75% {
+		opacity: 0.2;
+		transform: translate(-50%, -50%) scale(0.5);
+	}
+}
+
+@theme inline {
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
+}
+
+/*sonner*/
+/* global.css */
+
+/*sonner*/
+/* macOS desktop toast */
+:where([data-sonner-toast]).macos-toast {
+	width: calc(120px*2 + 12px*3);
+  border-radius: 16px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.90);
+  position: absolute;
+  top: 24px !important;
+  right: 24px !important;
+  padding-block: 12px;
+}
+
+:where([data-sonner-toast]) .macos-title {
+  font-weight: 700 !important;
+}
+
+
+/* Remove browser autofill highlight inside dialogs */
+.dialog input:-webkit-autofill,
+.dialog input:-webkit-autofill:hover,
+.dialog input:-webkit-autofill:focus,
+.dialog input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0px 1000px transparent inset;
+	box-shadow: 0 0 0px 1000px transparent inset;
+	background-color: transparent !important;
+	-webkit-text-fill-color: inherit;
+	transition: background-color 9999s ease-in-out 0s;
+}
+
+.dialog input:-moz-autofill,
+.dialog input:-moz-autofill:hover,
+.dialog input:-moz-autofill:focus,
+.dialog input:-moz-autofill:active {
+	box-shadow: 0 0 0px 1000px transparent inset;
+	background-color: transparent !important;
+	color: inherit;
+	transition: background-color 9999s ease-in-out 0s;
+}

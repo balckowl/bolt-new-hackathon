@@ -8,6 +8,7 @@ import { env } from "../env.mjs";
 import {
 	getDesktopStateHandler,
 	updateDesktopBackgroundHandler,
+	updateDesktopFontHandler,
 	updateDesktopStateHandler,
 	updateDesktopVisibilityHandler,
 } from "./controllers/os.controller";
@@ -16,6 +17,7 @@ import { type WithAuthenticatedRequest, authMiddleware } from "./middleware/auth
 import {
 	getDesktopStateRoute,
 	updateBackgroundRoute,
+	updateDesktopFontRoute,
 	updateDesktopStateRoute,
 	updateVisibilityRoute,
 } from "./routes/os.route";
@@ -29,7 +31,8 @@ const osApp = new OpenAPIHono<Env & WithAuthenticatedRequest>()
 	.openapi(getDesktopStateRoute, getDesktopStateHandler)
 	.openapi(updateDesktopStateRoute, updateDesktopStateHandler)
 	.openapi(updateVisibilityRoute, updateDesktopVisibilityHandler)
-	.openapi(updateBackgroundRoute, updateDesktopBackgroundHandler);
+	.openapi(updateBackgroundRoute, updateDesktopBackgroundHandler)
+	.openapi(updateDesktopFontRoute, updateDesktopFontHandler);
 
 app
 	.doc("/specification", {

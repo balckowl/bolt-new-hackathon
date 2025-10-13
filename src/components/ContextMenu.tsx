@@ -1,5 +1,15 @@
 import type { ContextMenuType } from "@/src/types/desktop";
-import { Edit3, FolderIcon, Plus, StickyNote, Trash2 } from "lucide-react";
+import {
+	Edit3,
+	FolderIcon,
+	FolderOutput,
+	Link2,
+	PenTool,
+	Smile,
+	StickyNote,
+	Trash2,
+	X,
+} from "lucide-react";
 
 type Props = {
 	contextMenu: ContextMenuType;
@@ -8,6 +18,8 @@ type Props = {
 	showAppUrlDialog: (e: React.MouseEvent) => void;
 	showMemoNameDialog: (e: React.MouseEvent) => void;
 	showFolderNameDialog: (e: React.MouseEvent) => void;
+	showSelectStampDialog: (e: React.MouseEvent) => void;
+	removeFromFolder: (e: React.MouseEvent) => void;
 };
 
 export const ContextMenu = ({
@@ -17,10 +29,12 @@ export const ContextMenu = ({
 	showAppUrlDialog,
 	showMemoNameDialog,
 	showFolderNameDialog,
+	showSelectStampDialog,
+	removeFromFolder,
 }: Props) => {
 	return (
 		<div
-			className="context-menu fixed z-50 min-w-[150px] rounded-lg border border-white/20 bg-white/90 py-2 shadow-xl backdrop-blur-md"
+			className="context-menu fixed z-50 min-w-[150px] rounded-xl bg-white p-1 shadow-xl"
 			style={{
 				left: contextMenu.x,
 				top: contextMenu.y,
@@ -39,48 +53,71 @@ export const ContextMenu = ({
 				<>
 					<button
 						onClick={showEditDialog}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
+						className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-gray-800/10"
 						type="button"
 					>
-						<Edit3 size={16} />
-						<span>Edit</span>
+						<PenTool size={17} />
+						<p>Edit</p>
 					</button>
+					{/* {contextMenu.folderId && (
+            <button
+              onClick={removeFromFolder}
+              className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-gray-800 text-md transition-colors hover:bg-gray-800/10"
+              type="button"
+            >
+              <FolderOutput size={15} />
+              <p>Move out</p>
+              <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-black text-white">
+                <FolderOutput size={15} />
+              </div>
+            </button>
+          )} */}
 					<button
 						onClick={deleteApp}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-red-600 text-sm transition-colors hover:bg-red-500/20"
+						className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-red-600 text-sm transition-colors hover:bg-red-600/10"
 						type="button"
 					>
-						<Trash2 size={16} />
-						<span>Delete</span>
+						<Trash2 size={17} />
+						<p>Delete</p>
 					</button>
 				</>
 			) : (
 				// Menu for empty cells
 				<>
 					<button
-						onClick={showFolderNameDialog}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
+						onClick={showMemoNameDialog}
+						className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-gray-800/10"
 						type="button"
 					>
-						<FolderIcon size={16} />
-						<span>Create Folder</span>
+						<StickyNote size={17} />
+						<p>Notes</p>
+					</button>
+					<button
+						onClick={showFolderNameDialog}
+						className="group flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-gray-800/10"
+						type="button"
+					>
+						<FolderIcon size={17} />
+						<p>Folder</p>
 					</button>
 					<button
 						onClick={showAppUrlDialog}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
+						className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-gray-800/10"
 						type="button"
 					>
-						<Plus size={16} />
-						<span>Create App</span>
+						<Link2 size={17} />
+						<p>Link</p>
 					</button>
-					<button
-						onClick={showMemoNameDialog}
-						className="flex w-full items-center space-x-2 px-4 py-2 text-left text-gray-800 text-sm transition-colors hover:bg-blue-500/20"
-						type="button"
-					>
-						<StickyNote size={16} />
-						<span>Create Notes</span>
-					</button>
+					{!contextMenu.folderId && (
+						<button
+							onClick={showSelectStampDialog}
+							className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-orange-600 text-sm transition-colors hover:bg-orange-600/10"
+							type="button"
+						>
+							<Smile size={17} />
+							<p>Stamp</p>
+						</button>
+					)}
 				</>
 			)}
 		</div>

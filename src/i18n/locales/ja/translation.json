@@ -1,0 +1,52 @@
+{
+	"get_started": "始める",
+	"hero": {
+		"title": "webの宇宙に、<br/>あなただけの惑星を打ち上げよう。"
+	},
+	"core_functions": {
+		"title": "コア機能",
+		"desc": "ウェブ上でデスクトップのような体験を可能にします。",
+		"openWithinOspace": {
+			"title": "ospace内でサイトを開く",
+			"body": "アプリ化すれば、ospace内でそのサイトを開ける。"
+		},
+		"chooseBackground": {
+			"title": "背景を選択",
+			"body": "9種類の背景からお気に入りを選べる。"
+		},
+		"privacy": {
+			"title": "公開・非公開",
+			"body": "公開してポートフォリオとして使える。"
+		},
+		"turnSites": {
+			"title": "お気に入りのサイトをアプリ化",
+			"body": "サイトをアプリにして、デスクトップに配置できる。"
+		}
+	},
+	"try_the_demo": {
+		"title": "デモを試す",
+		"desc": "ospaceへの最初の一歩を体験しよう。",
+		"click_here": "ここをクリック"
+	},
+	"recommend": {
+		"title": "惑星を打ち上げる準備はできた？",
+		"desc": "惑星を打ち上げて、自分の宇宙を広げよう。"
+	},
+	"login": {
+		"title": "ようこそ",
+		"desc": "ospaceへの扉を開こう",
+		"btn": "Googleで続ける",
+		"agreement": "続行すると、ospaceの利用規約とプライバシーポリシーに同意したことになります。"
+	},
+	"inputName": {
+		"title": "惑星に名前をつけよう",
+		"desc": "新しい世界に旗を立てよう。",
+		"placeholder": "私の惑星の名前は...",
+		"btn": "決定"
+	},
+	"createSuccess": {
+		"title": "あなたの惑星 \"{{osName}}\" が誕生",
+		"desc": "さあ旅を始めよう。",
+		"btn": "今すぐ探検する"
+	}
+}

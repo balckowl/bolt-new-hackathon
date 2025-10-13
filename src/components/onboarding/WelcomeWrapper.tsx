@@ -5,7 +5,11 @@ import { useState } from "react";
 import CreateSuccess from "./CreateSuccess";
 import InputOsNameForm from "./InputOsNameForm";
 
-export default function WelcomeWrapper() {
+type Props = {
+	lang: string;
+};
+
+export default function WelcomeWrapper({ lang }: Props) {
 	const [step, setStep] = useState(1);
 	const [osName, setOsName] = useState("");
 
@@ -15,9 +19,13 @@ export default function WelcomeWrapper() {
 	return (
 		<>
 			{step === 1 && (
-				<InputOsNameForm handleOsNameChange={handleOsNameChange} handleNextStep={handleNextStep} />
+				<InputOsNameForm
+					handleOsNameChange={handleOsNameChange}
+					handleNextStep={handleNextStep}
+					lang={lang}
+				/>
 			)}
-			{step === 2 && <CreateSuccess osName={osName} />}
+			{step === 2 && <CreateSuccess lang={lang} osName={osName} />}
 		</>
 	);
 }
