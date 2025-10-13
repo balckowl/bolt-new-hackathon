@@ -67,7 +67,7 @@ export default function LegalWrapper() {
 											1. Acceptance of Terms
 										</h2>
 										<p className="text-gray-600 leading-relaxed">
-											By accessing and using OSpace, you accept and agree to be bound by the terms
+											By accessing and using OSPACE, you accept and agree to be bound by the terms
 											and provision of this agreement.
 										</p>
 									</section>
@@ -75,7 +75,7 @@ export default function LegalWrapper() {
 									<section>
 										<h2 className="mb-4 font-semibold text-gray-800 text-xl">2. Use License</h2>
 										<p className="text-gray-600 leading-relaxed">
-											Permission is granted to temporarily use OSpace for personal, non-commercial
+											Permission is granted to temporarily use OSPACE for personal, non-commercial
 											transitory viewing only. This is the grant of a license, not a transfer of
 											title, and under this license you may not:
 										</p>
@@ -84,7 +84,7 @@ export default function LegalWrapper() {
 											<li>
 												use the materials for any commercial purpose or for any public display
 											</li>
-											<li>attempt to reverse engineer any software contained on OSpace</li>
+											<li>attempt to reverse engineer any software contained on OSPACE</li>
 											<li>
 												remove any copyright or other proprietary notations from the materials
 											</li>
@@ -94,7 +94,7 @@ export default function LegalWrapper() {
 									<section>
 										<h2 className="mb-4 font-semibold text-gray-800 text-xl">3. User Content</h2>
 										<p className="text-gray-600 leading-relaxed">
-											You retain ownership of any content you create, upload, or store using OSpace.
+											You retain ownership of any content you create, upload, or store using OSPACE.
 											However, by using our service, you grant us a license to host, store, and
 											display your content as necessary to provide the service.
 										</p>
@@ -111,7 +111,7 @@ export default function LegalWrapper() {
 									<section>
 										<h2 className="mb-4 font-semibold text-gray-800 text-xl">5. Disclaimer</h2>
 										<p className="text-gray-600 leading-relaxed">
-											The materials on OSpace are provided on an &#39;as is&#39; basis. OSpace makes
+											The materials on OSPACE are provided on an &#39;as is&#39; basis. OSPACE makes
 											no warranties, expressed or implied, and hereby disclaims and negates all
 											other warranties including without limitation, implied warranties or
 											conditions of merchantability, fitness for a particular purpose, or
@@ -147,7 +147,7 @@ export default function LegalWrapper() {
 										</p>
 										<ul className="ml-4 list-inside list-disc space-y-2 text-gray-600 leading-relaxed">
 											<li>Account information (email address, profile information)</li>
-											<li>Content you create, upload, or store using OSpace</li>
+											<li>Content you create, upload, or store using OSPACE</li>
 											<li>Usage data and analytics</li>
 											<li>Device and browser information</li>
 										</ul>
