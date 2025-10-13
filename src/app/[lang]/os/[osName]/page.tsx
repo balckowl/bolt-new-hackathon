@@ -12,12 +12,14 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const osName = params.osName.toUpperCase();
+
 	return {
-		title: `${params.osName}'s OS`,
-		description: `This is ${params.osName}'s OS page.`,
+		title: `${osName}`,
+		description: `Planet ${osName}`,
 		openGraph: {
-			title: `${params.osName}'s OS`,
-			description: `This is ${params.osName}'s OS page.`,
+			title: `${osName}`,
+			description: `Planet ${osName}`,
 		},
 	};
 }
